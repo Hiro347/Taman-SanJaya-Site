@@ -82,9 +82,9 @@ export default function HeroSection({ settings }: HeroSectionProps) {
         {/* ===================================================================== */}
         <motion.div
           style={{ y: heroParallax, opacity: heroOpacity }}
-          className="min-h-[calc(100vh-6.5rem)] flex flex-col justify-between"
+          className="flex flex-col"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center flex-1 my-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 sm:pt-4 pb-2 sm:pb-4">
             {/* ----------------------------------------------------------------- */}
             {/* Left Column: Narrative, Credibility & High-Converting CTA Suite   */}
             {/* ----------------------------------------------------------------- */}
@@ -272,41 +272,19 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             </div>
           </motion.div>
         </div>
-
-        {/* Cinematic Scroll Indicator at bottom of the full-screen fold */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          className="pt-4 pb-2 flex flex-col items-center justify-center text-center gap-1.5 cursor-pointer group select-none self-center"
-          onClick={() => {
-            document.getElementById('service')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-        >
-          <span className="text-[10px] sm:text-[11px] font-extrabold tracking-[0.28em] uppercase text-brand-earth/70 group-hover:text-brand-crimson transition-colors">
-            Gulir untuk Menjelajah
-          </span>
-          <div className="w-5 h-8 sm:w-6 sm:h-9 rounded-full border-2 border-brand-earth/30 flex items-start justify-center p-1 group-hover:border-brand-crimson transition-colors shadow-xs">
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
-              className="w-1.5 h-1.5 rounded-full bg-brand-crimson"
-            />
-          </div>
-        </motion.div>
       </motion.div>
     </div>
 
       {/* ===================================================================== */}
       {/* FULL-WIDTH NATURAL GARDEN SECTION DIVIDER: Group 1 SVG                */}
-      {/* Tepat di bawah "Gulir untuk Menjelajah", membentang penuh kanan-kiri  */}
+      {/* Tepat di bawah hero content, dinaikkan membentang penuh kanan-kiri    */}
       {/* ===================================================================== */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-20px' }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full relative -mt-2 sm:-mt-4 pointer-events-none select-none z-10"
+        className="w-full relative -mt-6 sm:-mt-10 lg:-mt-16 xl:-mt-20 pointer-events-none select-none z-10"
       >
         <img
           src="/images/group-1.svg"
