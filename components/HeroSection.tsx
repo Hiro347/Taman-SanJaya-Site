@@ -45,6 +45,30 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               Survei Lokasi
             </span>
           </div>
+
+          {/* Floating 3D Botanical Badge on Hero bottom */}
+          <motion.div
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+            className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 hidden sm:flex items-center gap-2.5 bg-white/95 backdrop-blur-md py-2 px-3.5 rounded-2xl shadow-xl border border-white/60"
+          >
+            <div className="relative w-9 h-9 rounded-xl overflow-hidden bg-brand-sand/40 flex-shrink-0">
+              <Image
+                src="/images/3d-botanical-plant.jpg"
+                alt="3D Plant"
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div>
+              <span className="text-[10px] uppercase tracking-wider font-extrabold text-brand-crimson block">
+                Hortikultura Ilmiah
+              </span>
+              <span className="text-xs font-bold text-brand-earth block">
+                Proteksi Tanaman IPB
+              </span>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
 

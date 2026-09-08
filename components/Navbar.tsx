@@ -16,6 +16,8 @@ export default function Navbar({ settings }: NavbarProps) {
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'Service', href: '#service' },
+    { name: '3D Concept', href: '#3d-concept' },
+    { name: 'Founder', href: '#founder' },
     { name: 'Project', href: '#project' },
     { name: 'Catalog', href: '#catalog' },
     { name: 'About Us', href: '#about' },
