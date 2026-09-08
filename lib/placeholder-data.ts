@@ -28,7 +28,7 @@ export const defaultServices: Service[] = [
       'Decking Kayu Ulin, Pergola, & Gazebo Santai',
       'Garansi Hidup & Tumbuh Tanaman 100%',
     ],
-    image_url: '/images/hero-garden.jpg',
+    image_url: '/images/Pembuatan.jpg',
     order_index: 1,
   },
   {
@@ -44,7 +44,7 @@ export const defaultServices: Service[] = [
       'Pemilihan Vegetasi Adaptif Iklim Tropis',
       'Rancangan Anggaran Biaya (RAB) Rinci & Transparan',
     ],
-    image_url: '/images/3d-garden-diorama.jpg',
+    image_url: '/images/Perencanaan.jpg',
     order_index: 2,
   },
   {
@@ -61,7 +61,7 @@ export const defaultServices: Service[] = [
       'Penggemburan Tanah & Pengisian Media Tanam Baru',
       'Paket Kunjungan Berkala Mingguan & Bulanan',
     ],
-    image_url: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=1200&q=80',
+    image_url: '/images/Perawatan.jpg',
     order_index: 3,
   },
 ];

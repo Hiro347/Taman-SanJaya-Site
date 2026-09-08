@@ -28,7 +28,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
       id: 'pembuatan',
       title: 'JASA PEMBUATAN',
       desc: 'Pembuatan taman tropis modern, kolam ikan koi dengan filtrasi 4-chamber, relief tebing air terjun, decking kayu, hardscape, dan penanaman bergaransi tumbuh.',
-      imageUrl: '/images/hero-garden.jpg',
+      imageUrl: '/images/Pembuatan.jpg',
       slug: 'jasa-pembuatan',
       icon: (
         <svg
@@ -58,7 +58,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
       id: 'perencanaan',
       title: 'JASA PERENCANAAN',
       desc: 'Visualisasi desain konsep 2D & 3D realistis, survei pengukuran lahan, tata letak vegetasi adaptif, sistem drainase, dan rancangan anggaran biaya (RAB) transparan.',
-      imageUrl: '/images/3d-garden-diorama.jpg',
+      imageUrl: '/images/Perencanaan.jpg',
       slug: 'jasa-perencanaan',
       icon: (
         <svg
@@ -89,8 +89,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
       id: 'perawatan',
       title: 'JASA PERAWATAN',
       desc: 'Perawatan rutin berkala: pemangkasan dahan pohon, pemupukan nutrisi organik, penggemburan tanah, serta pengendalian hama & jamur berbasis Proteksi Tanaman IPB.',
-      imageUrl:
-        'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&w=1200&q=80',
+      imageUrl: '/images/Perawatan.jpg',
       slug: 'jasa-perawatan',
       icon: (
         <svg
