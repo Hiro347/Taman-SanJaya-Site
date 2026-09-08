@@ -11,29 +11,6 @@ interface AboutSectionProps {
 }
 
 export default function AboutSection({ settings }: AboutSectionProps) {
-  const steps = [
-    {
-      num: '01',
-      title: 'Konsultasi & Brainstorming',
-      desc: 'Diskusikan impian taman Anda, gaya yang disukai, serta estimasi anggaran tanpa biaya awal.',
-    },
-    {
-      num: '02',
-      title: 'Survei & Pengukuran',
-      desc: 'Tim kami mendatangi lokasi untuk menganalisis kontur tanah, pencahayaan, dan sistem air.',
-    },
-    {
-      num: '03',
-      title: 'Desain 3D & RAB',
-      desc: 'Visualisasi rancangan detail bersama rancangan anggaran biaya (RAB) yang transparan.',
-    },
-    {
-      num: '04',
-      title: 'Pengerjaan & Garansi',
-      desc: 'Eksekusi rapi oleh tukang ahli dengan material premium dan garansi hidup tanaman.',
-    },
-  ];
-
   return (
     <section id="about" className="py-16 sm:py-20 px-3 sm:px-6 max-w-7xl mx-auto">
       {/* Brand Story Box with Scroll Reveal */}
@@ -105,40 +82,6 @@ export default function AboutSection({ settings }: AboutSectionProps) {
           </div>
         </div>
       </motion.div>
-
-      {/* 4 Step Workflow with Staggered Scroll Reveal */}
-      <div className="mt-16 sm:mt-20">
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-bold tracking-widest text-brand-crimson uppercase bg-brand-sand px-4 py-1.5 rounded-full">
-            Alur Kerja Kami
-          </span>
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-brand-earth mt-3">
-            Mudah, Terencana & Menyenangkan
-          </h3>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map((step, idx) => (
-            <motion.div
-              key={step.num}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.5, delay: idx * 0.12 }}
-              whileHover={{ y: -6 }}
-              className="bg-white rounded-[28px] p-6 sm:p-7 border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-300 relative flex flex-col justify-between group"
-            >
-              <div>
-                <span className="text-4xl font-black text-brand-sand group-hover:text-brand-crimson transition-colors font-mono block mb-3">
-                  {step.num}
-                </span>
-                <h4 className="font-bold text-lg text-brand-earth mb-2 group-hover:text-brand-crimson transition-colors">{step.title}</h4>
-                <p className="text-brand-earth/80 text-sm leading-relaxed">{step.desc}</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
     </section>
   );
 }
