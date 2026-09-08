@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   MapPin,
+  Sparkles,
 } from 'lucide-react';
 import { SiteSettings } from '@/lib/types';
 
@@ -73,19 +74,18 @@ const slideVariants = {
 export default function HeroSection({ settings }: HeroSectionProps) {
   const { scrollY } = useScroll();
   const heroParallax = useTransform(scrollY, [0, 500], [0, 30]);
-  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.95]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Auto-advance sideways every 4 seconds unless hovered
+  // Auto-advance sideways every 4.5 seconds unless hovered
   useEffect(() => {
     if (isHovered) return;
     const timer = setInterval(() => {
       setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % heroSlides.length);
-    }, 4000);
+    }, 4500);
     return () => clearInterval(timer);
   }, [currentIndex, isHovered]);
 
@@ -106,69 +106,18 @@ export default function HeroSection({ settings }: HeroSectionProps) {
   )}`;
 
   return (
-    <section id="home" className="w-full pt-8 sm:pt-14 lg:pt-16 pb-0 flex flex-col justify-between overflow-hidden relative">
-      <div className="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6">
+    <section id="home" className="w-full pt-4 sm:pt-6 lg:pt-8 pb-0 flex flex-col justify-between overflow-hidden relative">
+      <div className="max-w-6xl mx-auto w-full px-3 sm:px-6 lg:px-8">
         <motion.div
-          style={{ y: heroParallax, opacity: heroOpacity }}
-          className="flex flex-col items-center text-center"
+          style={{ y: heroParallax }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className="relative w-full rounded-2xl sm:rounded-3xl lg:rounded-[36px] overflow-hidden shadow-2xl border-2 border-white/60 bg-black/40 ring-1 ring-brand-earth/15 group min-h-[500px] sm:min-h-[580px] lg:min-h-[640px] flex flex-col justify-between p-5 sm:p-8 lg:p-12"
         >
-          {/* Editorial Clean Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-6xl lg:text-7xl xl:text-[78px] font-black text-brand-earth tracking-tight leading-[1.12] max-w-4xl"
-          >
-            Wujudkan{' '}
-            <span className="font-serif italic font-bold text-brand-crimson">
-              Taman Asri
-            </span>{' '}
-            Impian Anda
-          </motion.h1>
-
-          {/* Subtitle Value Proposition */}
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-4 sm:mt-6 text-brand-earth/80 text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto font-normal"
-          >
-            {settings.hero_subtitle ||
-              'Desain lanskap presisi, pembuatan taman tropis, dan kolam koi bergaransi tumbuh 100%.'}
-          </motion.p>
-
-          {/* Call to Action - Consultation Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-7 sm:mt-9 flex items-center justify-center w-full"
-          >
-            <motion.a
-              whileHover={{ scale: 1.04, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold text-base sm:text-lg px-9 py-4 rounded-full shadow-xl shadow-brand-crimson/20 transition-all group"
-            >
-              <MessageCircle className="w-5 h-5 fill-white text-brand-crimson transition-transform group-hover:rotate-12" />
-              <span>Konsultasi Sekarang</span>
-              <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-            </motion.a>
-          </motion.div>
-
           {/* ================================================================= */}
-          {/* AUTOMATIC SIDEWAYS SLIDING IMAGE SHOWCASE CAROUSEL                */}
+          {/* 1. BACKGROUND SLIDING IMAGES (BERGANTI KE SAMPING OTOMATIS)       */}
           {/* ================================================================= */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className="relative w-full max-w-5xl mx-auto mt-10 sm:mt-12 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-white/70 bg-brand-sand/30 ring-1 ring-brand-earth/10 group aspect-[16/10] sm:aspect-[21/10] max-h-[460px]"
-          >
+          <div className="absolute inset-0 z-0">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
                 key={currentIndex}
@@ -178,71 +127,123 @@ export default function HeroSection({ settings }: HeroSectionProps) {
                 animate="center"
                 exit="exit"
                 transition={{
-                  x: { type: 'spring', stiffness: 280, damping: 28 },
-                  opacity: { duration: 0.35 },
+                  x: { type: 'spring', stiffness: 260, damping: 26 },
+                  opacity: { duration: 0.4 },
                 }}
                 className="absolute inset-0 w-full h-full"
               >
                 <img
                   src={heroSlides[currentIndex].image}
                   alt={heroSlides[currentIndex].title}
-                  className="w-full h-full object-cover object-center"
+                  className="w-full h-full object-cover object-center scale-[1.02] transition-transform duration-1000"
                 />
-                {/* Bottom Vignette Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none" />
-
-                {/* Slide Information Overlay */}
-                <div className="absolute bottom-0 inset-x-0 p-4 sm:p-6 lg:p-7 flex flex-col sm:flex-row sm:items-end justify-between gap-3 text-white pointer-events-none">
-                  <div className="flex flex-col gap-1.5 text-left">
-                    <div className="inline-flex items-center gap-2">
-                      <span className="px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider bg-brand-crimson/95 backdrop-blur-md text-white shadow-sm">
-                        {heroSlides[currentIndex].category}
-                      </span>
-                      <span className="hidden sm:inline-flex items-center gap-1 text-xs text-white/85 backdrop-blur-md bg-black/40 px-2.5 py-0.5 rounded-full border border-white/10">
-                        <MapPin className="w-3 h-3 text-brand-sand" />
-                        {heroSlides[currentIndex].location}
-                      </span>
-                    </div>
-                    <h3 className="text-lg sm:text-2xl lg:text-3xl font-bold tracking-tight text-white drop-shadow-md">
-                      {heroSlides[currentIndex].title}
-                    </h3>
-                  </div>
-
-                  {/* Counter Badge */}
-                  <div className="hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/15 self-end">
-                    <span className="text-brand-crimson font-black">0{currentIndex + 1}</span>
-                    <span className="text-white/40">/</span>
-                    <span>0{heroSlides.length}</span>
-                  </div>
-                </div>
               </motion.div>
             </AnimatePresence>
 
-            {/* Left Arrow Navigation Button */}
-            <button
-              onClick={() => paginate(-1)}
-              aria-label="Foto Sebelumnya"
-              className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95"
-            >
-              <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
+            {/* Cinematic Gradient Scrim for crisp text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/60 z-[1]" />
+          </div>
 
-            {/* Right Arrow Navigation Button */}
-            <button
-              onClick={() => paginate(1)}
-              aria-label="Foto Berikutnya"
-              className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95"
-            >
-              <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
+          {/* ================================================================= */}
+          {/* 2. TOP BAR OVERLAY: BADGE KREDENSIAL BRAND                         */}
+          {/* ================================================================= */}
+          <div className="relative z-10 flex items-center justify-between w-full">
+            <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-brand-sand text-xs font-bold tracking-widest uppercase shadow-sm">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              <span className="text-brand-crimson font-black">成功之园</span>
+              <span className="text-white/30">•</span>
+              <span className="text-white/90">Proteksi Tanaman IPB</span>
+            </div>
 
-            {/* Bottom Pagination Dots */}
-            <div className="absolute bottom-3 sm:bottom-4 right-4 sm:right-6 z-20 flex items-center gap-1.5">
+            {/* Slide Counter Badge */}
+            <div className="hidden sm:flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/15">
+              <span className="text-brand-crimson font-black">0{currentIndex + 1}</span>
+              <span className="text-white/40">/</span>
+              <span>0{heroSlides.length}</span>
+            </div>
+          </div>
+
+          {/* ================================================================= */}
+          {/* 3. CENTER CONTENT: TAMAN SAN JAYA + SLOGAN SINGKAT PENDUKUNG      */}
+          {/* ================================================================= */}
+          <div className="relative z-10 flex flex-col items-center text-center my-auto py-6 sm:py-8 max-w-4xl mx-auto">
+            {/* Main Brand Title */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white tracking-wider leading-[1.08] drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)] uppercase font-sans"
+            >
+              TAMAN SAN JAYA
+            </motion.h1>
+
+            {/* Slogan Singkat Pendukung Produk */}
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-2 sm:mt-3 text-xl sm:text-3xl lg:text-4xl font-serif italic font-bold text-brand-sand drop-shadow-md tracking-wide"
+            >
+              Taman Tropis Asri & Kolam Koi Impian
+            </motion.p>
+
+            {/* Ringkasan Produk Pendukung */}
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-3 sm:mt-4 text-white/90 text-xs sm:text-base lg:text-lg max-w-2xl mx-auto font-normal drop-shadow leading-relaxed"
+            >
+              Spesialis pembuatan taman tropis, kolam koi modern, & tanaman hias berkualitas dengan garansi tumbuh 100%.
+            </motion.p>
+
+            {/* Call to Action - Consultation Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-6 sm:mt-8 flex items-center justify-center w-full"
+            >
+              <motion.a
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold text-sm sm:text-base lg:text-lg px-8 sm:px-10 py-3.5 sm:py-4 rounded-full shadow-2xl shadow-brand-crimson/50 border border-white/20 transition-all group"
+              >
+                <MessageCircle className="w-5 h-5 fill-white text-brand-crimson transition-transform group-hover:rotate-12" />
+                <span>Konsultasi Sekarang</span>
+                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+              </motion.a>
+            </motion.div>
+          </div>
+
+          {/* ================================================================= */}
+          {/* 4. BOTTOM BAR: INFORMASI SLIDE AKTIF & PAGINATION DOTS            */}
+          {/* ================================================================= */}
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-white/15 text-white">
+            {/* Info Produk/Lanskap Aktif */}
+            <div className="flex items-center gap-2 text-left">
+              <span className="px-3 py-1 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider bg-brand-crimson/95 backdrop-blur-md text-white shadow-sm">
+                {heroSlides[currentIndex].category}
+              </span>
+              <span className="hidden sm:inline-flex items-center gap-1 text-xs text-white/85 backdrop-blur-md bg-black/40 px-2.5 py-1 rounded-full border border-white/10">
+                <MapPin className="w-3 h-3 text-brand-sand" />
+                {heroSlides[currentIndex].location}
+              </span>
+            </div>
+
+            {/* Pagination Dots */}
+            <div className="flex items-center gap-1.5 self-center sm:self-auto">
               {heroSlides.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => goToSlide(idx)}
-                  aria-label={`Lihat Slide ${idx + 1}`}
+                  aria-label={`Lihat Foto ${idx + 1}`}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     idx === currentIndex
                       ? 'w-7 bg-brand-crimson'
@@ -251,7 +252,26 @@ export default function HeroSection({ settings }: HeroSectionProps) {
                 />
               ))}
             </div>
-          </motion.div>
+          </div>
+
+          {/* ================================================================= */}
+          {/* 5. SIDE NAVIGATION ARROWS (MANUAL SLIDE)                          */}
+          {/* ================================================================= */}
+          <button
+            onClick={() => paginate(-1)}
+            aria-label="Foto Sebelumnya"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95"
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+          </button>
+
+          <button
+            onClick={() => paginate(1)}
+            aria-label="Foto Berikutnya"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95"
+          >
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+          </button>
         </motion.div>
       </div>
 

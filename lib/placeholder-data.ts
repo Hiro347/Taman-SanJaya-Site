@@ -1,8 +1,8 @@
 import { SiteSettings, Product, Service, Project } from './types';
 
 export const defaultSiteSettings: SiteSettings = {
-  hero_title: 'Wujudkan Taman Asri Impian Anda',
-  hero_subtitle: 'Desain lanskap presisi, pembuatan taman tropis, dan kolam koi bergaransi tumbuh 100%.',
+  hero_title: 'TAMAN SAN JAYA - Taman Tropis Asri & Kolam Koi Impian',
+  hero_subtitle: 'Spesialis pembuatan taman tropis, kolam koi modern, & tanaman hias berkualitas dengan garansi tumbuh 100%.',
   // Exact landscape garden image from Figma mockup
   hero_image_url: '/images/hero-garden.jpg',
   whatsapp_number: '6281234567890',
