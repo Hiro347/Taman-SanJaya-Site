@@ -36,9 +36,19 @@ export default async function PublicLayout({
       {/* 2. Main Elevated Card Container (15px top, 24px sides matching Figma)     */}
       {/* ========================================================================= */}
       <div className="relative z-10 pt-[15px] px-3 sm:px-5 md:px-[24px] pb-12 w-full mx-auto">
-        <div className="bg-[#D8CDAE] rounded-[28px] sm:rounded-[36px] lg:rounded-[44px] shadow-2xl border border-[#c5b791]/60 overflow-hidden flex flex-col min-h-[92vh] relative">
-          {/* 3D Rotating Logo Ambient Background on Scroll */}
-          <ScrollRotatingLogo3D />
+        <div className="relative">
+          {/* Hanging Ivy / Bush (image 13.svg) Clinging at Top-Right Website Corner */}
+          <div className="absolute -top-3 sm:-top-5 -right-1 sm:-right-3 lg:-right-4 z-40 pointer-events-none select-none w-20 sm:w-28 md:w-32 lg:w-36 aspect-[63/84]">
+            <img
+              src="/images/image-13.svg"
+              alt="Tanaman Hias Merambat Taman San Jaya"
+              className="w-full h-auto block drop-shadow-[0_8px_16px_rgba(0,0,0,0.18)]"
+            />
+          </div>
+
+          <div className="bg-[#D8CDAE] rounded-[28px] sm:rounded-[36px] lg:rounded-[44px] shadow-2xl border border-[#c5b791]/60 overflow-hidden flex flex-col min-h-[92vh] relative">
+            {/* 3D Rotating Logo Ambient Background on Scroll */}
+            <ScrollRotatingLogo3D />
 
           <div className="relative z-10 flex flex-col flex-1">
             {/* Header / Navbar at the top of the card */}
@@ -52,6 +62,7 @@ export default async function PublicLayout({
           </div>
         </div>
       </div>
+    </div>
 
       {/* Floating WhatsApp Button */}
       <FloatingWhatsApp settings={settings} />

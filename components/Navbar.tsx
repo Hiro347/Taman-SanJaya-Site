@@ -68,8 +68,8 @@ export default function Navbar({ settings }: NavbarProps) {
           ))}
         </nav>
 
-        {/* Desktop CTA & Mobile Toggle */}
-        <div className="flex items-center gap-3">
+        {/* Desktop CTA & Mobile Toggle (Shifted inward to accommodate top-right hanging bush) */}
+        <div className="flex items-center gap-3 mr-10 sm:mr-16 md:mr-20 lg:mr-24">
           <a
             href={waUrl}
             target="_blank"
