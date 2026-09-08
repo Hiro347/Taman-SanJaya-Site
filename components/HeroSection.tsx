@@ -117,13 +117,13 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-6xl lg:text-[68px] xl:text-[74px] font-black text-brand-earth tracking-tight leading-[1.12] max-w-4xl"
+            className="text-4xl sm:text-6xl lg:text-7xl xl:text-[78px] font-black text-brand-earth tracking-tight leading-[1.12] max-w-4xl"
           >
             Wujudkan{' '}
-            <span className="block sm:inline font-serif italic font-bold text-brand-crimson">
-              Taman Tropis Asri
+            <span className="font-serif italic font-bold text-brand-crimson">
+              Taman Asri
             </span>{' '}
-            & Ruang Hijau Impian
+            Impian Anda
           </motion.h1>
 
           {/* Subtitle Value Proposition */}
@@ -131,9 +131,10 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-5 sm:mt-7 text-brand-earth/80 text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto font-normal"
+            className="mt-4 sm:mt-6 text-brand-earth/80 text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto font-normal"
           >
-            {settings.hero_subtitle}
+            {settings.hero_subtitle ||
+              'Desain lanskap presisi, pembuatan taman tropis, dan kolam koi bergaransi tumbuh 100%.'}
           </motion.p>
 
           {/* Call to Action - Consultation Button */}
