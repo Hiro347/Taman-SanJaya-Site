@@ -66,24 +66,34 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
           </div>
         </div>
 
-        {/* Category Pills */}
+        {/* Category Pills with animated active indicator */}
         <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-none mb-8">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
-                selectedCategory === cat
-                  ? 'bg-brand-crimson text-white shadow-sm'
-                  : 'bg-white/80 text-brand-earth hover:bg-white hover:text-brand-crimson'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+          {categories.map((cat) => {
+            const isActive = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`relative px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-300 ${
+                  isActive
+                    ? 'text-white shadow-md'
+                    : 'bg-white/70 text-brand-earth hover:bg-white hover:text-brand-crimson border border-brand-earth/15'
+                }`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeCatalogCategory"
+                    className="absolute inset-0 bg-brand-crimson rounded-full -z-0 shadow-md shadow-brand-crimson/30"
+                    transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-10">{cat}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Product Grid */}
+        {/* Product Grid with Staggered Fade & Hover Lift */}
         <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <AnimatePresence>
             {filteredProducts.map((product) => {
@@ -94,12 +104,14 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
               return (
                 <motion.div
                   layout
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
+                  initial={{ opacity: 0, scale: 0.94 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  exit={{ opacity: 0, scale: 0.94 }}
+                  transition={{ duration: 0.4 }}
+                  whileHover={{ y: -6 }}
                   key={product.id}
-                  className="bg-white rounded-3xl overflow-hidden border border-brand-sand-dark/30 shadow-xs hover:shadow-lg transition-all flex flex-col justify-between group"
+                  className="bg-white rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col justify-between group"
                 >
                   <div>
                     {/* Image Box */}

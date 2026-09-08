@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import {
   MessageCircle,
   Sprout,
@@ -14,6 +14,7 @@ import {
   Sparkles,
   Waves,
   Trees,
+  ChevronDown,
 } from 'lucide-react';
 import { SiteSettings } from '@/lib/types';
 
@@ -32,6 +33,10 @@ interface LandscapeTheme {
 }
 
 export default function HeroSection({ settings }: HeroSectionProps) {
+  const { scrollY } = useScroll();
+  const heroParallax = useTransform(scrollY, [0, 500], [0, 60]);
+  const heroOpacity = useTransform(scrollY, [0, 450], [1, 0.92]);
+
   const themes: LandscapeTheme[] = [
     {
       id: 'tropical',
@@ -70,35 +75,39 @@ export default function HeroSection({ settings }: HeroSectionProps) {
   )}`;
 
   return (
-    <section id="home" className="w-full px-4 sm:px-8 lg:px-12 pt-2 sm:pt-4 pb-12 sm:pb-16">
-      <div className="max-w-7xl mx-auto">
+    <section id="home" className="w-full px-4 sm:px-8 lg:px-12 pt-2 sm:pt-4 pb-12 sm:pb-16 flex flex-col justify-between">
+      <div className="max-w-7xl mx-auto w-full">
         {/* ===================================================================== */}
-        {/* UPPER HERO STAGE: Asymmetrical Split Editorial Layout                */}
+        {/* UPPER HERO STAGE: Full Viewport Opening Fold with Scroll Parallax     */}
         {/* ===================================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* ----------------------------------------------------------------- */}
-          {/* Left Column: Narrative, Credibility & High-Converting CTA Suite   */}
-          {/* ----------------------------------------------------------------- */}
-          <motion.div
-            initial={{ opacity: 0, x: -25 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 flex flex-col justify-center"
-          >
-            {/* Kicker Badge with Kanji & IPB University Heritage */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-brand-earth/15 text-brand-earth text-xs font-bold tracking-wide shadow-xs mb-4 sm:mb-5 self-start">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
-              </span>
-              <span className="text-brand-crimson font-black tracking-widest uppercase">
-                成功之园
-              </span>
-              <span className="text-brand-earth/30">•</span>
-              <span className="text-brand-earth font-semibold">
-                Proteksi Tanaman IPB Heritage
-              </span>
-            </div>
+        <motion.div
+          style={{ y: heroParallax, opacity: heroOpacity }}
+          className="min-h-[calc(100vh-6.5rem)] flex flex-col justify-between"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center flex-1 my-auto">
+            {/* ----------------------------------------------------------------- */}
+            {/* Left Column: Narrative, Credibility & High-Converting CTA Suite   */}
+            {/* ----------------------------------------------------------------- */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="lg:col-span-7 flex flex-col justify-center"
+            >
+              {/* Kicker Badge with Kanji & IPB University Heritage */}
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-brand-earth/15 text-brand-earth text-xs font-bold tracking-wide shadow-xs mb-4 sm:mb-5 self-start">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
+                </span>
+                <span className="text-brand-crimson font-black tracking-widest uppercase">
+                  成功之园
+                </span>
+                <span className="text-brand-earth/30">•</span>
+                <span className="text-brand-earth font-semibold">
+                  Proteksi Tanaman IPB Heritage
+                </span>
+              </div>
 
             {/* Editorial Architectural Headline */}
             <h1 className="text-3xl sm:text-5xl lg:text-[52px] xl:text-[58px] font-black text-brand-earth tracking-tight leading-[1.14]">
@@ -264,15 +273,39 @@ export default function HeroSection({ settings }: HeroSectionProps) {
           </motion.div>
         </div>
 
-        {/* ===================================================================== */}
-        {/* LOWER HERO RIBBON: 4-Pillar Luxury Architectural Metrics              */}
-        {/* ===================================================================== */}
+        {/* Cinematic Scroll Indicator at bottom of the full-screen fold */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-10 sm:mt-14 pt-8 border-t border-brand-earth/20 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-brand-earth"
+          transition={{ duration: 1, delay: 0.6 }}
+          className="pt-4 pb-2 flex flex-col items-center justify-center text-center gap-1.5 cursor-pointer group select-none self-center"
+          onClick={() => {
+            document.getElementById('service')?.scrollIntoView({ behavior: 'smooth' });
+          }}
         >
+          <span className="text-[10px] sm:text-[11px] font-extrabold tracking-[0.28em] uppercase text-brand-earth/70 group-hover:text-brand-crimson transition-colors">
+            Gulir untuk Menjelajah
+          </span>
+          <div className="w-5 h-8 sm:w-6 sm:h-9 rounded-full border-2 border-brand-earth/30 flex items-start justify-center p-1 group-hover:border-brand-crimson transition-colors shadow-xs">
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
+              className="w-1.5 h-1.5 rounded-full bg-brand-crimson"
+            />
+          </div>
+        </motion.div>
+      </motion.div>
+
+      {/* ===================================================================== */}
+      {/* LOWER HERO RIBBON: 4-Pillar Luxury Architectural Metrics              */}
+      {/* ===================================================================== */}
+      <motion.div
+        initial={{ opacity: 0, y: 25 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-40px' }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="mt-8 sm:mt-12 pt-8 border-t border-brand-earth/20 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-brand-earth"
+      >
           <div className="flex flex-col bg-white/40 backdrop-blur-xs p-4 sm:p-5 rounded-2xl border border-brand-earth/10">
             <span className="font-extrabold text-3xl sm:text-4xl text-brand-crimson">
               10+
