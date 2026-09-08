@@ -4,6 +4,8 @@ import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import { getSiteSettings } from '@/lib/data';
 
+import ScrollRotatingLogo3D from '@/components/ScrollRotatingLogo3D';
+
 // Keep page dynamically updated when settings change
 export const revalidate = 0;
 
@@ -34,15 +36,20 @@ export default async function PublicLayout({
       {/* 2. Main Elevated Card Container (15px top, 24px sides matching Figma)     */}
       {/* ========================================================================= */}
       <div className="relative z-10 pt-[15px] px-3 sm:px-5 md:px-[24px] pb-12 w-full mx-auto">
-        <div className="bg-[#D8CDAE] rounded-[28px] sm:rounded-[36px] lg:rounded-[44px] shadow-2xl border border-[#c5b791]/60 overflow-hidden flex flex-col min-h-[92vh]">
-          {/* Header / Navbar at the top of the card */}
-          <Navbar settings={settings} />
+        <div className="bg-[#D8CDAE] rounded-[28px] sm:rounded-[36px] lg:rounded-[44px] shadow-2xl border border-[#c5b791]/60 overflow-hidden flex flex-col min-h-[92vh] relative">
+          {/* 3D Rotating Logo Ambient Background on Scroll */}
+          <ScrollRotatingLogo3D />
 
-          {/* Main Content */}
-          <main className="flex-1 w-full">{children}</main>
+          <div className="relative z-10 flex flex-col flex-1">
+            {/* Header / Navbar at the top of the card */}
+            <Navbar settings={settings} />
 
-          {/* Footer at the bottom of the card */}
-          <Footer settings={settings} />
+            {/* Main Content */}
+            <main className="flex-1 w-full">{children}</main>
+
+            {/* Footer at the bottom of the card */}
+            <Footer settings={settings} />
+          </div>
         </div>
       </div>
 

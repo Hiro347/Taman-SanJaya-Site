@@ -1,141 +1,326 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { MessageCircle, Sprout, ShieldCheck, Ruler, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  MessageCircle,
+  Sprout,
+  ShieldCheck,
+  ArrowUpRight,
+  ArrowRight,
+  CheckCircle2,
+  MapPin,
+  Sparkles,
+  Waves,
+  Trees,
+} from 'lucide-react';
 import { SiteSettings } from '@/lib/types';
 
 interface HeroSectionProps {
   settings: SiteSettings;
 }
 
+interface LandscapeTheme {
+  id: string;
+  name: string;
+  icon: React.ElementType;
+  tagline: string;
+  location: string;
+  badge: string;
+  imageUrl: string;
+}
+
 export default function HeroSection({ settings }: HeroSectionProps) {
+  const themes: LandscapeTheme[] = [
+    {
+      id: 'tropical',
+      name: 'Taman Tropis',
+      icon: Trees,
+      tagline: 'Courtyard Sanctuary & Decking Kayu',
+      location: 'Residensial Jakarta Selatan',
+      badge: 'Signature Style',
+      imageUrl: settings.hero_image_url || '/images/hero-garden.jpg',
+    },
+    {
+      id: 'koi',
+      name: 'Kolam Koi Modern',
+      icon: Waves,
+      tagline: 'Filtrasi 4-Chamber & Air Terjun Dinding',
+      location: 'BSD City, Tangerang',
+      badge: 'Ekosistem Alami',
+      imageUrl: '/images/3d-garden-diorama.jpg',
+    },
+    {
+      id: 'zen',
+      name: 'Zen Garden Kering',
+      icon: Sprout,
+      tagline: 'Minimalis Batu Koral & Vegetasi Sikas',
+      location: 'Menteng, Jakarta Pusat',
+      badge: 'Low Maintenance',
+      imageUrl: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
+    },
+  ];
+
+  const [activeTheme, setActiveTheme] = useState<LandscapeTheme>(themes[0]);
+
   const waUrl = `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(
-    settings.whatsapp_message || 'Halo Taman San Jaya, saya ingin konsultasi mengenai pembuatan taman.'
+    settings.whatsapp_message ||
+      'Halo Taman San Jaya, saya ingin konsultasi mengenai perencanaan & pembuatan taman.'
   )}`;
 
   return (
-    <section id="home" className="w-full px-4 sm:px-8 lg:px-12 pt-2 pb-12 sm:pb-16">
-      {/* Centered Hero Image Frame matching Figma mockup */}
-      <div className="max-w-5xl lg:max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[16/10] max-h-[580px] rounded-2xl sm:rounded-[32px] overflow-hidden shadow-xl border border-black/10 group"
-        >
-          <Image
-            src={settings.hero_image_url}
-            alt="Taman San Jaya Landscape Design"
-            fill
-            className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
-            priority
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
-          />
+    <section id="home" className="w-full px-4 sm:px-8 lg:px-12 pt-2 sm:pt-4 pb-12 sm:pb-16">
+      <div className="max-w-7xl mx-auto">
+        {/* ===================================================================== */}
+        {/* UPPER HERO STAGE: Asymmetrical Split Editorial Layout                */}
+        {/* ===================================================================== */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* ----------------------------------------------------------------- */}
+          {/* Left Column: Narrative, Credibility & High-Converting CTA Suite   */}
+          {/* ----------------------------------------------------------------- */}
+          <motion.div
+            initial={{ opacity: 0, x: -25 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-7 flex flex-col justify-center"
+          >
+            {/* Kicker Badge with Kanji & IPB University Heritage */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border border-brand-earth/15 text-brand-earth text-xs font-bold tracking-wide shadow-xs mb-4 sm:mb-5 self-start">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-600" />
+              </span>
+              <span className="text-brand-crimson font-black tracking-widest uppercase">
+                成功之园
+              </span>
+              <span className="text-brand-earth/30">•</span>
+              <span className="text-brand-earth font-semibold">
+                Proteksi Tanaman IPB Heritage
+              </span>
+            </div>
 
-          {/* Floating Badges */}
-          <div className="absolute top-4 left-4 sm:top-5 sm:left-5 flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-md text-brand-earth text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
-              <ShieldCheck className="w-3.5 h-3.5 text-brand-crimson" />
-              Garansi Tumbuh
+            {/* Editorial Architectural Headline */}
+            <h1 className="text-3xl sm:text-5xl lg:text-[52px] xl:text-[58px] font-black text-brand-earth tracking-tight leading-[1.14]">
+              Wujudkan{' '}
+              <span className="text-brand-crimson font-serif italic font-bold">
+                Taman Tropis Asri
+              </span>{' '}
+              & Bernilai Estetika Tinggi
+            </h1>
+
+            {/* Subtitle / Value Proposition */}
+            <p className="mt-4 sm:mt-5 text-brand-earth/85 text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl font-normal">
+              {settings.hero_subtitle}
+            </p>
+
+            {/* Action Buttons (Primary WhatsApp + Secondary Catalog) */}
+            <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4">
+              <motion.a
+                whileHover={{ scale: 1.02, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                href={waUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-3 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold text-base px-7 py-4 rounded-2xl shadow-xl shadow-brand-crimson/25 transition-all group"
+              >
+                <MessageCircle className="w-5 h-5 fill-white text-brand-crimson transition-transform group-hover:rotate-12" />
+                <span>Konsultasi Desain (WhatsApp)</span>
+                <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+              </motion.a>
+
+              <motion.a
+                whileHover={{ scale: 1.02, y: -1 }}
+                whileTap={{ scale: 0.98 }}
+                href="#catalog"
+                className="inline-flex items-center justify-center gap-2.5 bg-white/70 hover:bg-white text-brand-earth font-semibold text-base px-6 py-4 rounded-2xl border border-brand-earth/20 shadow-sm backdrop-blur-md transition-all hover:border-brand-crimson/40"
+              >
+                <Sparkles className="w-4 h-4 text-brand-navy" />
+                <span>Katalog Tanaman Hias</span>
+              </motion.a>
+            </div>
+
+            {/* Micro Trust & Social Proof Row */}
+            <div className="mt-7 pt-5 border-t border-brand-earth/15 flex flex-wrap items-center gap-y-2 gap-x-5 sm:gap-x-7 text-xs sm:text-sm text-brand-earth/90">
+              <div className="flex items-center gap-1.5">
+                <div className="flex text-amber-600">
+                  {'★★★★★'.split('').map((star, i) => (
+                    <span key={i} className="text-sm font-bold">
+                      ★
+                    </span>
+                  ))}
+                </div>
+                <span className="font-extrabold text-brand-earth">4.9/5</span>
+                <span className="text-brand-earth/65">(120+ Klien)</span>
+              </div>
+
+              <div className="flex items-center gap-1.5 font-medium">
+                <CheckCircle2 className="w-4 h-4 text-brand-crimson flex-shrink-0" />
+                <span>Garansi Tumbuh 100%</span>
+              </div>
+
+              <div className="flex items-center gap-1.5 font-medium">
+                <CheckCircle2 className="w-4 h-4 text-brand-navy flex-shrink-0" />
+                <span>Survei & Estimasi RAB Gratis</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* ----------------------------------------------------------------- */}
+          {/* Right Column: Visual Stage with Interactive Showcase Card         */}
+          {/* ----------------------------------------------------------------- */}
+          <motion.div
+            initial={{ opacity: 0, x: 25 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+            className="lg:col-span-5 flex flex-col gap-3.5"
+          >
+            {/* Main Showcase Frame */}
+            <div className="relative w-full aspect-[4/3] sm:aspect-[14/11] lg:aspect-[1/1] xl:aspect-[14/12] rounded-[28px] sm:rounded-[36px] overflow-hidden shadow-2xl border-2 border-white/50 group bg-brand-sand-dark/20">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTheme.id}
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6, ease: 'easeOut' }}
+                  className="relative w-full h-full"
+                >
+                  <Image
+                    src={activeTheme.imageUrl}
+                    alt={activeTheme.name}
+                    fill
+                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
+                  />
+                  {/* Gentle Cinematic Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-black/10" />
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Top Floating Badge: Location & Project Tag */}
+              <div className="absolute top-4 left-4 sm:top-5 sm:left-5 right-4 sm:right-5 flex items-center justify-between pointer-events-none">
+                <span className="inline-flex items-center gap-1.5 bg-brand-crimson/95 text-white text-[11px] sm:text-xs font-bold px-3 py-1.5 rounded-full shadow-md backdrop-blur-md">
+                  <Sparkles className="w-3 h-3 text-brand-sand" />
+                  {activeTheme.badge}
+                </span>
+
+                <div className="inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-md text-brand-earth text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+                  <MapPin className="w-3.5 h-3.5 text-brand-navy" />
+                  <span className="truncate max-w-[140px] sm:max-w-none">
+                    {activeTheme.location}
+                  </span>
+                </div>
+              </div>
+
+              {/* Bottom Floating Info Pill */}
+              <div className="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 bg-black/55 backdrop-blur-md rounded-2xl p-3 sm:p-4 border border-white/20 text-white flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                    <ShieldCheck className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm font-bold truncate">
+                      {activeTheme.name}
+                    </p>
+                    <p className="text-[11px] sm:text-xs text-white/80 truncate">
+                      {activeTheme.tagline}
+                    </p>
+                  </div>
+                </div>
+
+                <a
+                  href="#project"
+                  className="hidden sm:inline-flex items-center gap-1 text-xs font-bold text-brand-sand hover:text-white transition-colors flex-shrink-0 bg-white/10 px-3 py-1.5 rounded-lg hover:bg-white/20"
+                >
+                  <span>Lihat Hasil</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Interactive Landscape Theme Switcher (Mini Tabs) */}
+            <div className="bg-white/60 backdrop-blur-md p-1.5 rounded-2xl border border-brand-earth/15 flex items-center justify-between gap-1 shadow-xs">
+              {themes.map((theme) => {
+                const Icon = theme.icon;
+                const isActive = activeTheme.id === theme.id;
+                return (
+                  <button
+                    key={theme.id}
+                    onClick={() => setActiveTheme(theme)}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-bold transition-all ${
+                      isActive
+                        ? 'bg-brand-earth text-white shadow-sm'
+                        : 'text-brand-earth/80 hover:text-brand-earth hover:bg-white/50'
+                    }`}
+                  >
+                    <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-brand-sand' : 'text-brand-earth/60'}`} />
+                    <span className="truncate">{theme.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* ===================================================================== */}
+        {/* LOWER HERO RIBBON: 4-Pillar Luxury Architectural Metrics              */}
+        {/* ===================================================================== */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="mt-10 sm:mt-14 pt-8 border-t border-brand-earth/20 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-brand-earth"
+        >
+          <div className="flex flex-col bg-white/40 backdrop-blur-xs p-4 sm:p-5 rounded-2xl border border-brand-earth/10">
+            <span className="font-extrabold text-3xl sm:text-4xl text-brand-crimson">
+              10+
             </span>
-            <span className="inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-md text-brand-earth text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
-              <Ruler className="w-3.5 h-3.5 text-brand-navy" />
-              Survei Lokasi
+            <span className="text-sm font-bold text-brand-earth mt-1">
+              Tahun Pengalaman
+            </span>
+            <span className="text-xs text-brand-earth/70 mt-0.5">
+              Ratusan taman hunian & villa
             </span>
           </div>
 
-          {/* Floating 3D Botanical Badge on Hero bottom */}
-          <motion.div
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 hidden sm:flex items-center gap-2.5 bg-white/95 backdrop-blur-md py-2 px-3.5 rounded-2xl shadow-xl border border-white/60"
-          >
-            <div className="relative w-9 h-9 rounded-xl overflow-hidden bg-brand-sand/40 flex-shrink-0">
-              <Image
-                src="/images/3d-botanical-plant.jpg"
-                alt="3D Plant"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div>
-              <span className="text-[10px] uppercase tracking-wider font-extrabold text-brand-crimson block">
-                Hortikultura Ilmiah
-              </span>
-              <span className="text-xs font-bold text-brand-earth block">
-                Proteksi Tanaman IPB
-              </span>
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Narrative & High-Converting CTA Box */}
-      <div className="mt-8 sm:mt-12 max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
-        <div className="lg:col-span-8">
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <span className="inline-block text-xs uppercase tracking-widest font-extrabold text-brand-crimson bg-white/80 px-3.5 py-1 rounded-full mb-3 shadow-xs">
-              Jasa Landscape & Tanaman Hias Berkualitas
+          <div className="flex flex-col bg-white/40 backdrop-blur-xs p-4 sm:p-5 rounded-2xl border border-brand-earth/10">
+            <span className="font-extrabold text-3xl sm:text-4xl text-brand-navy">
+              350+
             </span>
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-brand-earth leading-tight">
-              {settings.hero_title}
-            </h1>
-            <p className="mt-3 sm:mt-4 text-brand-earth/85 text-base sm:text-lg leading-relaxed max-w-3xl">
-              {settings.hero_subtitle}
-            </p>
-          </motion.div>
-        </div>
+            <span className="text-sm font-bold text-brand-earth mt-1">
+              Proyek Selesai
+            </span>
+            <span className="text-xs text-brand-earth/70 mt-0.5">
+              Lanskap, kolam koi & relief
+            </span>
+          </div>
 
-        <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3.5 justify-end">
-          <motion.a
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            href={waUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold text-sm sm:text-base px-6 py-4 rounded-2xl shadow-lg transition-colors group"
-          >
-            <MessageCircle className="w-5 h-5 text-white animate-pulse" />
-            <span>Konsultasi WhatsApp</span>
-            <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </motion.a>
+          <div className="flex flex-col bg-white/40 backdrop-blur-xs p-4 sm:p-5 rounded-2xl border border-brand-earth/10">
+            <span className="font-extrabold text-3xl sm:text-4xl text-brand-earth">
+              100%
+            </span>
+            <span className="text-sm font-bold text-brand-earth mt-1">
+              Garansi Tumbuh
+            </span>
+            <span className="text-xs text-brand-earth/70 mt-0.5">
+              Didukung keilmuan hayati IPB
+            </span>
+          </div>
 
-          <motion.a
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            href="#catalog"
-            className="inline-flex items-center justify-center gap-2.5 bg-brand-navy hover:bg-brand-navy-dark text-white font-semibold text-sm sm:text-base px-6 py-4 rounded-2xl shadow-md transition-colors"
-          >
-            <Sprout className="w-5 h-5 text-brand-sand" />
-            <span>Lihat Katalog Tanaman</span>
-          </motion.a>
-        </div>
-      </div>
-
-      {/* Quick Highlights / Trust Bar */}
-      <div className="mt-8 sm:mt-10 pt-6 border-t border-brand-earth/15 max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 text-brand-earth">
-        <div className="flex flex-col">
-          <span className="font-extrabold text-2xl sm:text-3xl text-brand-crimson">10+</span>
-          <span className="text-xs sm:text-sm text-brand-earth/80 font-medium">Tahun Pengalaman</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="font-extrabold text-2xl sm:text-3xl text-brand-navy">350+</span>
-          <span className="text-xs sm:text-sm text-brand-earth/80 font-medium">Proyek Taman Selesai</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="font-extrabold text-2xl sm:text-3xl text-brand-earth">100%</span>
-          <span className="text-xs sm:text-sm text-brand-earth/80 font-medium">Tanaman Pilihan Segar</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="font-extrabold text-2xl sm:text-3xl text-brand-crimson">Free</span>
-          <span className="text-xs sm:text-sm text-brand-earth/80 font-medium">Konsultasi Awal & Survei</span>
-        </div>
+          <div className="flex flex-col bg-white/40 backdrop-blur-xs p-4 sm:p-5 rounded-2xl border border-brand-earth/10">
+            <span className="font-extrabold text-3xl sm:text-4xl text-brand-crimson">
+              Gratis
+            </span>
+            <span className="text-sm font-bold text-brand-earth mt-1">
+              Survei & Desain Awal
+            </span>
+            <span className="text-xs text-brand-earth/70 mt-0.5">
+              RAB transparan tanpa komitmen
+            </span>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

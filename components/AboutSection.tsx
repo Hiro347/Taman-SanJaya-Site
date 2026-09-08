@@ -55,7 +55,7 @@ export default function AboutSection({ settings }: AboutSectionProps) {
             </p>
 
             <p className="mt-3 text-white/80 text-base sm:text-lg leading-relaxed">
-              Dengan pengalaman menangani ratusan proyek taman residensial dan komersial, kami memadukan keahlian teknik sipil lanskap dengan kepekaan botani mendalam untuk menciptakan karya hijau yang abadi dan minim perawatan.
+              Diinisiasi oleh <strong>Ergoputra Kusuma Sanjaya</strong> dengan latar belakang keilmuan <strong>Proteksi Tanaman IPB University</strong>, kami memadukan estetika arsitektur lanskap dengan riset kesehatan biologis tanaman agar setiap karya hijau tumbuh subur, tahan hama, dan bergaransi hidup.
             </p>
 
             {/* Pillar Grid */}
@@ -80,16 +80,17 @@ export default function AboutSection({ settings }: AboutSectionProps) {
           </div>
 
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-sm aspect-[4/5] rounded-3xl overflow-hidden border-4 border-brand-sand/30 shadow-2xl">
+            <div className="relative w-full max-w-sm aspect-[4/5] rounded-3xl overflow-hidden border-4 border-brand-sand/40 shadow-2xl group">
               <Image
-                src="https://images.unsplash.com/photo-1598902108854-10e335adac99?auto=format&fit=crop&w=800&q=80"
-                alt="Tentang Kami Taman San Jaya"
+                src="/images/founder.jpg"
+                alt="Ergoputra Kusuma Sanjaya - Founder Taman San Jaya"
                 fill
-                className="object-cover"
+                className="object-cover object-top hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-earth/80 via-transparent to-transparent flex flex-col justify-end p-6">
-                <span className="text-brand-sand text-xs font-bold tracking-wider uppercase">Workshop Nursery</span>
-                <p className="text-white text-sm font-medium mt-1">Bibit Unggul & Tim Terlatih</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-earth/90 via-black/20 to-transparent flex flex-col justify-end p-6">
+                <span className="text-brand-sand text-xs font-bold tracking-wider uppercase">Founder & Horticulturalist</span>
+                <p className="text-white text-base font-bold mt-0.5">Ergoputra Kusuma Sanjaya</p>
+                <p className="text-white/80 text-xs mt-0.5">Departemen Proteksi Tanaman • IPB University</p>
               </div>
             </div>
           </div>

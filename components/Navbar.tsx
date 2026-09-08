@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Menu, X, PhoneCall } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { SiteSettings } from '@/lib/types';
 
 interface NavbarProps {
@@ -16,8 +17,6 @@ export default function Navbar({ settings }: NavbarProps) {
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'Service', href: '#service' },
-    { name: '3D Concept', href: '#3d-concept' },
-    { name: 'Founder', href: '#founder' },
     { name: 'Project', href: '#project' },
     { name: 'Catalog', href: '#catalog' },
     { name: 'About Us', href: '#about' },
@@ -29,7 +28,12 @@ export default function Navbar({ settings }: NavbarProps) {
 
   return (
     <header className="w-full px-5 sm:px-8 lg:px-12 pt-6 sm:pt-8 pb-4">
-      <div className="flex items-center justify-between">
+      <motion.div
+        initial={{ opacity: 0, y: -25 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        className="flex items-center justify-between"
+      >
         {/* Brand Logo matching Figma mockup */}
         <Link href="#home" className="flex items-center gap-3.5 group">
           <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex-shrink-0 transition-transform group-hover:scale-105">
@@ -84,7 +88,7 @@ export default function Navbar({ settings }: NavbarProps) {
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile Drawer */}
       {isOpen && (
