@@ -75,8 +75,8 @@ export default function HeroSection({ settings }: HeroSectionProps) {
   )}`;
 
   return (
-    <section id="home" className="w-full px-4 sm:px-8 lg:px-12 pt-2 sm:pt-4 pb-12 sm:pb-16 flex flex-col justify-between">
-      <div className="max-w-7xl mx-auto w-full">
+    <section id="home" className="w-full pt-2 sm:pt-4 pb-0 flex flex-col justify-between overflow-hidden relative">
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-8 lg:px-12">
         {/* ===================================================================== */}
         {/* UPPER HERO STAGE: Full Viewport Opening Fold with Scroll Parallax     */}
         {/* ===================================================================== */}
@@ -295,88 +295,25 @@ export default function HeroSection({ settings }: HeroSectionProps) {
           </div>
         </motion.div>
       </motion.div>
+    </div>
 
       {/* ===================================================================== */}
-      {/* LOWER HERO RIBBON: 4-Pillar Luxury Architectural Metrics              */}
+      {/* FULL-WIDTH NATURAL GARDEN SECTION DIVIDER: Group 1 SVG                */}
+      {/* Tepat di bawah "Gulir untuk Menjelajah", membentang penuh kanan-kiri  */}
       {/* ===================================================================== */}
       <motion.div
-        initial={{ opacity: 0, y: 25 }}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-40px' }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-        className="mt-8 sm:mt-12 pt-8 border-t border-brand-earth/20 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 text-brand-earth"
+        viewport={{ once: true, margin: '-20px' }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full relative -mt-2 sm:-mt-4 pointer-events-none select-none z-10"
       >
-          <div className="flex flex-col bg-white/40 backdrop-blur-xs p-4 sm:p-5 rounded-2xl border border-brand-earth/10">
-            <span className="font-extrabold text-3xl sm:text-4xl text-brand-crimson">
-              10+
-            </span>
-            <span className="text-sm font-bold text-brand-earth mt-1">
-              Tahun Pengalaman
-            </span>
-            <span className="text-xs text-brand-earth/70 mt-0.5">
-              Ratusan taman hunian & villa
-            </span>
-          </div>
-
-          <div className="flex flex-col bg-white/40 backdrop-blur-xs p-4 sm:p-5 rounded-2xl border border-brand-earth/10">
-            <span className="font-extrabold text-3xl sm:text-4xl text-brand-navy">
-              350+
-            </span>
-            <span className="text-sm font-bold text-brand-earth mt-1">
-              Proyek Selesai
-            </span>
-            <span className="text-xs text-brand-earth/70 mt-0.5">
-              Lanskap, kolam koi & relief
-            </span>
-          </div>
-
-          <div className="flex flex-col bg-white/40 backdrop-blur-xs p-4 sm:p-5 rounded-2xl border border-brand-earth/10">
-            <span className="font-extrabold text-3xl sm:text-4xl text-brand-earth">
-              100%
-            </span>
-            <span className="text-sm font-bold text-brand-earth mt-1">
-              Garansi Tumbuh
-            </span>
-            <span className="text-xs text-brand-earth/70 mt-0.5">
-              Didukung keilmuan hayati IPB
-            </span>
-          </div>
-
-          <div className="flex flex-col bg-white/40 backdrop-blur-xs p-4 sm:p-5 rounded-2xl border border-brand-earth/10">
-            <span className="font-extrabold text-3xl sm:text-4xl text-brand-crimson">
-              Gratis
-            </span>
-            <span className="text-sm font-bold text-brand-earth mt-1">
-              Survei & Desain Awal
-            </span>
-            <span className="text-xs text-brand-earth/70 mt-0.5">
-              RAB transparan tanpa komitmen
-            </span>
-          </div>
-        </motion.div>
-
-        {/* ===================================================================== */}
-        {/* NATURAL GARDEN SECTION DIVIDER: Rockery & Alpine Flowers (Group 1)    */}
-        {/* ===================================================================== */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-20px' }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full flex justify-center items-center mt-10 sm:mt-16 -mb-6 sm:-mb-10 pointer-events-none select-none relative"
-        >
-          <div className="relative w-full max-w-lg sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl aspect-[354/99]">
-            <Image
-              src="/images/group-1-hd.png"
-              alt="Pembatas Taman San Jaya - Ornamen Batuan & Bunga Alami"
-              fill
-              priority
-              className="object-contain drop-shadow-[0_12px_20px_rgba(92,64,51,0.18)]"
-              sizes="(max-width: 768px) 95vw, (max-width: 1200px) 85vw, 1100px"
-            />
-          </div>
-        </motion.div>
-      </div>
+        <img
+          src="/images/group-1.svg"
+          alt="Pembatas Taman San Jaya - Ornamen Batuan & Bunga Alami"
+          className="w-full h-auto block drop-shadow-[0_12px_24px_rgba(92,64,51,0.18)]"
+        />
+      </motion.div>
     </section>
   );
 }
