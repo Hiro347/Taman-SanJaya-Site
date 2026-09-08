@@ -354,6 +354,28 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             </span>
           </div>
         </motion.div>
+
+        {/* ===================================================================== */}
+        {/* NATURAL GARDEN SECTION DIVIDER: Rockery & Alpine Flowers (Group 1)    */}
+        {/* ===================================================================== */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-20px' }}
+          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full flex justify-center items-center mt-10 sm:mt-16 -mb-6 sm:-mb-10 pointer-events-none select-none relative"
+        >
+          <div className="relative w-full max-w-lg sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl aspect-[354/99]">
+            <Image
+              src="/images/group-1-hd.png"
+              alt="Pembatas Taman San Jaya - Ornamen Batuan & Bunga Alami"
+              fill
+              priority
+              className="object-contain drop-shadow-[0_12px_20px_rgba(92,64,51,0.18)]"
+              sizes="(max-width: 768px) 95vw, (max-width: 1200px) 85vw, 1100px"
+            />
+          </div>
+        </motion.div>
       </div>
     </section>
   );
