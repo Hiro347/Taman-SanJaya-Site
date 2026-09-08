@@ -1,6 +1,6 @@
 # Taman San Jaya (成功之园) - Website Landscape & Katalog Tanaman Hias
 
-Website resmi **Taman San Jaya** untuk jasa landscape architecture, pembuatan taman minimalis modern, tropis, kolam ikan koi, relief tebing alami, perawatan berkala, serta katalog ragam tanaman hias. 
+Website resmi **Taman San Jaya** untuk jasa landscape architecture, pembuatan taman minimalis modern, tropis, relief tebing alami, perawatan berkala, serta katalog ragam tanaman hias. 
 
 Website ini dibangun menggunakan **Next.js (App Router)**, **Tailwind CSS**, **Framer Motion**, dan **Supabase (Database, Auth, Storage)** yang 100% dioptimalkan untuk deployment ke **Vercel**.
 
@@ -20,7 +20,7 @@ Website ini dibangun menggunakan **Next.js (App Router)**, **Tailwind CSS**, **F
 
 ### 1. Halaman Publik (Pengunjung)
 - **Hero Section Dinamis**: Banner taman tropis berbingkai rounded elegan (`rounded-3xl`) dengan CTA langsung ke WhatsApp. Foto & teks headline dapat diubah lewat Admin Panel.
-- **Layanan Jasa**: Jasa Perencanaan (Desain 2D/3D), Jasa Pembuatan (Hardscape, Kolam Koi, Relief), dan Jasa Perawatan Berkala. Masing-masing dilengkapi tombol konsultasi khusus via WA.
+- **Layanan Jasa**: Jasa Perencanaan (Desain 2D/3D), Jasa Pembuatan (Hardscape, Relief Tebing, Air Mancur), dan Jasa Perawatan Berkala. Masing-masing dilengkapi tombol konsultasi khusus via WA.
 - **Katalog Tanaman Hias**: Dilengkapi pencarian instan (live search), filter kategori (Indoor, Outdoor, Pohon & Palem, Bonsai), info harga, tips perawatan, status stok, serta tombol pemesanan WhatsApp otomatis.
 - **Portofolio Proyek**: Dokumentasi hasil karya taman nyata dengan kategori dan lokasi pengerjaan.
 - **Tentang Kami & Alur Kerja**: Filosofi brand, 4 pilar keunggulan, serta 4 langkah mudah alur kerja dari konsultasi hingga serah terima garansi.

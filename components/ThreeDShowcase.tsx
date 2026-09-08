@@ -54,9 +54,9 @@ export default function ThreeDShowcase({ settings }: ThreeDShowcaseProps) {
   const hotspots: Hotspot[] = [
     {
       id: 1,
-      title: 'Kolam Koi Kaca & Filtrasi 4 Chamber',
-      category: 'Aquatic Engineering',
-      description: 'Dinding kaca tempered 12mm dengan sistem aerasi bawah air dan biologi filtrasi agar air tetap sejernih kristal tanpa kuras berkala.',
+      title: 'Water Feature & Ornamen Air Alami',
+      category: 'Aquatic Landscape',
+      description: 'Sirkulasi air mengalir alami dengan sistem filtrasi tersembunyi agar gemercik air senantiasa jernih dan menyejukkan taman.',
       icon: <Waves className="w-4 h-4 text-cyan-400" />,
       x: '52%',
       y: '72%',

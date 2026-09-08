@@ -264,7 +264,7 @@ export default function AdminProjectsPage() {
                 <input
                   type="text"
                   required
-                  placeholder="Contoh: Taman Tropis & Kolam Koi Residensial"
+                  placeholder="Contoh: Taman Minimalis & Rumput Hijau Residensial"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
@@ -283,10 +283,10 @@ export default function AdminProjectsPage() {
                   >
                     <option value="Taman Tropis">Taman Tropis</option>
                     <option value="Taman Minimalis">Taman Minimalis</option>
-                    <option value="Kolam Koi">Kolam Ikan Koi</option>
-                    <option value="Taman Kering (Zen)">Taman Kering (Zen Garden)</option>
+                    <option value="Perencanaan 3D">Perencanaan 3D Lanskap</option>
+                    <option value="Relief Tebing & Air">Relief Tebing & Air Mancur</option>
+                    <option value="Pengerjaan Lanskap">Pengerjaan & Konstruksi Lanskap</option>
                     <option value="Vertical Garden">Vertical Garden</option>
-                    <option value="Relief & Gazebo">Relief Tebing & Gazebo</option>
                   </select>
                 </div>
 

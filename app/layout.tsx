@@ -12,7 +12,7 @@ const jakarta = Plus_Jakarta_Sans({
 export const metadata: Metadata = {
   title: 'Taman San Jaya (成功之园) - Jasa Pembuatan Taman & Tanaman Hias',
   description:
-    'Layanan profesional landscape design, perencanaan 3D, pembuatan taman minimalis, tropis, kolam ikan koi, relief tebing, perawatan berkala, serta katalog tanaman hias berkualitas.',
+    'Layanan profesional landscape design, perencanaan 3D, pembuatan taman minimalis, tropis, relief tebing alami, air mancur, perawatan berkala, serta katalog tanaman hias berkualitas.',
   keywords: [
     'taman san jaya',
     'jasa pembuatan taman',
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     'katalog tanaman hias',
     'lidah mertua',
     'monstera',
-    'kolam koi minimalis',
+    'relief tebing alami',
   ],
   openGraph: {
     title: 'Taman San Jaya - Jasa Pembuatan Taman & Tanaman Hias',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
+        url: '/images/proyek-4.avif',
         width: 1200,
         height: 630,
         alt: 'Taman San Jaya Landscape',

@@ -191,8 +191,8 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                       <option value="Jasa Perawatan (Maintenance) Taman Berkala">
                         3. Jasa Perawatan (Maintenance) Taman Berkala
                       </option>
-                      <option value="Pembuatan Kolam Ikan Koi & Relief Alami">
-                        4. Pembuatan Kolam Ikan Koi & Relief Alami
+                      <option value="Pembuatan Relief Tebing & Air Mancur Alami">
+                        4. Pembuatan Relief Tebing & Air Mancur Alami
                       </option>
                       <option value="Pemesanan Tanaman Hias & Pohon Peneduh">
                         5. Pemesanan Tanaman Hias & Pohon Peneduh
@@ -206,7 +206,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
                     </label>
                     <textarea
                       rows={3}
-                      placeholder="Contoh: Luas lahan sekitar 6x5m, ingin gaya tropis minimalis dengan rumput jepang dan kolam koi kecil..."
+                      placeholder="Contoh: Luas lahan sekitar 6x5m, ingin gaya tropis minimalis dengan rumput jepang dan pohon peneduh..."
                       value={formData.notes}
                       onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                       className="w-full px-4 py-3 rounded-xl border border-brand-earth/20 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 focus:border-brand-crimson transition-all text-brand-earth placeholder:text-brand-earth/40"

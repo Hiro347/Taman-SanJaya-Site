@@ -18,38 +18,38 @@ interface HeroSectionProps {
 const heroSlides = [
   {
     id: 1,
-    title: 'Taman Tropis Asri & Gazebo Santai',
-    category: 'Taman Tropis Modern',
-    location: 'Hunian Residensial Jakarta & Bogor',
-    image: '/images/hero-garden.jpg',
+    title: 'Taman Minimalis Modern & Rumput Hijau Rapat',
+    category: 'Taman Minimalis',
+    location: 'Hunian Residensial Mewah',
+    image: '/images/proyek-4.avif',
   },
   {
     id: 2,
-    title: 'Kolam Ikan Koi Minimalis & Tebing Andesit',
-    category: 'Kolam Koi Modern',
-    location: 'BSD City, Tangerang',
-    image: 'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?auto=format&fit=crop&w=1600&q=80',
+    title: 'Taman Tropis Alami & Jalan Setapak Villa',
+    category: 'Taman Tropis',
+    location: 'Kawasan Villa & Resort',
+    image: '/images/proyek-2.jpg',
   },
   {
     id: 3,
-    title: 'Hamparan Rumput Hijau & Pohon Peneduh',
-    category: 'Lanskap Hunian Privat',
-    location: 'Sentul City & Puncak',
-    image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1600&q=80',
+    title: 'Perencanaan Desain Lanskap 3D Kawasan',
+    category: 'Perencanaan 3D',
+    location: 'Masterplan Kawasan Terbuka',
+    image: '/images/proyek-1.jpeg',
   },
   {
     id: 4,
-    title: 'Zen Garden Kering & Koral Putih Alami',
-    category: 'Taman Gaya Jepang',
-    location: 'Menteng, Jakarta Pusat',
-    image: 'https://images.unsplash.com/photo-1558904541-efa8c4a5c963?auto=format&fit=crop&w=1600&q=80',
+    title: 'Taman Air Mancur Relief Batu Alam & Gazebo',
+    category: 'Relief Tebing & Air',
+    location: 'Courtyard Hunian Asri',
+    image: '/images/proyek-3.jpg',
   },
   {
     id: 5,
-    title: 'Vertical Garden Tropis & Irigasi Otomatis',
-    category: 'Living Green Wall',
-    location: 'Area Komersial & Rooftop',
-    image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1600&q=80',
+    title: 'Pengerjaan & Konstruksi Lanskap Riil',
+    category: 'Konstruksi Lanskap',
+    location: 'Workshop & Nursery',
+    image: '/images/Pembuatan.jpg',
   },
 ];
 
@@ -177,7 +177,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
               className="mt-1 sm:mt-1.5 text-base sm:text-2xl lg:text-3xl font-serif italic font-bold text-brand-sand drop-shadow-md tracking-wide"
             >
-              Taman Tropis Asri & Kolam Koi Impian
+              Taman Tropis Asri & Ruang Hijau Impian
             </motion.p>
 
             {/* Ringkasan Produk Pendukung */}
@@ -187,7 +187,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="mt-2 sm:mt-2.5 text-white/90 text-xs sm:text-sm lg:text-base max-w-2xl mx-auto font-normal drop-shadow leading-relaxed"
             >
-              Spesialis pembuatan taman tropis, kolam koi modern, & tanaman hias berkualitas dengan garansi tumbuh 100%.
+              Spesialis desain lanskap 3D, pembuatan taman tropis, relief tebing alami, & perawatan bergaransi tumbuh 100%.
             </motion.p>
 
             {/* Call to Action - Consultation Button */}

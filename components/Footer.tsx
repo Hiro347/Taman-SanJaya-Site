@@ -36,7 +36,7 @@ export default function Footer({ settings }: FooterProps) {
             </div>
 
             <p className="mt-4 text-white/75 text-sm leading-relaxed max-w-md">
-              Penyedia jasa landscape profesional, perencanaan visual taman 2D/3D, konstruksi kolam koi, relief alami, perawatan berkala, serta katalog ragam tanaman hias berkualitas tinggi.
+              Penyedia jasa landscape profesional, perencanaan visual taman 2D/3D, pembuatan taman tropis & minimalis, relief tebing alami, perawatan berkala, serta katalog ragam tanaman hias berkualitas tinggi.
             </p>
 
             <div className="mt-6 flex items-center gap-3">

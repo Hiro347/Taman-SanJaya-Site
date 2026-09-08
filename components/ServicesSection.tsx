@@ -27,7 +27,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
     {
       id: 'pembuatan',
       title: 'JASA PEMBUATAN',
-      desc: 'Pembuatan taman tropis modern, kolam ikan koi dengan filtrasi 4-chamber, relief tebing air terjun, decking kayu, hardscape, dan penanaman bergaransi tumbuh.',
+      desc: 'Pembuatan taman tropis modern, taman minimalis, relief tebing air terjun alami, stepping stone, hardscape, dan penanaman bergaransi tumbuh 100%.',
       imageUrl: '/images/Pembuatan.jpg',
       slug: 'jasa-pembuatan',
       icon: (

@@ -31,7 +31,7 @@ export default function ProjectSection({ projects, settings }: ProjectSectionPro
           Koleksi Proyek Taman San Jaya
         </h2>
         <p className="mt-4 text-brand-earth/80 text-base sm:text-lg">
-          Inspirasi nyata dari proyek taman hunian privat, villa, perkantoran, dan kolam koi yang telah kami selesaikan dengan kepuasan pelanggan.
+          Inspirasi nyata dari proyek taman hunian privat, villa, kawasan publik, dan relief tebing alami yang telah kami selesaikan dengan kepuasan pelanggan.
         </p>
 
         {/* Category Filters with animated tab pill */}
