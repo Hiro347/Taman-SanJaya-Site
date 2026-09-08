@@ -7,6 +7,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 export default function ScrollRotatingLogo3D() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -61,8 +62,7 @@ export default function ScrollRotatingLogo3D() {
 
     // 4. Pivot Group for Perfectly Centered Rotation
     const pivot = new THREE.Group();
-    // Start above viewport for top-to-bottom entrance
-    pivot.position.y = 1.5;
+    pivot.position.y = 0;
     scene.add(pivot);
 
     let modelMesh: THREE.Group | null = null;
@@ -118,24 +118,47 @@ export default function ScrollRotatingLogo3D() {
     let currentRotX = 0;
 
     let targetY = 0;
-    let currentY = 1.5; // Starts at 1.5 and glides to 0 (top-to-bottom entrance)
+    let currentY = 0;
 
     let mouseX = 0;
     let mouseY = 0;
 
     const onScroll = () => {
       const scrollY = window.scrollY;
-      const maxScroll = Math.max(
-        document.documentElement.scrollHeight - window.innerHeight,
-        1
-      );
-      const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+      const projectEl = document.getElementById('project');
 
-      // Horizontal rotation around Y-axis (slow, majestic 1 full 360° rotation over full page)
-      targetRotY = progress * Math.PI * 2;
+      if (projectEl) {
+        const rect = projectEl.getBoundingClientRect();
+        // Model 3D mulai aktif saat pengguna scroll mencapai area Koleksi Proyek
+        const inProjectZone = rect.top <= window.innerHeight * 0.75;
+        setIsVisible(inProjectZone);
 
-      // Vertical parallax shift
-      targetY = (progress - 0.5) * -0.35;
+        if (inProjectZone) {
+          const projectPageTop = projectEl.offsetTop;
+          const scrollFromProject = Math.max(0, scrollY - (projectPageTop - window.innerHeight * 0.5));
+          const totalRemaining = Math.max(
+            document.documentElement.scrollHeight - (projectPageTop - window.innerHeight * 0.5) - window.innerHeight,
+            1
+          );
+          const progress = Math.min(Math.max(scrollFromProject / totalRemaining, 0), 1);
+
+          // Rotasi anggun selama berada di seksi proyek hingga bawah
+          targetRotY = progress * Math.PI * 2.5;
+          targetY = (progress - 0.5) * -0.3;
+        } else {
+          targetRotY = 0;
+          targetY = 0.2;
+        }
+      } else {
+        const maxScroll = Math.max(
+          document.documentElement.scrollHeight - window.innerHeight,
+          1
+        );
+        const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+        setIsVisible(progress > 0.25);
+        targetRotY = progress * Math.PI * 2;
+        targetY = (progress - 0.5) * -0.35;
+      }
     };
 
     const onMouseMove = (e: MouseEvent) => {
@@ -148,6 +171,7 @@ export default function ScrollRotatingLogo3D() {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    onScroll(); // initial check
 
     // 7. Resize Handler
     const onResize = () => {
@@ -206,11 +230,13 @@ export default function ScrollRotatingLogo3D() {
       aria-hidden="true"
       className="fixed inset-0 pointer-events-none z-0 overflow-hidden flex items-center justify-center"
     >
-      {/* 3D WebGL Canvas Container centered in the viewport */}
+      {/* 3D WebGL Canvas Container: hanya muncul saat scroll sampai di Koleksi Proyek */}
       <div
         ref={containerRef}
-        className={`w-[360px] h-[360px] sm:w-[500px] sm:h-[500px] lg:w-[650px] lg:h-[650px] transition-opacity duration-1000 ${
-          isLoaded ? 'opacity-[0.25] sm:opacity-[0.30]' : 'opacity-0'
+        className={`w-[360px] h-[360px] sm:w-[500px] sm:h-[500px] lg:w-[650px] lg:h-[650px] transition-all duration-700 ease-out ${
+          isLoaded && isVisible
+            ? 'opacity-[0.25] sm:opacity-[0.30] scale-100'
+            : 'opacity-0 scale-95 pointer-events-none'
         }`}
         style={{
           filter: 'drop-shadow(0 25px 35px rgba(92, 64, 51, 0.35))',
