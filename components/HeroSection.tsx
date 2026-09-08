@@ -311,7 +311,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
         <img
           src="/images/group-1.svg"
           alt="Pembatas Taman San Jaya - Ornamen Batuan & Bunga Alami"
-          className="w-full h-auto block drop-shadow-[0_12px_24px_rgba(92,64,51,0.18)]"
+          className="w-full h-auto block"
         />
       </motion.div>
     </section>
