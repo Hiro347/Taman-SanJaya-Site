@@ -11,14 +11,17 @@ interface FooterProps {
 export default function Footer({ settings }: FooterProps) {
   return (
     <div className="w-full relative mt-12 sm:mt-16">
-      {/* Ornamen Bunga Liar Alami (Group 2.svg) Membentang Tepat di Atas Footer */}
+      {/* Ornamen Bunga Liar Alami (Group 2) Membentang Tepat di Atas Footer */}
       <div className="w-full relative -mb-1 sm:-mb-1.5 pointer-events-none select-none z-10">
-        <img
-          src="/images/group-2.svg"
-          alt="Ornamen Bunga Liar Alami Taman San Jaya"
-          className="w-full h-auto block"
-          loading="lazy"
-        />
+        <picture>
+          <source srcSet="/images/group-2.webp" type="image/webp" />
+          <img
+            src="/images/group-2.png"
+            alt="Ornamen Bunga Liar Alami Taman San Jaya"
+            className="w-full h-auto block"
+            loading="lazy"
+          />
+        </picture>
       </div>
 
       <footer className="w-full bg-brand-earth text-white pt-14 pb-12">
