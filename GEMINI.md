@@ -74,6 +74,7 @@ The brand visual language is inspired by high-end architectural monographs, orga
 │  │  [CatalogSection - Plant Catalog + Care Guides]   │  │
 │  │  [AboutSection - Founder Ergoputra Kusuma IPB]    │  │
 │  │  [ContactSection - Direct WhatsApp Form]          │  │
+│  │  [Group 2.svg Wildflower Meadow Divider]          │  │
 │  │  [Footer with navigation, workshop address]       │  │
 │  └──────────────────────────────────────────────────┘  │
 │ FloatingWhatsApp widget (bottom-right pulse)           │
@@ -128,6 +129,10 @@ The brand visual language is inspired by high-end architectural monographs, orga
    - Brand story of *Taman San Jaya (成功之园)* and IPB University plant protection science.
    - Founder card of **Ergoputra Kusuma Sanjaya** with `/images/founder.jpg`.
 
+8. **`components/Footer.tsx`**:
+   - **Wildflower Crown**: Topped seamlessly by [`Group 2.svg`](/images/group-2.svg) spanning 100% full width (`w-full`) edge-to-edge right above the dark earth (`bg-brand-earth`) footer container.
+   - Features brand information, page navigation, operational hours, WhatsApp contact, and admin login gateway.
+
 ---
 
 ## 5. 📁 Asset Catalog & Storage Map
@@ -144,6 +149,7 @@ All production-served assets reside in `public/images/`, while original raw sour
 | `/images/Perencanaan.jpg` | 3D Blueprint & Architectural Landscape Design | ServicesSection |
 | `/images/Perawatan.jpg` | Plant Pathology & IPB Horticultural Maintenance | ServicesSection |
 | `/images/Group 1.svg` | Edge-to-edge natural rockery & flower section divider | HeroSection bottom |
+| `/images/Group 2.svg` | Edge-to-edge natural wildflower meadow section divider | Footer top crown |
 | `/images/image 13.svg` | Hanging botanical ivy bush | Top-right corner of layout |
 | `/models/LogoTamanSanjaya.glb` | 3D GLB brand logo model | ScrollRotatingLogo3D |
 | `/images/logo.png` | Official brand logo | Navbar, Footer |
@@ -170,5 +176,5 @@ Before submitting any code change:
 1. **Type & Build Check**: Run `npm run build` — must exit with code 0 without TypeScript or lint errors.
 2. **Koi Prohibition**: Ensure no references to koi fish or koi ponds are introduced.
 3. **Palette Integrity**: Use only official `#D8CDAE`, `#990633`, `#174A73`, `#5C4033` tokens.
-4. **Divider Integrity**: Ensure `Group 1.svg` remains full-width (`w-full`) at the bottom of the Hero Section.
+4. **Divider Integrity**: Ensure `Group 1.svg` remains full-width (`w-full`) at the bottom of the Hero Section and `Group 2.svg` remains full-width (`w-full`) crowned above the Footer.
 5. **3D Logo Rule**: Ensure `ScrollRotatingLogo3D` remains hidden above `#project`.

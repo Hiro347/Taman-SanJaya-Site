@@ -10,8 +10,19 @@ interface FooterProps {
 
 export default function Footer({ settings }: FooterProps) {
   return (
-    <footer className="w-full bg-brand-earth text-white mt-16 pt-16 pb-12 border-t border-brand-earth-light/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="w-full relative mt-12 sm:mt-16">
+      {/* Ornamen Bunga Liar Alami (Group 2.svg) Membentang Tepat di Atas Footer */}
+      <div className="w-full relative -mb-1 sm:-mb-1.5 pointer-events-none select-none z-10">
+        <img
+          src="/images/group-2.svg"
+          alt="Ornamen Bunga Liar Alami Taman San Jaya"
+          className="w-full h-auto block"
+          loading="lazy"
+        />
+      </div>
+
+      <footer className="w-full bg-brand-earth text-white pt-14 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-white/10">
           
           {/* Brand Info */}
@@ -124,6 +135,7 @@ export default function Footer({ settings }: FooterProps) {
           </div>
         </div>
       </div>
-    </footer>
+      </footer>
+    </div>
   );
 }
