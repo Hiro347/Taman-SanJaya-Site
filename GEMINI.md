@@ -88,11 +88,12 @@ The brand visual language is inspired by high-end architectural monographs, orga
    - Wrapped with `<SmoothScroll />` powered by **Lenis** for continuous momentum physics.
    - Ambient background uses pre-rendered `/images/background-blur.webp` for zero CPU blur filter lag.
    - Renders the outer elevated sand canvas (`bg-[#D8CDAE] rounded-[28px] sm:rounded-[36px] lg:rounded-[44px]`).
-   - Top-right corner features the clinging ivy bush: [`image 13.svg`](/images/image-13.svg).
-   - Hosts `<ScrollRotatingLogo3D />` in the background.
+   - Top-right corner features the clinging ivy bush: [`image-13.webp`](/images/image-13.webp) with fallback to [`image-13.svg`](/images/image-13.svg).
+   - Hosts `<ScrollRotatingLogoWrapper />` which dynamically lazy-loads Three.js and the 3D model only upon user scroll or idle, eliminating initial bundle weight.
 
-2. **`components/ScrollRotatingLogo3D.tsx`**:
+2. **`components/ScrollRotatingLogo3D.tsx` & `components/ScrollRotatingLogoWrapper.tsx`**:
    - **Crucial Rule**: The 3D GLB logo model is **hidden (`opacity-0`)** at the top of the page (Hero & Services).
+   - Wrapped by `ScrollRotatingLogoWrapper` with Next.js dynamic import (`ssr: false`) and scroll-intent trigger. Three.js runtime and GLB file are deferred from first paint.
    - It **only fades in and begins rotating when the user scrolls down to the Project Section (`#project`)**.
    - If user scrolls back up above `#project`, it smoothly fades back to `opacity-0`.
 
@@ -153,10 +154,10 @@ All production-served assets reside in `public/images/`, while original raw sour
 | `/images/group-1.svg` | Edge-to-edge natural rockery & flower section divider | HeroSection bottom |
 | `/images/group-3.svg` | Cascading natural bougainvillea floral garland divider | FloralDivider (between Project & Catalog) |
 | `/images/group-2.png`, `group-2.webp` | Edge-to-edge natural wildflower meadow section divider | Footer top crown |
-| `/images/image-13.svg` | Hanging botanical ivy bush | Top-right corner of layout |
-| `/models/LogoTamanSanjaya.glb` | 3D GLB brand logo model | ScrollRotatingLogo3D |
+| `/images/image-13.svg`, `image-13.webp` | Hanging botanical ivy bush | Top-right corner of layout |
+| `/models/LogoTamanSanjaya.glb` | 3D GLB brand logo model (Draco + WebP compressed) | ScrollRotatingLogo3D |
 | `/images/logo.png` | Official brand logo | Navbar, Footer |
-| `/images/founder.jpg` | Founder portrait (Ergoputra Kusuma Sanjaya) | AboutSection |
+| `/images/founder.jpg`, `founder.webp` | Founder portrait (Ergoputra Kusuma Sanjaya) | AboutSection |
 | `/images/lidah-mertua.jpg` | Sansevieria plant photography | CatalogSection |
 | `/images/monstera-janda-bolong.jpg` | Monstera Adansonii photography | CatalogSection |
 | `/images/aglaonema.jpg` | Aglaonema plant photography | CatalogSection |

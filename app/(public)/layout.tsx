@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import { getSiteSettings } from '@/lib/data';
 
-import ScrollRotatingLogo3D from '@/components/ScrollRotatingLogo3D';
+import ScrollRotatingLogoWrapper from '@/components/ScrollRotatingLogoWrapper';
 import SmoothScroll from '@/components/SmoothScroll';
 
 // Keep page dynamically updated when settings change
@@ -42,18 +42,21 @@ export default async function PublicLayout({
       {/* ========================================================================= */}
       <div className="relative z-10 pt-[15px] px-3 sm:px-5 md:px-[24px] pb-12 w-full mx-auto">
         <div className="relative">
-          {/* Hanging Ivy / Bush (image 13.svg) Clinging at Top-Right Website Corner */}
+          {/* Hanging Ivy / Bush Clinging at Top-Right Website Corner */}
           <div className="absolute -top-3 sm:-top-5 -right-2 sm:-right-4 lg:-right-6 z-40 pointer-events-none select-none w-20 sm:w-28 md:w-32 lg:w-36 aspect-[63/84]">
-            <img
-              src="/images/image-13.svg"
-              alt="Tanaman Hias Merambat Taman San Jaya"
-              className="w-full h-auto block drop-shadow-[0_8px_16px_rgba(0,0,0,0.18)]"
-            />
+            <picture>
+              <source srcSet="/images/image-13.webp" type="image/webp" />
+              <img
+                src="/images/image-13.svg"
+                alt="Tanaman Hias Merambat Taman San Jaya"
+                className="w-full h-auto block drop-shadow-[0_8px_16px_rgba(0,0,0,0.18)]"
+              />
+            </picture>
           </div>
 
           <div className="bg-[#D8CDAE] rounded-[28px] sm:rounded-[36px] lg:rounded-[44px] shadow-2xl border border-[#c5b791]/60 overflow-hidden flex flex-col min-h-[92vh] relative">
-            {/* 3D Rotating Logo Ambient Background on Scroll */}
-            <ScrollRotatingLogo3D />
+            {/* 3D Rotating Logo Ambient Background on Scroll (Lazy-loaded) */}
+            <ScrollRotatingLogoWrapper />
 
           <div className="relative z-10 flex flex-col flex-1">
             {/* Header / Navbar at the top of the card */}
