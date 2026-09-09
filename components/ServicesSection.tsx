@@ -205,7 +205,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
                           onClick={(e) => {
                             e.stopPropagation();
                           }}
-                          className="inline-flex items-center gap-1.5 bg-[#74A12E] hover:bg-[#648F24] text-white text-xs font-black px-4 sm:px-5 py-2 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95 uppercase tracking-wider"
+                          className="inline-flex items-center gap-1.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs font-black px-4 sm:px-5 py-2 rounded-full shadow-lg shadow-brand-crimson/40 transition-all hover:scale-105 active:scale-95 uppercase tracking-wider"
                         >
                           <span>LIHAT PROYEK</span>
                         </a>
@@ -307,7 +307,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
                       <div className="flex items-center gap-2">
                         <a
                           href="#project"
-                          className="inline-flex items-center gap-1.5 bg-[#74A12E] text-white text-xs font-black px-4 py-2 rounded-full shadow-md uppercase tracking-wide"
+                          className="inline-flex items-center gap-1.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs font-black px-4 py-2 rounded-full shadow-md shadow-brand-crimson/40 uppercase tracking-wide transition-all active:scale-95"
                         >
                           <span>LIHAT PROYEK</span>
                         </a>

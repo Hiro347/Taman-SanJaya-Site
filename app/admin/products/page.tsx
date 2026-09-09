@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
 import { defaultProducts } from '@/lib/placeholder-data';
 import { Product } from '@/lib/types';
+import { TokopediaIcon, ShopeeIcon } from '@/components/MarketplaceIcons';
 import {
   Plus,
   Edit2,
@@ -16,6 +17,7 @@ import {
   X,
   Search,
   Sprout,
+  ExternalLink,
 } from 'lucide-react';
 
 export default function AdminProductsPage() {
@@ -38,6 +40,8 @@ export default function AdminProductsPage() {
     care_instructions: '',
     image_url: '',
     in_stock: true,
+    tokopedia_url: '',
+    shopee_url: '',
   });
 
   useEffect(() => {
@@ -76,6 +80,8 @@ export default function AdminProductsPage() {
       care_instructions: 'Penyiraman 1-2 kali seminggu.',
       image_url: 'https://images.unsplash.com/photo-1593691509543-c55fb32e7355?auto=format&fit=crop&w=800&q=80',
       in_stock: true,
+      tokopedia_url: '',
+      shopee_url: '',
     });
     setIsModalOpen(true);
   };
@@ -91,6 +97,8 @@ export default function AdminProductsPage() {
       care_instructions: product.care_instructions || '',
       image_url: product.image_url,
       in_stock: product.in_stock,
+      tokopedia_url: product.tokopedia_url || '',
+      shopee_url: product.shopee_url || '',
     });
     setIsModalOpen(true);
   };
@@ -154,6 +162,8 @@ export default function AdminProductsPage() {
             care_instructions: formData.care_instructions,
             image_url: formData.image_url,
             in_stock: formData.in_stock,
+            tokopedia_url: formData.tokopedia_url || null,
+            shopee_url: formData.shopee_url || null,
           })
           .eq('id', editingProduct.id);
 
@@ -171,6 +181,8 @@ export default function AdminProductsPage() {
             care_instructions: formData.care_instructions,
             image_url: formData.image_url,
             in_stock: formData.in_stock,
+            tokopedia_url: formData.tokopedia_url || null,
+            shopee_url: formData.shopee_url || null,
           },
         ]);
         if (error) throw error;
@@ -197,6 +209,8 @@ export default function AdminProductsPage() {
         care_instructions: formData.care_instructions,
         image_url: formData.image_url,
         in_stock: formData.in_stock,
+        tokopedia_url: formData.tokopedia_url,
+        shopee_url: formData.shopee_url,
       };
 
       if (editingProduct) {
@@ -300,6 +314,7 @@ export default function AdminProductsPage() {
                 <th className="px-6 py-4">Kategori</th>
                 <th className="px-6 py-4">Harga</th>
                 <th className="px-6 py-4">Status Stok</th>
+                <th className="px-6 py-4">Marketplace</th>
                 <th className="px-6 py-4 text-right">Aksi</th>
               </tr>
             </thead>
@@ -346,6 +361,51 @@ export default function AdminProductsPage() {
                     >
                       {p.in_stock ? 'Tersedia' : 'Pre-Order / Habis'}
                     </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <div className="flex items-center gap-1.5">
+                      {p.tokopedia_url ? (
+                        <a
+                          href={p.tokopedia_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#03AC0E]/10 hover:bg-[#03AC0E]/20 text-[#03AC0E] text-[11px] font-bold border border-[#03AC0E]/30 transition-colors"
+                          title="Buka Link Tokopedia"
+                        >
+                          <TokopediaIcon className="w-3.5 h-3.5" />
+                          <span>Tokopedia</span>
+                        </a>
+                      ) : (
+                        <span
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-gray-100 text-gray-400 text-[11px] font-medium"
+                          title="Link belum diisi (otomatis cari nama tanaman)"
+                        >
+                          <TokopediaIcon className="w-3.5 h-3.5" />
+                          <span>Auto-Search</span>
+                        </span>
+                      )}
+
+                      {p.shopee_url ? (
+                        <a
+                          href={p.shopee_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#EE4D2D]/10 hover:bg-[#EE4D2D]/20 text-[#EE4D2D] text-[11px] font-bold border border-[#EE4D2D]/30 transition-colors"
+                          title="Buka Link Shopee"
+                        >
+                          <ShopeeIcon className="w-3.5 h-3.5" />
+                          <span>Shopee</span>
+                        </a>
+                      ) : (
+                        <span
+                          className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-gray-100 text-gray-400 text-[11px] font-medium"
+                          title="Link belum diisi (otomatis cari nama tanaman)"
+                        >
+                          <ShopeeIcon className="w-3.5 h-3.5" />
+                          <span>Auto-Search</span>
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex items-center justify-end gap-2">
@@ -507,6 +567,52 @@ export default function AdminProductsPage() {
                   }
                   className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
+              </div>
+
+              {/* Marketplace Links (Tokopedia & Shopee) */}
+              <div className="pt-3 border-t border-brand-sand-dark/30 space-y-3">
+                <div>
+                  <span className="block text-xs font-bold text-brand-earth uppercase tracking-wider">
+                    Link Marketplace Tokopedia & Shopee
+                  </span>
+                  <p className="text-[11px] text-brand-earth/60 mt-0.5">
+                    Tempelkan link produk langsung dari toko Tokopedia / Shopee Anda. Jika dikosongkan, tombol di website otomatis mengarahkan ke pencarian nama tanaman.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="flex items-center gap-1.5 text-xs font-bold text-[#03AC0E] mb-1.5">
+                      <TokopediaIcon className="w-4 h-4 text-[#03AC0E]" />
+                      <span>URL Produk Tokopedia</span>
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="https://www.tokopedia.com/..."
+                      value={formData.tokopedia_url}
+                      onChange={(e) =>
+                        setFormData({ ...formData, tokopedia_url: e.target.value })
+                      }
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-brand-sand-dark/60 text-xs sm:text-sm text-brand-earth focus:outline-none focus:ring-2 focus:ring-[#03AC0E]/50"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="flex items-center gap-1.5 text-xs font-bold text-[#EE4D2D] mb-1.5">
+                      <ShopeeIcon className="w-4 h-4 text-[#EE4D2D]" />
+                      <span>URL Produk Shopee</span>
+                    </label>
+                    <input
+                      type="url"
+                      placeholder="https://shopee.co.id/..."
+                      value={formData.shopee_url}
+                      onChange={(e) =>
+                        setFormData({ ...formData, shopee_url: e.target.value })
+                      }
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-brand-sand-dark/60 text-xs sm:text-sm text-brand-earth focus:outline-none focus:ring-2 focus:ring-[#EE4D2D]/50"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center gap-2 pt-2">

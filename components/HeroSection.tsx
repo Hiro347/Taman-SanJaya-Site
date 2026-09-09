@@ -270,11 +270,11 @@ export default function HeroSection({ settings }: HeroSectionProps) {
       {/* Dinaikkan agar langsung terlihat jelas tepat di bawah gambar panggung */}
       {/* ===================================================================== */}
       <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         viewport={{ once: true, margin: '-20px' }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full relative -mt-6 sm:-mt-10 lg:-mt-14 pointer-events-none select-none z-10"
+        className="w-full relative -mt-12 sm:-mt-10 lg:-mt-14 pointer-events-none select-none z-10"
       >
         <img
           src="/images/group-1.svg"

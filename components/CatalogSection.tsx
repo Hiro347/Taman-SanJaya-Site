@@ -3,7 +3,8 @@
 import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ShoppingBag, Droplets } from 'lucide-react';
+import { Search, Droplets } from 'lucide-react';
+import { TokopediaIcon, ShopeeIcon } from '@/components/MarketplaceIcons';
 import { Product, SiteSettings } from '@/lib/types';
 
 interface CatalogSectionProps {
@@ -12,30 +13,21 @@ interface CatalogSectionProps {
 }
 
 export default function CatalogSection({ products, settings }: CatalogSectionProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  // Extract unique categories
-  const categories = useMemo(() => {
-    const cats = Array.from(new Set(products.map((p) => p.category)));
-    return ['Semua', ...cats];
-  }, [products]);
-
-  // Filter products based on selected category & search query
+  // Filter products based on search query
   const filteredProducts = useMemo(() => {
+    if (!searchQuery.trim()) return products;
     return products.filter((p) => {
-      const matchCategory =
-        selectedCategory === 'Semua' ||
-        p.category.toLowerCase().includes(selectedCategory.toLowerCase());
-      const matchSearch =
+      return (
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchCategory && matchSearch;
+        p.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     });
-  }, [products, selectedCategory, searchQuery]);
+  }, [products, searchQuery]);
 
   return (
-    <section id="catalog" className="py-16 sm:py-20 px-3 sm:px-6 max-w-7xl mx-auto">
+    <section id="catalog" className="pt-0 pb-16 sm:pb-20 px-3 sm:px-6 max-w-7xl mx-auto">
       {/* Outer Sand Background Canvas */}
       <div className="bg-brand-sand/40 border border-brand-sand-dark/40 rounded-[32px] sm:rounded-[44px] p-6 sm:p-10 lg:p-12">
         
@@ -66,40 +58,19 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
           </div>
         </div>
 
-        {/* Category Pills with animated active indicator */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-none mb-8">
-          {categories.map((cat) => {
-            const isActive = selectedCategory === cat;
-            return (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`relative px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-300 ${
-                  isActive
-                    ? 'text-white shadow-md'
-                    : 'bg-white/70 text-brand-earth hover:bg-white hover:text-brand-crimson border border-brand-earth/15'
-                }`}
-              >
-                {isActive && (
-                  <motion.div
-                    layoutId="activeCatalogCategory"
-                    className="absolute inset-0 bg-brand-crimson rounded-full -z-0 shadow-md shadow-brand-crimson/30"
-                    transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                  />
-                )}
-                <span className="relative z-10">{cat}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Product Grid with Staggered Fade & Hover Lift */}
-        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {/* Product Grid with Staggered Fade & Hover Lift (4 Botanical Cards) */}
+        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <AnimatePresence>
             {filteredProducts.map((product) => {
-              const productWaUrl = `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(
-                `Halo Taman San Jaya, saya tertarik memesan tanaman hias "${product.name}" (${product.price_display || `Rp ${product.price.toLocaleString('id-ID')}`}). Apakah stok tersedia?`
-              )}`;
+              const tokopediaLink =
+                product.tokopedia_url && product.tokopedia_url.trim() !== ''
+                  ? product.tokopedia_url
+                  : `https://www.tokopedia.com/search?st=product&q=${encodeURIComponent(product.name)}`;
+
+              const shopeeLink =
+                product.shopee_url && product.shopee_url.trim() !== ''
+                  ? product.shopee_url
+                  : `https://shopee.co.id/search?keyword=${encodeURIComponent(product.name)}`;
 
               return (
                 <motion.div
@@ -123,11 +94,6 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                       
-                      {/* Category Tag */}
-                      <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-[11px] font-bold text-brand-navy px-2.5 py-1 rounded-lg shadow-xs">
-                        {product.category}
-                      </span>
-
                       {/* Stock Tag */}
                       <span
                         className={`absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-xs ${
@@ -167,16 +133,28 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                     </div>
                   </div>
 
-                  {/* Order via WhatsApp Button */}
-                  <div className="p-5 pt-0">
+                  {/* Marketplace Direct Buy Buttons (Tokopedia & Shopee) */}
+                  <div className="p-5 pt-0 grid grid-cols-2 gap-2">
                     <a
-                      href={productWaUrl}
+                      href={tokopediaLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2 w-full bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs sm:text-sm font-semibold py-2.5 px-4 rounded-xl shadow-xs transition-colors"
+                      className="flex items-center justify-center gap-1.5 w-full bg-[#03AC0E] hover:bg-[#029B0D] active:scale-[0.98] text-white text-xs sm:text-[13px] font-bold py-2.5 px-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                      title={`Beli ${product.name} di Tokopedia`}
                     >
-                      <ShoppingBag className="w-4 h-4" />
-                      <span>Pesan / Tanya Stok</span>
+                      <TokopediaIcon className="w-4 h-4 flex-shrink-0 text-white" />
+                      <span className="truncate">Tokopedia</span>
+                    </a>
+
+                    <a
+                      href={shopeeLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 w-full bg-[#EE4D2D] hover:bg-[#D73211] active:scale-[0.98] text-white text-xs sm:text-[13px] font-bold py-2.5 px-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                      title={`Beli ${product.name} di Shopee`}
+                    >
+                      <ShopeeIcon className="w-4 h-4 flex-shrink-0 text-white" />
+                      <span className="truncate">Shopee</span>
                     </a>
                   </div>
                 </motion.div>

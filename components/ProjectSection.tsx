@@ -3,17 +3,17 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { MapPin, ArrowUpRight } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 import { Project, SiteSettings } from '@/lib/types';
 
 interface ProjectSectionProps {
   projects: Project[];
-  settings: SiteSettings;
+  settings?: SiteSettings;
 }
 
-export default function ProjectSection({ projects, settings }: ProjectSectionProps) {
+export default function ProjectSection({ projects }: ProjectSectionProps) {
   return (
-    <section id="project" className="py-14 sm:py-20 px-3 sm:px-6 max-w-7xl mx-auto">
+    <section id="project" className="pt-14 sm:pt-20 pb-1 sm:pb-2 px-3 sm:px-6 max-w-7xl mx-auto">
       {/* Section Header - Bersih tanpa tab kategori */}
       <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
         <span className="inline-block text-xs font-bold tracking-widest text-brand-crimson uppercase bg-white/80 border border-brand-earth/15 px-4 py-1.5 rounded-full mb-3 shadow-xs">
@@ -31,16 +31,10 @@ export default function ProjectSection({ projects, settings }: ProjectSectionPro
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         {projects.map((project, index) => {
           const isFeatured = index === 0;
-          const projectWaUrl = `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(
-            `Halo Taman San Jaya, saya melihat portofolio proyek "${project.title}" di website dan ingin konsultasi pembuatan konsep taman serupa.`
-          )}`;
 
           return (
-            <motion.a
+            <motion.div
               key={project.id}
-              href={projectWaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-40px' }}
@@ -73,11 +67,6 @@ export default function ProjectSection({ projects, settings }: ProjectSectionPro
                 <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md text-white text-xs font-mono font-bold tracking-wider border border-white/20">
                   0{index + 1}
                 </div>
-
-                {/* Floating Interactive Arrow Badge */}
-                <div className="absolute top-3.5 right-3.5 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/90 backdrop-blur-md text-brand-earth group-hover:bg-brand-crimson group-hover:text-white flex items-center justify-center shadow-md transition-all duration-300 group-hover:scale-110">
-                  <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </div>
               </div>
 
               {/* Project Details */}
@@ -91,7 +80,7 @@ export default function ProjectSection({ projects, settings }: ProjectSectionPro
 
                   {/* Title */}
                   <h3
-                    className={`font-black text-brand-earth group-hover:text-brand-crimson transition-colors leading-snug tracking-tight ${
+                    className={`font-black text-brand-earth leading-snug tracking-tight ${
                       isFeatured ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'
                     }`}
                   >
@@ -103,16 +92,8 @@ export default function ProjectSection({ projects, settings }: ProjectSectionPro
                     {project.description}
                   </p>
                 </div>
-
-                {/* Bottom subtle indicator */}
-                <div className="pt-4 mt-4 border-t border-brand-earth/10 flex items-center justify-between text-xs text-brand-earth/60 group-hover:text-brand-crimson transition-colors font-medium">
-                  <span>Konsultasi Proyek Ini</span>
-                  <span className="inline-flex items-center gap-1 font-bold text-brand-crimson">
-                    WhatsApp <ArrowUpRight className="w-3.5 h-3.5" />
-                  </span>
-                </div>
               </div>
-            </motion.a>
+            </motion.div>
           );
         })}
       </div>

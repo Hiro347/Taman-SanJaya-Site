@@ -36,6 +36,8 @@ CREATE TABLE IF NOT EXISTS public.products (
   in_stock BOOLEAN NOT NULL DEFAULT true,
   featured BOOLEAN NOT NULL DEFAULT false,
   order_index INTEGER NOT NULL DEFAULT 0,
+  tokopedia_url TEXT,
+  shopee_url TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -166,8 +168,8 @@ VALUES
   3
 ) ON CONFLICT (slug) DO NOTHING;
 
--- Katalog Produk Tanaman Hias Contoh
-INSERT INTO public.products (name, slug, category, price, price_display, description, care_instructions, image_url, in_stock, featured, order_index)
+-- Katalog Produk Tanaman Hias Contoh (4 Produk Aset Pilihan)
+INSERT INTO public.products (name, slug, category, price, price_display, description, care_instructions, image_url, in_stock, featured, order_index, tokopedia_url, shopee_url)
 VALUES
 (
   'Lidah Mertua (Sansevieria Trifasciata)',
@@ -175,78 +177,70 @@ VALUES
   'Indoor & Outdoor',
   75000,
   'Rp 75.000',
-  'Tanaman hias tangguh yang sangat efektif menyaring polusi dan racun udara di dalam maupun luar ruangan. Tahan kering dan minim perawatan.',
-  'Siram 1-2 kali seminggu. Letakkan di tempat dengan sinar matahari tidak langsung hingga terang.',
-  'https://images.unsplash.com/photo-1593691509543-c55fb32e7355?auto=format&fit=crop&w=800&q=80',
+  'Tanaman hias tangguh penyerap racun udara dan polusi paling efektif. Sangat mudah dirawat dan cocok di sudut ruangan maupun pembatas teras.',
+  'Penyiraman 1x seminggu. Tahan di tempat minim cahaya hingga sinar matahari penuh.',
+  '/images/lidah-mertua.jpg',
   true,
   true,
-  1
+  1,
+  'https://www.tokopedia.com/search?st=product&q=Lidah+Mertua+Sansevieria',
+  'https://shopee.co.id/search?keyword=Lidah+Mertua+Sansevieria'
 ),
 (
-  'Monstera Deliciosa',
-  'monstera-deliciosa',
+  'Monstera Adansonii (Janda Bolong)',
+  'monstera-janda-bolong',
   'Indoor',
-  150000,
-  'Rp 150.000',
-  'Primadona tanaman hias bernuansa tropis elegan dengan ciri khas daun berlubang artistik. Memberikan aksen mewah di sudut ruang keluarga atau teras.',
-  'Siram ketika 2-3 cm lapisan tanah atas kering. Hindari sinar matahari terik langsung.',
-  'https://images.unsplash.com/photo-1614594975525-e45190c55d0b?auto=format&fit=crop&w=800&q=80',
+  85000,
+  'Rp 85.000',
+  'Tanaman hias tropis merambat populer dengan lubang-lubang artistik alami pada helai daun. Sangat estetik untuk dekorasi meja, ambalan dinding, atau pot gantung.',
+  'Siram saat media tanam mulai mengering (2-3 hari sekali). Letakkan di area terang tanpa terkena sinar matahari langsung.',
+  '/images/monstera-janda-bolong.jpg',
   true,
   true,
-  2
+  2,
+  'https://www.tokopedia.com/search?st=product&q=Monstera+Janda+Bolong',
+  'https://shopee.co.id/search?keyword=Monstera+Janda+Bolong'
 ),
 (
-  'Pohon Palem Merah (Cyrtostachys renda)',
-  'palem-merah',
-  'Pohon & Palem',
-  350000,
-  'Mulai Rp 350.000',
-  'Palem eksotis dengan pelepah daun berwarna merah menyala khas nusantara. Sangat anggun menghiasi gerbang depan rumah atau sudut taman utama.',
-  'Suka sinar matahari penuh hingga teduh sebagian. Penyiraman rutin setiap hari.',
-  'https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&fit=crop&w=800&q=80',
-  true,
-  true,
-  3
-),
-(
-  'Aglaonema Suksom Jaipong',
-  'aglaonema-suksom-jaipong',
-  'Tanaman Hias Daun',
+  'Aglaonema (Sri Rejeki)',
+  'aglaonema-sri-rejeki',
+  'Tanaman Daun',
   125000,
   'Rp 125.000',
-  'Varian Aglaonema berdaun merah merona hampir tanpa corak hijau. Simbol kemakmuran dan pembawa aura positif di teras rumah.',
-  'Cahaya teduh / terfilter, kelembapan cukup, media poros tidak becek.',
-  'https://images.unsplash.com/photo-1617173944883-6ffbd35d584d?auto=format&fit=crop&w=800&q=80',
+  'Ratu tanaman daun dengan corak hijau segar dan semburat artistik memikat. Dipercaya membawa keberuntungan, ketenangan, serta membersihkan udara dalam hunian.',
+  'Cahaya teduh terfilter, kelembapan seimbang, penyiraman teratur 2 kali seminggu pada media tanam poros.',
+  '/images/aglaonema.jpg',
   true,
   true,
-  4
+  3,
+  'https://www.tokopedia.com/search?st=product&q=Aglaonema+Sri+Rejeki',
+  'https://shopee.co.id/search?keyword=Aglaonema+Sri+Rejeki'
 ),
 (
-  'Bonsai Beringin Dolar (Ficus microcarpa)',
-  'bonsai-beringin-dolar',
-  'Bonsai & Koleksi',
-  850000,
-  'Rp 850.000',
-  'Bonsai dengan karakter batang berotot kokoh dan daun bulat tebal mengkilap. Sangat bernilai seni tinggi untuk taman zen atau teras beranda.',
-  'Pencahayaan penuh, pemangkasan rutin sebulan sekali untuk menjaga bentuk.',
-  'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=800&q=80',
+  'Bunga Anggrek Bulan (Phalaenopsis)',
+  'bunga-anggrek-bulan',
+  'Bunga & Koleksi',
+  145000,
+  'Rp 145.000',
+  'Pesona anggrek nusantara dengan kelopak bunga mekar anggun, elegan, dan tahan lama. Simbol keindahan abadi yang sangat cocok sebagai penghias ruang tamu utama.',
+  'Siram semprot halus 2 kali seminggu di akar/media pakis, sirkulasi udara lancar dan sinar pagi tidak langsung.',
+  '/images/anggrek.jpg',
   true,
-  false,
-  5
-),
-(
-  'Philodendron Birkin',
-  'philodendron-birkin',
-  'Indoor',
-  95000,
-  'Rp 95.000',
-  'Tanaman hias dengan garis-garis lurik putih krem yang elegan pada daun hijau gelap. Tumbuh kompak dan sangat cantik dalam pot keramik.',
-  'Pencahayaan terang terfilter, media tanam berporositas tinggi.',
-  'https://images.unsplash.com/photo-1598880940371-c756e015fea1?auto=format&fit=crop&w=800&q=80',
   true,
-  false,
-  6
-) ON CONFLICT (slug) DO NOTHING;
+  4,
+  'https://www.tokopedia.com/search?st=product&q=Bunga+Anggrek+Bulan',
+  'https://shopee.co.id/search?keyword=Bunga+Anggrek+Bulan'
+) ON CONFLICT (slug) DO UPDATE SET
+  name = EXCLUDED.name,
+  category = EXCLUDED.category,
+  price = EXCLUDED.price,
+  price_display = EXCLUDED.price_display,
+  description = EXCLUDED.description,
+  care_instructions = EXCLUDED.care_instructions,
+  image_url = EXCLUDED.image_url,
+  order_index = EXCLUDED.order_index,
+  tokopedia_url = EXCLUDED.tokopedia_url,
+  shopee_url = EXCLUDED.shopee_url;
 
 -- Portofolio Proyek Contoh
 INSERT INTO public.projects (title, category, location, image_url, description, order_index)

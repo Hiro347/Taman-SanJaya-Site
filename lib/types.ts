@@ -25,6 +25,8 @@ export interface Product {
   in_stock: boolean;
   featured?: boolean;
   order_index?: number;
+  tokopedia_url?: string;
+  shopee_url?: string;
   created_at?: string;
 }
 

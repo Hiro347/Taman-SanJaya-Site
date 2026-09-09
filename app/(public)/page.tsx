@@ -2,6 +2,7 @@ import React from 'react';
 import HeroSection from '@/components/HeroSection';
 import ServicesSection from '@/components/ServicesSection';
 import ProjectSection from '@/components/ProjectSection';
+import FloralDivider from '@/components/FloralDivider';
 import CatalogSection from '@/components/CatalogSection';
 import AboutSection from '@/components/AboutSection';
 import ContactSection from '@/components/ContactSection';
@@ -28,6 +29,9 @@ export default async function HomePage() {
 
       {/* 3. Real Projects Showcase */}
       <ProjectSection projects={projects} settings={settings} />
+
+      {/* Natural Floral Garland Divider: Group 3.svg */}
+      <FloralDivider />
 
       {/* 4. Ornamental Plants Catalog */}
       <CatalogSection products={products} settings={settings} />

@@ -69,8 +69,8 @@ The brand visual language is inspired by high-end architectural monographs, orga
 │  │  [HeroSection (Widescreen auto-sliding gallery)]  │  │
 │  │  [Group 1.svg Full-width Natural Plant Divider]   │  │
 │  │  [ServicesSection - 3 Core Pillars Accordion]     │  │
-│  │  [MarqueeBanner - Botanical & Landscape Flow]     │  │
 │  │  [ProjectSection - Architectural Portfolio Grid]  │  │
+│  │  [FloralDivider (group-3.svg Garland)]            │  │
 │  │  [CatalogSection - Plant Catalog + Care Guides]   │  │
 │  │  [AboutSection - Founder Ergoputra Kusuma IPB]    │  │
 │  │  [ContactSection - Direct WhatsApp Form]          │  │
@@ -122,8 +122,7 @@ The brand visual language is inspired by high-end architectural monographs, orga
      - Features index counter (`01`, `02`...), location tag with pin, bold title, and refined description.
 
 6. **`components/CatalogSection.tsx`**:
-   - Plant catalog with live search, category tabs (Indoor, Outdoor, Pohon & Palem, Bonsai, Tanaman Daun).
-   - Each card displays sunlight and water care requirements, price, and instant "Pesan via WhatsApp" button.
+   - Curated 4-plant nursery catalog with live search, direct Tokopedia & Shopee marketplace buttons, and care guides. (Category tabs and floating image badges removed for a clean architectural design).
 
 7. **`components/AboutSection.tsx`**:
    - Brand story of *Taman San Jaya (成功之园)* and IPB University plant protection science.
@@ -148,12 +147,17 @@ All production-served assets reside in `public/images/`, while original raw sour
 | `/images/Pembuatan.jpg` | Landscape Ground Construction & Physical Planting | ServicesSection, ProjectSection |
 | `/images/Perencanaan.jpg` | 3D Blueprint & Architectural Landscape Design | ServicesSection |
 | `/images/Perawatan.jpg` | Plant Pathology & IPB Horticultural Maintenance | ServicesSection |
-| `/images/Group 1.svg` | Edge-to-edge natural rockery & flower section divider | HeroSection bottom |
-| `/images/Group 2.svg` | Edge-to-edge natural wildflower meadow section divider | Footer top crown |
-| `/images/image 13.svg` | Hanging botanical ivy bush | Top-right corner of layout |
+| `/images/group-1.svg` | Edge-to-edge natural rockery & flower section divider | HeroSection bottom |
+| `/images/group-3.svg` | Cascading natural bougainvillea floral garland divider | FloralDivider (between Project & Catalog) |
+| `/images/group-2.png`, `group-2.webp` | Edge-to-edge natural wildflower meadow section divider | Footer top crown |
+| `/images/image-13.svg` | Hanging botanical ivy bush | Top-right corner of layout |
 | `/models/LogoTamanSanjaya.glb` | 3D GLB brand logo model | ScrollRotatingLogo3D |
 | `/images/logo.png` | Official brand logo | Navbar, Footer |
 | `/images/founder.jpg` | Founder portrait (Ergoputra Kusuma Sanjaya) | AboutSection |
+| `/images/lidah-mertua.jpg` | Sansevieria plant photography | CatalogSection |
+| `/images/monstera-janda-bolong.jpg` | Monstera Adansonii photography | CatalogSection |
+| `/images/aglaonema.jpg` | Aglaonema plant photography | CatalogSection |
+| `/images/anggrek.jpg` | Phalaenopsis orchid flower photography | CatalogSection |
 
 ---
 
