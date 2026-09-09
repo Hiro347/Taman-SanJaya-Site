@@ -276,11 +276,15 @@ export default function HeroSection({ settings }: HeroSectionProps) {
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         className="w-full relative -mt-12 sm:-mt-10 lg:-mt-14 pointer-events-none select-none z-10"
       >
-        <img
-          src="/images/group-1.svg"
-          alt="Pembatas Taman San Jaya - Ornamen Batuan & Bunga Alami"
-          className="w-full h-auto block"
-        />
+        <picture>
+          <source srcSet="/images/group-1.webp" type="image/webp" />
+          <img
+            src="/images/group-1.png"
+            alt="Pembatas Taman San Jaya - Ornamen Batuan & Bunga Alami"
+            className="w-full h-auto block"
+            fetchPriority="high"
+          />
+        </picture>
       </motion.div>
     </section>
   );
