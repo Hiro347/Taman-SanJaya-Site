@@ -177,7 +177,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
               className="mt-1 sm:mt-1.5 text-base sm:text-2xl lg:text-3xl font-serif italic font-bold text-brand-sand drop-shadow-md tracking-wide"
             >
-              Taman Tropis Asri & Ruang Hijau Impian
+              Specialist Landscape Architecture
             </motion.p>
 
             {/* Ringkasan Produk Pendukung */}

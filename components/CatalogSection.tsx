@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ShoppingBag, Droplets, Sun, CheckCircle, HelpCircle } from 'lucide-react';
+import { Search, ShoppingBag, Droplets } from 'lucide-react';
 import { Product, SiteSettings } from '@/lib/types';
 
 interface CatalogSectionProps {
@@ -192,33 +192,6 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
             </p>
           </div>
         )}
-
-        {/* Special Request Callout */}
-        <div className="mt-12 bg-white/90 backdrop-blur-md rounded-2xl p-5 sm:p-6 border border-brand-sand-dark/40 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-brand-sand/80 rounded-xl text-brand-earth">
-              <HelpCircle className="w-6 h-6 text-brand-crimson" />
-            </div>
-            <div>
-              <h4 className="font-bold text-brand-earth text-sm sm:text-base">
-                Mencari Jenis Tanaman Tertentu atau Ukuran Spesifik?
-              </h4>
-              <p className="text-xs sm:text-sm text-brand-earth/70">
-                Kami memiliki jaringan nursery luas untuk pengadaan pohon besar, tanaman langka, dan varietas khusus.
-              </p>
-            </div>
-          </div>
-          <a
-            href={`https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(
-              'Halo Taman San Jaya, saya sedang mencari tanaman khusus / spesifikasi tertentu.'
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="whitespace-nowrap px-5 py-2.5 bg-brand-navy hover:bg-brand-navy-dark text-white text-xs sm:text-sm font-semibold rounded-xl transition-colors"
-          >
-            Tanya Pengadaan Khusus
-          </a>
-        </div>
 
       </div>
     </section>
