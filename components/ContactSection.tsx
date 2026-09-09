@@ -25,7 +25,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
   };
 
   return (
-    <section id="contact" className="pt-12 sm:pt-16 pb-2 sm:pb-4 px-3 sm:px-6 max-w-7xl mx-auto">
+    <section id="contact" className="pt-12 sm:pt-16 pb-6 sm:pb-8 px-3 sm:px-6 max-w-7xl mx-auto">
       {/* Decorative gradient border wrap using brand palette */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}

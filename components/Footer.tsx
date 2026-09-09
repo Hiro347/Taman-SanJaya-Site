@@ -10,7 +10,7 @@ interface FooterProps {
 
 export default function Footer({ settings }: FooterProps) {
   return (
-    <div className="w-full relative -mt-4 sm:-mt-8 lg:-mt-12">
+    <div className="w-full relative mt-2 sm:mt-4 lg:mt-6">
       {/* Ornamen Bunga Liar Alami (Group 2) Membentang Tepat di Atas Footer */}
       <div className="w-full relative -mb-1 sm:-mb-1.5 pointer-events-none select-none z-10">
         <picture>
@@ -18,7 +18,7 @@ export default function Footer({ settings }: FooterProps) {
           <img
             src="/images/group-2.png"
             alt="Ornamen Bunga Liar Alami Taman San Jaya"
-            className="w-full h-auto max-h-[140px] sm:max-h-[200px] lg:max-h-[240px] object-cover object-bottom block"
+            className="w-full h-auto max-h-[160px] sm:max-h-[220px] lg:max-h-[270px] object-cover object-bottom block"
             loading="lazy"
           />
         </picture>
