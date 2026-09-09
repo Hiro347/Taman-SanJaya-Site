@@ -49,6 +49,7 @@ The brand visual language is inspired by high-end architectural monographs, orga
 * **Framework**: Next.js 14 (App Router, React 18, TypeScript)
 * **Styling**: Tailwind CSS 3.4
 * **Animations**: Framer Motion 11 (spring physics, directional layout transitions, scroll parallax, AnimatePresence)
+* **Smooth Scrolling**: Lenis (`lenis`) for luxury momentum scrolling & inertia physics
 * **3D Graphics**: Three.js (`three` + `@types/three`) with `GLTFLoader` for WebGL rendering of `/models/LogoTamanSanjaya.glb`
 * **Icons**: Lucide React (`lucide-react`)
 * **Backend & Database**: Supabase (`@supabase/ssr`, `@supabase/supabase-js`) PostgreSQL database with full fallback to `lib/placeholder-data.ts`
@@ -84,6 +85,8 @@ The brand visual language is inspired by high-end architectural monographs, orga
 ### Component Breakdown & Rules
 
 1. **`app/(public)/layout.tsx`**:
+   - Wrapped with `<SmoothScroll />` powered by **Lenis** for continuous momentum physics.
+   - Ambient background uses pre-rendered `/images/background-blur.webp` for zero CPU blur filter lag.
    - Renders the outer elevated sand canvas (`bg-[#D8CDAE] rounded-[28px] sm:rounded-[36px] lg:rounded-[44px]`).
    - Top-right corner features the clinging ivy bush: [`image 13.svg`](/images/image-13.svg).
    - Hosts `<ScrollRotatingLogo3D />` in the background.

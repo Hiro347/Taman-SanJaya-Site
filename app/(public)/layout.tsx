@@ -1,10 +1,12 @@
 import React from 'react';
+import Image from 'next/image';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import { getSiteSettings } from '@/lib/data';
 
 import ScrollRotatingLogo3D from '@/components/ScrollRotatingLogo3D';
+import SmoothScroll from '@/components/SmoothScroll';
 
 // Keep page dynamically updated when settings change
 export const revalidate = 0;
@@ -17,16 +19,19 @@ export default async function PublicLayout({
   const settings = await getSiteSettings();
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden selection:bg-brand-crimson selection:text-white">
+    <SmoothScroll>
+      <div className="relative min-h-screen overflow-x-hidden selection:bg-brand-crimson selection:text-white">
       {/* ========================================================================= */}
-      {/* 1. Ambient Background using the exact Hero Section Image (Soft Focus)      */}
+      {/* 1. Ambient Background using Pre-blurred Image Asset (Zero CSS Filter Lag)   */}
       {/* ========================================================================= */}
-      <div className="fixed inset-0 -z-30 overflow-hidden pointer-events-none">
-        <div
-          className="absolute -inset-6 bg-cover bg-center filter blur-[6px] sm:blur-[7px] brightness-[0.98] transition-all duration-500 scale-105"
-          style={{
-            backgroundImage: `url(${settings.hero_image_url})`,
-          }}
+      <div className="fixed inset-0 -z-30 overflow-hidden pointer-events-none transform-gpu">
+        <Image
+          src="/images/background-blur.webp"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover scale-105 brightness-[0.98]"
         />
         {/* Very subtle tint to blend naturally */}
         <div className="absolute inset-0 bg-black/5" />
@@ -67,5 +72,6 @@ export default async function PublicLayout({
       {/* Floating WhatsApp Button */}
       <FloatingWhatsApp settings={settings} />
     </div>
+    </SmoothScroll>
   );
 }

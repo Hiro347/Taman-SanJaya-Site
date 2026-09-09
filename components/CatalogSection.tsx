@@ -27,7 +27,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
   }, [products, searchQuery]);
 
   return (
-    <section id="catalog" className="pt-0 pb-16 sm:pb-20 px-3 sm:px-6 max-w-7xl mx-auto">
+    <section id="catalog" className="-mt-8 sm:-mt-12 lg:-mt-16 pb-16 sm:pb-20 px-3 sm:px-6 max-w-7xl mx-auto relative z-20">
       {/* Outer Sand Background Canvas */}
       <div className="bg-brand-sand/40 border border-brand-sand-dark/40 rounded-[32px] sm:rounded-[44px] p-6 sm:p-10 lg:p-12">
         
@@ -75,10 +75,10 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
               return (
                 <motion.div
                   layout
-                  initial={{ opacity: 0, scale: 0.94 }}
+                  initial={{ opacity: 0, scale: 0.96 }}
                   whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: '-40px' }}
-                  exit={{ opacity: 0, scale: 0.94 }}
+                  viewport={{ once: true, margin: '150px 0px' }}
+                  exit={{ opacity: 0, scale: 0.96 }}
                   transition={{ duration: 0.4 }}
                   whileHover={{ y: -6 }}
                   key={product.id}

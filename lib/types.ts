@@ -49,6 +49,7 @@ export interface Project {
   location: string;
   image_url: string;
   before_image_url?: string;
+  gallery_images?: string[];
   description: string;
   order_index?: number;
   created_at?: string;

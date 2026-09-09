@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
   location TEXT DEFAULT 'Jakarta',
   image_url TEXT NOT NULL,
   before_image_url TEXT,
+  gallery_images JSONB DEFAULT '[]'::jsonb,
   description TEXT,
   order_index INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
@@ -129,7 +130,7 @@ INSERT INTO public.site_settings (id, hero_title, hero_subtitle, hero_image_url,
 VALUES (
   '00000000-0000-0000-0000-000000000001',
   'Wujudkan Taman Asri & Bernilai Estetika Tinggi',
-  'Layanan lengkap landscape design, pengerjaan taman hunian & komersial, kolam ikan koi, relief tebing, serta katalog tanaman hias terpilih.',
+  'Layanan lengkap landscape design, pengerjaan taman hunian & komersial, air mancur relief batu alam, serta katalog tanaman hias terpilih.',
   'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1600&q=80',
   '6281234567890'
 ) ON CONFLICT (id) DO NOTHING;
@@ -243,37 +244,50 @@ VALUES
   shopee_url = EXCLUDED.shopee_url;
 
 -- Portofolio Proyek Contoh
-INSERT INTO public.projects (title, category, location, image_url, description, order_index)
+INSERT INTO public.projects (title, category, location, image_url, gallery_images, description, order_index)
 VALUES
 (
-  'Taman Tropis Modern & Gazebo Santai',
-  'Taman Tropis',
-  'Hunian Residensial Jakarta Selatan',
-  'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
-  'Perpaduan rumput jepang rapat, tanaman kamboja fosil, tanaman pakis, serta stepping stone alam yang menyatu dengan decking kayu teras.',
+  'Taman Minimalis Modern & Rumput Hijau Rapat',
+  'Taman Minimalis',
+  'Hunian Residensial Mewah',
+  '/images/proyek-4.avif',
+  '["/images/proyek-4.avif", "/images/proyek-2.jpg", "/images/proyek-1.jpeg", "/images/Pembuatan.jpg"]'::jsonb,
+  'Penataan tanaman bonsai peneduh artistik, batuan koral hias, hamparan rumput jepang rapi, dan vegetasi tropis pembatas pagar hunian privat.',
   1
 ),
 (
-  'Kolam Ikan Koi Minimalis & Dinding Batu Alam Andesit',
-  'Kolam Koi',
-  'BSD City, Tangerang Selatan',
-  'https://images.unsplash.com/photo-1584467541268-b040f83be3fd?auto=format&fit=crop&w=1200&q=80',
-  'Instalasi kolam koi berfiltrasi modern 4 chamber dengan gemericik air terjun mini dinding relief andesit hitam dan pencahayaan underwater.',
+  'Taman Tropis Alami & Jalan Setapak Villa',
+  'Taman Tropis',
+  'Kawasan Villa & Hunian Tropis',
+  '/images/proyek-2.jpg',
+  '["/images/proyek-2.jpg", "/images/proyek-4.avif", "/images/proyek-3.jpg", "/images/Perawatan.jpg"]'::jsonb,
+  'Kombinasi pohon kamboja berbunga harum, palem tropis, tanaman puring hias, dan pedestrian paving yang asri serta rindang.',
   2
 ),
 (
-  'Taman Kering Zen Garden Konsep Jepang',
-  'Taman Kering (Zen)',
-  'Menteng, Jakarta Pusat',
-  'https://images.unsplash.com/photo-1558904541-efa8c4a5c963?auto=format&fit=crop&w=1200&q=80',
-  'Konsep taman minimalis low-maintenance dengan kombinasi batu koral putih, tanaman sikas, bambu hias, dan lentera batu khas Jepang.',
+  'Perencanaan Desain Lanskap 3D Kawasan & Taman Terbuka',
+  'Perencanaan 3D',
+  'Masterplan Kawasan Publik & Privat',
+  '/images/proyek-1.jpeg',
+  '["/images/proyek-1.jpeg", "/images/Perencanaan.jpg", "/images/proyek-4.avif", "/images/proyek-2.jpg"]'::jsonb,
+  'Rancangan arsitektural 3D fotorealistis meliputi jalur pejalan kaki, gazebo santai, area hijau terbuka, serta penataan komposisi vegetasi terstruktur.',
   3
 ),
 (
-  'Vertical Garden Dinding Hijau Tropis',
-  'Vertical Garden',
-  'Commercial Cafe & Bistro, Senopati',
-  'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?auto=format&fit=crop&w=1200&q=80',
-  'Dinding hidup seluas 24m² dengan sistem irigasi otomatis (drip system) berisikan aneka varietas pakis sarang burung, tanduk rusa, dan philodendron.',
+  'Taman Air Mancur Relief Batu Alam & Gazebo Bersantai',
+  'Relief Tebing & Air',
+  'Courtyard Hunian Tropis',
+  '/images/proyek-3.jpg',
+  '["/images/proyek-3.jpg", "/images/proyek-2.jpg", "/images/Pembuatan.jpg", "/images/proyek-4.avif"]'::jsonb,
+  'Ornamen air mancur bertingkat relief batu alam berpadu dengan gazebo kayu tradisional dan pepohonan tropis yang menyejukkan.',
   4
+),
+(
+  'Konstruksi & Eksekusi Pembuatan Lanskap Riil',
+  'Pengerjaan Lanskap',
+  'Area Hunian & Komersial',
+  '/images/Pembuatan.jpg',
+  '["/images/Pembuatan.jpg", "/images/proyek-1.jpeg", "/images/proyek-3.jpg", "/images/Perawatan.jpg"]'::jsonb,
+  'Eksekusi fisik pengerjaan lanskap dari olah lahan, seleksi bibit unggul, pemupukan organik, hingga penataan hardscape bergaransi tumbuh 100%.',
+  5
 );

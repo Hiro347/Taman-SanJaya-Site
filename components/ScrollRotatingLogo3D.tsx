@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 export default function ScrollRotatingLogo3D() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -67,8 +68,13 @@ export default function ScrollRotatingLogo3D() {
 
     let modelMesh: THREE.Group | null = null;
 
-    // 5. Load GLB Model
+    // 5. Load GLB Model with DRACOLoader
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath('/draco/');
+
     const loader = new GLTFLoader();
+    loader.setDRACOLoader(dracoLoader);
+
     loader.load(
       '/models/LogoTamanSanjaya.glb',
       (gltf) => {
@@ -120,21 +126,27 @@ export default function ScrollRotatingLogo3D() {
     let targetY = 0;
     let currentY = 0;
 
-    let mouseX = 0;
-    let mouseY = 0;
+    let isCurrentlyVisible = false;
+    let cachedProjectEl: HTMLElement | null = null;
+    let scrollTicking = false;
 
-    const onScroll = () => {
+    const updateScrollPhysics = () => {
+      scrollTicking = false;
       const scrollY = window.scrollY;
-      const projectEl = document.getElementById('project');
+      if (!cachedProjectEl) {
+        cachedProjectEl = document.getElementById('project');
+      }
 
-      if (projectEl) {
-        const rect = projectEl.getBoundingClientRect();
-        // Model 3D mulai aktif saat pengguna scroll mencapai area Koleksi Proyek
+      if (cachedProjectEl) {
+        const rect = cachedProjectEl.getBoundingClientRect();
         const inProjectZone = rect.top <= window.innerHeight * 0.75;
-        setIsVisible(inProjectZone);
+        if (isCurrentlyVisible !== inProjectZone) {
+          isCurrentlyVisible = inProjectZone;
+          setIsVisible(inProjectZone);
+        }
 
         if (inProjectZone) {
-          const projectPageTop = projectEl.offsetTop;
+          const projectPageTop = cachedProjectEl.offsetTop;
           const scrollFromProject = Math.max(0, scrollY - (projectPageTop - window.innerHeight * 0.5));
           const totalRemaining = Math.max(
             document.documentElement.scrollHeight - (projectPageTop - window.innerHeight * 0.5) - window.innerHeight,
@@ -155,23 +167,32 @@ export default function ScrollRotatingLogo3D() {
           1
         );
         const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
-        setIsVisible(progress > 0.25);
+        const inZone = progress > 0.25;
+        if (isCurrentlyVisible !== inZone) {
+          isCurrentlyVisible = inZone;
+          setIsVisible(inZone);
+        }
         targetRotY = progress * Math.PI * 2;
         targetY = (progress - 0.5) * -0.35;
       }
     };
 
-    const onMouseMove = (e: MouseEvent) => {
-      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    const onScroll = () => {
+      if (!scrollTicking) {
+        scrollTicking = true;
+        requestAnimationFrame(updateScrollPhysics);
+      }
+    };
 
+    const onMouseMove = (e: MouseEvent) => {
+      const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
       // Subtle 3D tilt towards mouse cursor
       targetRotX = mouseY * 0.15;
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
-    onScroll(); // initial check
+    updateScrollPhysics(); // initial check
 
     // 7. Resize Handler
     const onResize = () => {
@@ -196,6 +217,15 @@ export default function ScrollRotatingLogo3D() {
       currentRotX += (targetRotX - currentRotX) * 0.08;
       currentY += (targetY - currentY) * 0.04;
 
+      // Skip GPU rendering when logo is hidden and finished returning to rest position
+      const isSettled =
+        Math.abs(currentRotY - targetRotY) < 0.005 &&
+        Math.abs(currentY - targetY) < 0.005;
+
+      if (!isCurrentlyVisible && isSettled) {
+        return;
+      }
+
       // Subtle organic hover float
       const elapsed = clock.getElapsedTime();
       const idleFloat = Math.sin(elapsed * 1.2) * 0.04;
@@ -216,6 +246,8 @@ export default function ScrollRotatingLogo3D() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', onResize);
+
+      dracoLoader.dispose();
 
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
@@ -239,7 +271,8 @@ export default function ScrollRotatingLogo3D() {
             : 'opacity-0 scale-95 pointer-events-none'
         }`}
         style={{
-          filter: 'drop-shadow(0 25px 35px rgba(92, 64, 51, 0.35))',
+          willChange: 'transform, opacity',
+          transform: 'translateZ(0)',
         }}
       />
     </div>

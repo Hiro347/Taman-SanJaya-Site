@@ -8,8 +8,8 @@ export default function FloralDivider() {
     <motion.div
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: '-20px' }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      viewport={{ once: true, margin: '150px 0px' }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className="w-full relative pointer-events-none select-none z-10 -mt-2 sm:-mt-4 lg:-mt-6 -mb-6 sm:-mb-10 lg:-mb-14"
     >
       <img

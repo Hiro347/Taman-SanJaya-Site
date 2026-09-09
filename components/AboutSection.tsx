@@ -17,8 +17,8 @@ export default function AboutSection({ settings }: AboutSectionProps) {
       <motion.div
         initial={{ opacity: 0, y: 35 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        viewport={{ once: true, margin: '150px 0px' }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="bg-brand-earth text-white rounded-[32px] sm:rounded-[44px] p-8 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl border border-white/10"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">

@@ -1,10 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { MapPin } from 'lucide-react';
+import { MapPin, Images } from 'lucide-react';
 import { Project, SiteSettings } from '@/lib/types';
+import ProjectDetailModal from './ProjectDetailModal';
 
 interface ProjectSectionProps {
   projects: Project[];
@@ -12,6 +13,8 @@ interface ProjectSectionProps {
 }
 
 export default function ProjectSection({ projects }: ProjectSectionProps) {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
   return (
     <section id="project" className="pt-14 sm:pt-20 pb-1 sm:pb-2 px-3 sm:px-6 max-w-7xl mx-auto">
       {/* Section Header - Bersih tanpa tab kategori */}
@@ -23,7 +26,7 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
           Koleksi Proyek Taman San Jaya
         </h2>
         <p className="mt-3.5 sm:mt-4 text-brand-earth/80 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-          Dokumentasi karya nyata pengerjaan lanskap hunian privat, villa, kawasan terbuka, dan relief alami bergaransi tumbuh 100%.
+          Dokumentasi karya nyata pengerjaan lanskap hunian privat, villa, kawasan terbuka, dan relief alami bergaransi tumbuh 100%. Klik kartu untuk melihat detail & galeri foto.
         </p>
       </div>
 
@@ -31,16 +34,26 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         {projects.map((project, index) => {
           const isFeatured = index === 0;
+          const galleryCount = (project.gallery_images?.length || 0) + (project.image_url ? 1 : 0);
 
           return (
             <motion.div
               key={project.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => setSelectedProject(project)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setSelectedProject(project);
+                }
+              }}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-40px' }}
-              transition={{ duration: 0.6, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              viewport={{ once: true, margin: '150px 0px' }}
+              transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -6 }}
-              className={`group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col justify-between ${
+              className={`group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col justify-between cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-brand-crimson/50 ${
                 isFeatured ? 'md:col-span-2' : ''
               }`}
             >
@@ -61,11 +74,17 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
                 />
 
                 {/* Subtle dark vignette on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-25 group-hover:opacity-55 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-30 group-hover:opacity-60 transition-opacity duration-500" />
 
                 {/* Project Index Number */}
                 <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md text-white text-xs font-mono font-bold tracking-wider border border-white/20">
                   0{index + 1}
+                </div>
+
+                {/* Gallery photo count badge on hover/display */}
+                <div className="absolute top-3.5 right-3.5 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md text-white text-xs font-medium tracking-wide border border-white/20 flex items-center gap-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
+                  <Images className="w-3.5 h-3.5" />
+                  <span>{galleryCount > 1 ? `${galleryCount} Foto` : 'Lihat Detail'}</span>
                 </div>
               </div>
 
@@ -80,7 +99,7 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
 
                   {/* Title */}
                   <h3
-                    className={`font-black text-brand-earth leading-snug tracking-tight ${
+                    className={`font-black text-brand-earth leading-snug tracking-tight group-hover:text-brand-crimson transition-colors duration-200 ${
                       isFeatured ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'
                     }`}
                   >
@@ -88,7 +107,7 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
                   </h3>
 
                   {/* Description */}
-                  <p className="mt-2.5 text-brand-earth/75 text-sm sm:text-base leading-relaxed font-normal">
+                  <p className="mt-2.5 text-brand-earth/75 text-sm sm:text-base leading-relaxed font-normal line-clamp-3 sm:line-clamp-none">
                     {project.description}
                   </p>
                 </div>
@@ -97,6 +116,13 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
           );
         })}
       </div>
+
+      {/* Detail Modal Popup */}
+      <ProjectDetailModal
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
     </section>
   );
 }
+

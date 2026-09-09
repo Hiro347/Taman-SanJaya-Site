@@ -9,18 +9,22 @@ import {
   Plus,
   Trash2,
   Upload,
-  Link as LinkIcon,
+  Pencil,
   CheckCircle2,
   AlertCircle,
   X,
   MapPin,
+  Images,
 } from 'lucide-react';
 
 export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
+  const [galleryUrlInput, setGalleryUrlInput] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -29,6 +33,7 @@ export default function AdminProjectsPage() {
     category: 'Taman Tropis',
     location: '',
     image_url: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
+    gallery_images: [] as string[],
     description: '',
   });
 
@@ -58,12 +63,29 @@ export default function AdminProjectsPage() {
   };
 
   const openAddModal = () => {
+    setEditingId(null);
+    setGalleryUrlInput('');
     setFormData({
       title: '',
       category: 'Taman Tropis',
       location: 'Jakarta Selatan',
       image_url: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
+      gallery_images: [],
       description: '',
+    });
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (proj: Project) => {
+    setEditingId(proj.id);
+    setGalleryUrlInput('');
+    setFormData({
+      title: proj.title,
+      category: proj.category || 'Taman Tropis',
+      location: proj.location,
+      image_url: proj.image_url,
+      gallery_images: Array.isArray(proj.gallery_images) ? [...proj.gallery_images] : [],
+      description: proj.description,
     });
     setIsModalOpen(true);
   };
@@ -93,12 +115,72 @@ export default function AdminProjectsPage() {
         ...prev,
         image_url: publicUrlData.publicUrl,
       }));
-      setToast({ type: 'success', text: 'Foto dokumentasi proyek berhasil diunggah!' });
+      setToast({ type: 'success', text: 'Foto utama proyek berhasil diunggah!' });
     } catch (err: any) {
       setToast({ type: 'error', text: err.message || 'Gagal mengunggah foto.' });
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingGallery(true);
+    try {
+      const supabase = createClient();
+      const newUrls: string[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileExt = file.name.split('.').pop();
+        const fileName = `gallery_${Date.now()}_${i}.${fileExt}`;
+        const filePath = `projects/gallery/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('taman-media')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicUrlData } = supabase.storage
+          .from('taman-media')
+          .getPublicUrl(filePath);
+
+        if (publicUrlData?.publicUrl) {
+          newUrls.push(publicUrlData.publicUrl);
+        }
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        gallery_images: [...prev.gallery_images, ...newUrls],
+      }));
+      setToast({ type: 'success', text: `${newUrls.length} foto berhasil ditambahkan ke galeri!` });
+    } catch (err: any) {
+      setToast({ type: 'error', text: err.message || 'Gagal mengunggah foto galeri.' });
+    } finally {
+      setUploadingGallery(false);
+      // Reset input value so same files can be re-uploaded if needed
+      e.target.value = '';
+    }
+  };
+
+  const handleAddGalleryUrl = () => {
+    if (!galleryUrlInput.trim()) return;
+    setFormData((prev) => ({
+      ...prev,
+      gallery_images: [...prev.gallery_images, galleryUrlInput.trim()],
+    }));
+    setGalleryUrlInput('');
+  };
+
+  const handleRemoveGalleryImage = (indexToRemove: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      gallery_images: prev.gallery_images.filter((_, idx) => idx !== indexToRemove),
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -108,34 +190,75 @@ export default function AdminProjectsPage() {
 
     try {
       const supabase = createClient();
-      const { error } = await supabase.from('projects').insert([
-        {
+
+      if (editingId) {
+        // Edit existing project
+        const { error } = await supabase
+          .from('projects')
+          .update({
+            title: formData.title,
+            category: formData.category,
+            location: formData.location,
+            image_url: formData.image_url,
+            gallery_images: formData.gallery_images,
+            description: formData.description,
+          })
+          .eq('id', editingId);
+
+        if (error) throw error;
+        setToast({ type: 'success', text: 'Proyek dan galeri foto berhasil diperbarui!' });
+      } else {
+        // Insert new project
+        const { error } = await supabase.from('projects').insert([
+          {
+            title: formData.title,
+            category: formData.category,
+            location: formData.location,
+            image_url: formData.image_url,
+            gallery_images: formData.gallery_images,
+            description: formData.description,
+          },
+        ]);
+
+        if (error) throw error;
+        setToast({ type: 'success', text: 'Proyek baru berhasil ditambahkan!' });
+      }
+
+      setIsModalOpen(false);
+      fetchProjects();
+    } catch (err: any) {
+      // Local fallback for display when offline or fallback mode
+      if (editingId) {
+        setProjects((prev) =>
+          prev.map((p) =>
+            p.id === editingId
+              ? {
+                  ...p,
+                  title: formData.title,
+                  category: formData.category,
+                  location: formData.location,
+                  image_url: formData.image_url,
+                  gallery_images: formData.gallery_images,
+                  description: formData.description,
+                }
+              : p
+          )
+        );
+        setToast({ type: 'success', text: 'Proyek berhasil diperbarui di website!' });
+      } else {
+        const newProj: Project = {
+          id: `local_${Date.now()}`,
           title: formData.title,
           category: formData.category,
           location: formData.location,
           image_url: formData.image_url,
+          gallery_images: formData.gallery_images,
           description: formData.description,
-        },
-      ]);
-
-      if (error) throw error;
-
-      setToast({ type: 'success', text: 'Proyek baru berhasil ditambahkan!' });
+        };
+        setProjects((prev) => [newProj, ...prev]);
+        setToast({ type: 'success', text: 'Proyek ditambahkan ke website!' });
+      }
       setIsModalOpen(false);
-      fetchProjects();
-    } catch (err: any) {
-      // Local fallback for display
-      const newProj: Project = {
-        id: `local_${Date.now()}`,
-        title: formData.title,
-        category: formData.category,
-        location: formData.location,
-        image_url: formData.image_url,
-        description: formData.description,
-      };
-      setProjects((prev) => [newProj, ...prev]);
-      setIsModalOpen(false);
-      setToast({ type: 'success', text: 'Proyek ditambahkan ke tampilan website!' });
     } finally {
       setSubmitting(false);
     }
@@ -165,7 +288,7 @@ export default function AdminProjectsPage() {
             Portofolio Proyek Landscape
           </h1>
           <p className="text-sm text-brand-earth/75 mt-1">
-            Unggah dokumentasi taman yang sudah selesai dibuat agar calon klien semakin yakin.
+            Kelola dokumentasi taman dan galeri foto hasil pengerjaan agar calon klien semakin yakin.
           </p>
         </div>
 
@@ -197,56 +320,93 @@ export default function AdminProjectsPage() {
 
       {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {projects.map((proj) => (
-          <div
-            key={proj.id}
-            className="bg-white rounded-3xl overflow-hidden border border-brand-sand-dark/40 shadow-xs flex flex-col justify-between"
-          >
-            <div>
-              <div className="relative w-full h-56 sm:h-64 overflow-hidden bg-brand-sand/30">
-                <Image
-                  src={proj.image_url}
-                  alt={proj.title}
-                  fill
-                  className="object-cover"
-                />
-                <span className="absolute top-3 left-3 bg-brand-earth/80 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full">
-                  {proj.category}
-                </span>
-              </div>
+        {projects.map((proj) => {
+          const galleryCount = (proj.gallery_images?.length || 0) + (proj.image_url ? 1 : 0);
 
-              <div className="p-6">
-                <div className="flex items-center gap-1.5 text-xs text-brand-navy font-semibold mb-1.5">
-                  <MapPin className="w-3.5 h-3.5" />
-                  <span>{proj.location}</span>
+          return (
+            <div
+              key={proj.id}
+              className="bg-white rounded-3xl overflow-hidden border border-brand-sand-dark/40 shadow-xs flex flex-col justify-between"
+            >
+              <div>
+                <div className="relative w-full h-56 sm:h-64 overflow-hidden bg-brand-sand/30">
+                  <Image
+                    src={proj.image_url}
+                    alt={proj.title}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute top-3 left-3 flex items-center gap-2">
+                    <span className="bg-brand-earth/80 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full">
+                      {proj.category}
+                    </span>
+                    <span className="bg-black/60 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1">
+                      <Images className="w-3 h-3" />
+                      <span>{galleryCount} Foto</span>
+                    </span>
+                  </div>
                 </div>
-                <h3 className="font-bold text-lg text-brand-earth">{proj.title}</h3>
-                <p className="mt-2 text-xs sm:text-sm text-brand-earth/75 leading-relaxed">
-                  {proj.description}
-                </p>
+
+                <div className="p-6">
+                  <div className="flex items-center gap-1.5 text-xs text-brand-navy font-semibold mb-1.5">
+                    <MapPin className="w-3.5 h-3.5" />
+                    <span>{proj.location}</span>
+                  </div>
+                  <h3 className="font-bold text-lg text-brand-earth">{proj.title}</h3>
+                  <p className="mt-2 text-xs sm:text-sm text-brand-earth/75 leading-relaxed">
+                    {proj.description}
+                  </p>
+
+                  {/* Gallery preview pills */}
+                  {proj.gallery_images && proj.gallery_images.length > 0 && (
+                    <div className="mt-4 pt-3 border-t border-brand-sand/40">
+                      <span className="text-xs font-bold text-brand-earth/60 uppercase tracking-wider block mb-2">
+                        Galeri ({proj.gallery_images.length} foto tambahan):
+                      </span>
+                      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                        {proj.gallery_images.map((img, i) => (
+                          <div
+                            key={i}
+                            className="relative w-12 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-stone-100 border border-brand-sand-dark/40"
+                          >
+                            <Image src={img} alt="" fill className="object-cover" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="p-6 pt-0 flex items-center justify-between border-t border-brand-sand/30 mt-4">
+                <button
+                  onClick={() => openEditModal(proj)}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-navy hover:bg-brand-navy/10 px-3 py-2 rounded-xl transition-colors"
+                >
+                  <Pencil className="w-4 h-4" />
+                  <span>Edit Proyek & Galeri</span>
+                </button>
+
+                <button
+                  onClick={() => handleDelete(proj.id)}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 px-3 py-2 rounded-xl transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Hapus</span>
+                </button>
               </div>
             </div>
-
-            <div className="p-6 pt-0 flex justify-end">
-              <button
-                onClick={() => handleDelete(proj.id)}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 px-3 py-2 rounded-xl transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-                <span>Hapus Proyek</span>
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Add Project Modal */}
+      {/* Add / Edit Project Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-3xl w-full max-w-2xl p-6 sm:p-8 shadow-2xl border border-brand-sand-dark/40">
-            <div className="flex items-center justify-between pb-4 border-b border-brand-sand-dark/30 mb-6">
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs overflow-y-auto">
+          <div className="bg-white rounded-3xl w-full max-w-2xl p-6 sm:p-8 shadow-2xl border border-brand-sand-dark/40 max-h-[92vh] flex flex-col">
+            <div className="flex items-center justify-between pb-4 border-b border-brand-sand-dark/30 mb-6 flex-shrink-0">
               <h2 className="text-xl font-bold text-brand-earth">
-                Tambah Proyek Portofolio
+                {editingId ? 'Edit Proyek & Galeri Foto' : 'Tambah Proyek Portofolio'}
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -256,7 +416,7 @@ export default function AdminProjectsPage() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-5 overflow-y-auto pr-1 flex-1">
               <div>
                 <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-1.5">
                   Judul Proyek Taman
@@ -305,13 +465,13 @@ export default function AdminProjectsPage() {
                 </div>
               </div>
 
-              {/* Photo Upload / URL */}
+              {/* Photo Upload / URL (Primary Landscape Photo) */}
               <div className="space-y-3">
                 <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider">
-                  Foto Hasil Pengerjaan
+                  Foto Utama Proyek (Landscape)
                 </label>
                 <div className="flex items-center gap-4">
-                  <div className="relative w-24 h-20 rounded-2xl overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/40">
+                  <div className="relative w-28 h-20 rounded-2xl overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/40">
                     <Image
                       src={formData.image_url}
                       alt="Preview"
@@ -322,7 +482,7 @@ export default function AdminProjectsPage() {
                   <div className="flex-1 space-y-2">
                     <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-xl text-xs font-bold text-brand-earth cursor-pointer transition-colors">
                       <Upload className="w-4 h-4 text-brand-crimson" />
-                      <span>{uploading ? 'Mengunggah...' : 'Upload dari HP / Laptop'}</span>
+                      <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
                       <input
                         type="file"
                         accept="image/*"
@@ -333,7 +493,7 @@ export default function AdminProjectsPage() {
                     </label>
                     <input
                       type="url"
-                      placeholder="Atau tempel link URL foto..."
+                      placeholder="Atau tempel link URL foto utama..."
                       value={formData.image_url}
                       onChange={(e) =>
                         setFormData({ ...formData, image_url: e.target.value })
@@ -344,6 +504,77 @@ export default function AdminProjectsPage() {
                 </div>
               </div>
 
+              {/* Galeri Foto Tambahan */}
+              <div className="space-y-3 p-4 rounded-2xl bg-brand-sand-light/60 border border-brand-sand-dark/40">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-brand-earth uppercase tracking-wider flex items-center gap-1.5">
+                    <Images className="w-4 h-4 text-brand-navy" />
+                    <span>Galeri Foto Tambahan ({formData.gallery_images.length})</span>
+                  </label>
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-navy text-white hover:bg-brand-navy-dark rounded-xl text-xs font-bold cursor-pointer transition-colors">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{uploadingGallery ? 'Mengunggah...' : '+ Upload Foto Galeri'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleGalleryUpload}
+                      disabled={uploadingGallery}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                <p className="text-xs text-brand-earth/70">
+                  Foto-foto dokumentasi ini akan muncul di pop-up detail dan slider galeri pengunjung.
+                </p>
+
+                {/* Input URL foto tambahan */}
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    placeholder="Atau tempel URL foto lalu klik Tambah..."
+                    value={galleryUrlInput}
+                    onChange={(e) => setGalleryUrlInput(e.target.value)}
+                    className="flex-1 px-3 py-2 rounded-xl border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddGalleryUrl}
+                    className="px-3 py-2 bg-brand-earth text-white rounded-xl text-xs font-bold hover:bg-brand-earth-dark transition-colors"
+                  >
+                    Tambah
+                  </button>
+                </div>
+
+                {/* Gallery Thumbnails Manager */}
+                {formData.gallery_images.length > 0 && (
+                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 pt-2">
+                    {formData.gallery_images.map((imgUrl, idx) => (
+                      <div
+                        key={idx}
+                        className="relative group w-full aspect-[4/3] rounded-lg overflow-hidden border border-brand-sand-dark/60 bg-white"
+                      >
+                        <Image
+                          src={imgUrl}
+                          alt={`Gallery item ${idx + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveGalleryImage(idx)}
+                          className="absolute top-1 right-1 p-1 bg-red-600 hover:bg-red-700 text-white rounded-md opacity-80 group-hover:opacity-100 transition-opacity shadow-sm"
+                          title="Hapus foto dari galeri"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               <div>
                 <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-1.5">
                   Deskripsi Hasil Pengerjaan
@@ -351,7 +582,7 @@ export default function AdminProjectsPage() {
                 <textarea
                   rows={3}
                   required
-                  placeholder="Jelaskan elemen taman yang dipasang: jenis rumput, tanaman utama, kolam, atau relief..."
+                  placeholder="Jelaskan elemen taman yang dipasang: jenis rumput, tanaman peneduh, batuan koral, atau fitur air relief batu alam..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
@@ -368,10 +599,10 @@ export default function AdminProjectsPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={submitting || uploading}
+                  disabled={submitting || uploading || uploadingGallery}
                   className="px-6 py-2.5 rounded-xl bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white text-sm font-bold shadow-md transition-colors"
                 >
-                  {submitting ? 'Menyimpan...' : 'Simpan ke Portofolio'}
+                  {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Proyek' : 'Simpan ke Portofolio'}
                 </button>
               </div>
             </form>
