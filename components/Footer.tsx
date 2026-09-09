@@ -18,7 +18,7 @@ export default function Footer({ settings }: FooterProps) {
           <img
             src="/images/group-2.png"
             alt="Ornamen Bunga Liar Alami Taman San Jaya"
-            className="w-full h-auto max-h-[160px] sm:max-h-[220px] lg:max-h-[270px] object-cover object-bottom block"
+            className="w-full h-auto block"
             loading="lazy"
           />
         </picture>
