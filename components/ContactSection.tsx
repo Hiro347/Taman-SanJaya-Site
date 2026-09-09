@@ -15,7 +15,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
   )}`;
 
   return (
-    <section id="contact" className="pt-20 sm:pt-28 pb-16 sm:pb-24 px-4 sm:px-8 max-w-4xl mx-auto text-center">
+    <section id="contact" className="pt-6 sm:pt-10 pb-2 sm:pb-4 px-4 sm:px-8 max-w-4xl mx-auto text-center">
       {/* Pop-up Spring Entrance when user reaches this section */}
       <motion.div
         initial={{ opacity: 0, scale: 0.88, y: 40 }}

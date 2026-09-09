@@ -16,7 +16,7 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
-    <section id="project" className="pt-14 sm:pt-20 pb-1 sm:pb-2 px-3 sm:px-6 max-w-7xl mx-auto">
+    <section id="project" className="pt-2 sm:pt-4 pb-2 sm:pb-4 px-3 sm:px-6 max-w-7xl mx-auto">
       {/* Section Header - Bersih tanpa tab kategori */}
       <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
         <span className="inline-block text-xs font-bold tracking-widest text-brand-crimson uppercase bg-white/80 border border-brand-earth/15 px-4 py-1.5 rounded-full mb-3 shadow-xs">

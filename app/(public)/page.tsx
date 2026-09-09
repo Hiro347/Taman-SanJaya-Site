@@ -20,7 +20,7 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="w-full space-y-4 sm:space-y-8">
+    <div className="w-full">
       {/* 1. Hero Section */}
       <HeroSection settings={settings} />
 

@@ -27,7 +27,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
   }, [products, searchQuery]);
 
   return (
-    <section id="catalog" className="-mt-8 sm:-mt-12 lg:-mt-16 pb-16 sm:pb-20 px-3 sm:px-6 max-w-7xl mx-auto relative z-20">
+    <section id="catalog" className="-mt-14 sm:-mt-20 lg:-mt-28 pb-16 sm:pb-20 px-3 sm:px-6 max-w-7xl mx-auto relative z-20">
       {/* Outer Sand Background Canvas */}
       <div className="bg-brand-sand/40 border border-brand-sand-dark/40 rounded-[32px] sm:rounded-[44px] p-6 sm:p-10 lg:p-12">
         

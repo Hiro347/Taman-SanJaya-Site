@@ -10,7 +10,7 @@ interface FooterProps {
 
 export default function Footer({ settings }: FooterProps) {
   return (
-    <div className="w-full relative mt-2 sm:mt-4 lg:mt-6">
+    <div className="w-full relative -mt-4 sm:-mt-8 lg:-mt-12">
       {/* Ornamen Bunga Liar Alami (Group 2) Membentang Tepat di Atas Footer */}
       <div className="w-full relative -mb-1 sm:-mb-1.5 pointer-events-none select-none z-10">
         <picture>

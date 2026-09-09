@@ -120,7 +120,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
     )}`;
 
   return (
-    <section id="service" className="w-full px-4 sm:px-8 lg:px-12 py-12 sm:py-16">
+    <section id="service" className="w-full px-4 sm:px-8 lg:px-12 pt-10 sm:pt-14 pb-4 sm:pb-6">
       <div className="max-w-7xl mx-auto">
         {/* ================================================================= */}
         {/* SECTION TITLE: Clean "Layanan Kami"                               */}
