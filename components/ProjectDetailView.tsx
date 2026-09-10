@@ -50,6 +50,15 @@ export default function ProjectDetailView({
     setActiveImageIndex((prev) => (prev === galleryList.length - 1 ? 0 : prev + 1));
   }, [galleryList.length]);
 
+  // Selalu pastikan halaman detail proyek dimulai dari paling atas saat dibuka
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+    const lenis = (window as unknown as { lenis?: { scrollTo: (target: number, opts?: object) => void } }).lenis;
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    }
+  }, []);
+
   // Keyboard navigation for smooth browsing
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

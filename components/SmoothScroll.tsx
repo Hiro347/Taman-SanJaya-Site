@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import Lenis from 'lenis';
 
 interface SmoothScrollProps {
@@ -8,6 +9,15 @@ interface SmoothScrollProps {
 }
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
+  const pathname = usePathname();
+  const lenisRef = useRef<Lenis | null>(null);
+  const homeScrollPosRef = useRef<number>(0);
+  const isHomepageRef = useRef<boolean>(pathname === '/');
+
+  useEffect(() => {
+    isHomepageRef.current = pathname === '/';
+  }, [pathname]);
+
   useEffect(() => {
     // Inisialisasi Lenis Smooth Scroll untuk momentum scroll sekelas website Awwwards
     const lenis = new Lenis({
@@ -18,6 +28,14 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       smoothWheel: true,
       wheelMultiplier: 1.0,
       touchMultiplier: 1.5,
+    });
+    lenisRef.current = lenis;
+
+    // Simpan posisi scroll saat pengunjung berselancar di homepage
+    lenis.on('scroll', (e: { scroll: number }) => {
+      if (isHomepageRef.current) {
+        homeScrollPosRef.current = e.scroll;
+      }
     });
 
     let rafId: number;
@@ -76,11 +94,57 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       cancelAnimationFrame(rafId);
       document.removeEventListener('click', handleAnchorClick);
       lenis.destroy();
+      lenisRef.current = null;
       if (typeof window !== 'undefined') {
         delete (window as unknown as { lenis?: Lenis }).lenis;
       }
     };
   }, []);
+
+  // Menangani transisi perpindahan halaman / rute
+  useEffect(() => {
+    const lenis = lenisRef.current;
+
+    if (pathname !== '/') {
+      // 1. Saat berpindah ke halaman detail (/proyek/* atau /katalog/*):
+      // SELALU pastikan halaman dimulai dari posisi PALING ATAS
+      window.scrollTo(0, 0);
+      if (lenis) {
+        lenis.scrollTo(0, { immediate: true });
+      }
+    } else {
+      // 2. Saat kembali ke homepage (/):
+      // Pertahankan posisi terakhir di mana pengunjung berada di homepage
+      const hash = typeof window !== 'undefined' ? window.location.hash : '';
+
+      const restoreScroll = () => {
+        if (hash) {
+          const targetId = hash.replace('#', '');
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            if (lenis) {
+              lenis.scrollTo(targetElement, { offset: -25, immediate: true });
+            } else {
+              targetElement.scrollIntoView();
+            }
+            return;
+          }
+        }
+
+        if (homeScrollPosRef.current > 0) {
+          if (lenis) {
+            lenis.scrollTo(homeScrollPosRef.current, { immediate: true });
+          } else {
+            window.scrollTo(0, homeScrollPosRef.current);
+          }
+        }
+      };
+
+      // Jalankan pemulihan scroll setelah frame render homepage siap
+      const timer = setTimeout(restoreScroll, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [pathname]);
 
   return <>{children}</>;
 }

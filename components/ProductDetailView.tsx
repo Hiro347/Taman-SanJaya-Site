@@ -72,6 +72,15 @@ export default function ProductDetailView({
     }
   }, []);
 
+  // Selalu pastikan halaman detail produk dimulai dari paling atas saat dibuka
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+    const lenis = (window as unknown as { lenis?: { scrollTo: (target: number, opts?: object) => void } }).lenis;
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    }
+  }, []);
+
   // Auto-scroll active thumbnail into view when index changes
   React.useEffect(() => {
     const activeBtn = thumbnailItemRefs.current[activeImageIndex];
