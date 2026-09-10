@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
@@ -26,6 +27,16 @@ export default function ProjectDetailView({
   otherProjects,
   settings,
 }: ProjectDetailViewProps) {
+  const router = useRouter();
+
+  const handleBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (typeof window !== 'undefined' && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push('/#project');
+    }
+  };
   // Combine primary image and gallery images into a unique list
   const galleryList = React.useMemo(() => {
     const list: string[] = [];
@@ -83,13 +94,14 @@ export default function ProjectDetailView({
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-16">
       {/* 1. TOP BAR: TOMBOL BACK ICON */}
       <div className="flex items-center justify-between mb-5 sm:mb-7">
-        <Link
-          href="/#project"
+        <button
+          type="button"
+          onClick={handleBack}
           aria-label="Kembali ke Koleksi Proyek"
           className="inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 hover:bg-white text-brand-earth hover:text-brand-crimson border border-brand-earth/15 shadow-xs hover:shadow-md transition-all duration-200 group active:scale-95 cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
-        </Link>
+        </button>
       </div>
 
       {/* 2. HERO FOTO UTAMA BESAR */}

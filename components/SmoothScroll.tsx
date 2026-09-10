@@ -12,11 +12,8 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
   const homeScrollPosRef = useRef<number>(0);
-  const isHomepageRef = useRef<boolean>(pathname === '/');
-
-  useEffect(() => {
-    isHomepageRef.current = pathname === '/';
-  }, [pathname]);
+  const isNavigatingRef = useRef<boolean>(false);
+  const prevPathnameRef = useRef<string>(pathname);
 
   useEffect(() => {
     // Inisialisasi Lenis Smooth Scroll dengan pembatasan kecepatan maksimum (Anti-Lag & Anti-Flicker)
@@ -53,9 +50,10 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     });
     lenisRef.current = lenis;
 
-    // Simpan posisi scroll saat pengunjung berselancar di homepage
+    // Catat posisi scroll hanya saat berada di homepage dan TIDAK sedang dalam transisi rute
     lenis.on('scroll', (e: { scroll: number }) => {
-      if (isHomepageRef.current) {
+      const isHome = typeof window !== 'undefined' ? window.location.pathname === '/' : pathname === '/';
+      if (isHome && !isNavigatingRef.current) {
         homeScrollPosRef.current = e.scroll;
       }
     });
@@ -91,7 +89,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       if (targetId === 'home') {
         e.preventDefault();
         lenis.scrollTo(0, {
-          duration: 1.2,
+          duration: 1.0,
           easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         });
         history.pushState(null, '', '#home');
@@ -103,7 +101,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
         e.preventDefault();
         lenis.scrollTo(targetElement, {
           offset: -25,
-          duration: 1.2,
+          duration: 1.0,
           easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         });
         history.pushState(null, '', href);
@@ -123,24 +121,44 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     };
   }, []);
 
-  // Menangani transisi perpindahan halaman / rute
+  // Menangani transisi perpindahan halaman dan pemulihan posisi scroll homepage
   useEffect(() => {
     const lenis = lenisRef.current;
+    const wasHomepage = prevPathnameRef.current === '/';
+    prevPathnameRef.current = pathname;
 
     if (pathname !== '/') {
       // 1. Saat berpindah ke halaman detail (/proyek/* atau /katalog/*):
-      // SELALU pastikan halaman dimulai dari posisi PALING ATAS
+      // Kunci flag agar event scroll ke 0 tidak menimpa nilai posisi homepage
+      isNavigatingRef.current = true;
+      if (wasHomepage && homeScrollPosRef.current > 0 && typeof window !== 'undefined') {
+        sessionStorage.setItem('taman_home_scroll', homeScrollPosRef.current.toString());
+      }
+
+      // Pastikan halaman detail dibuka dari posisi PALING ATAS
       window.scrollTo(0, 0);
       if (lenis) {
         lenis.scrollTo(0, { immediate: true });
       }
     } else {
       // 2. Saat kembali ke homepage (/):
-      // Pertahankan posisi terakhir di mana pengunjung berada di homepage
+      const saved = typeof window !== 'undefined'
+        ? Number(sessionStorage.getItem('taman_home_scroll')) || homeScrollPosRef.current
+        : homeScrollPosRef.current;
+
       const hash = typeof window !== 'undefined' ? window.location.hash : '';
 
       const restoreScroll = () => {
-        if (hash) {
+        // Jika ada posisi scroll riil tersimpan, prioritaskan pemulihan posisi presisi tersebut
+        if (saved > 0) {
+          if (lenis) {
+            lenis.resize();
+            lenis.scrollTo(saved, { immediate: true });
+          } else {
+            window.scrollTo(0, saved);
+          }
+        } else if (hash && hash !== '#home') {
+          // Fallback ke elemen ID jika ada hash eksplisit dan tidak ada posisi tersimpan
           const targetId = hash.replace('#', '');
           const targetElement = document.getElementById(targetId);
           if (targetElement) {
@@ -149,22 +167,21 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
             } else {
               targetElement.scrollIntoView();
             }
-            return;
           }
         }
 
-        if (homeScrollPosRef.current > 0) {
-          if (lenis) {
-            lenis.scrollTo(homeScrollPosRef.current, { immediate: true });
-          } else {
-            window.scrollTo(0, homeScrollPosRef.current);
+        // Frame kedua untuk menjamin kestabilan layout paint, lalu buka kembali lock
+        requestAnimationFrame(() => {
+          if (lenis && saved > 0) {
+            lenis.resize();
+            lenis.scrollTo(saved, { immediate: true });
           }
-        }
+          isNavigatingRef.current = false;
+        });
       };
 
-      // Jalankan pemulihan scroll setelah frame render homepage siap
-      const timer = setTimeout(restoreScroll, 50);
-      return () => clearTimeout(timer);
+      // Jalankan pemulihan sinkron dengan frame rendering browser (zero CPU polling)
+      requestAnimationFrame(restoreScroll);
     }
   }, [pathname]);
 
