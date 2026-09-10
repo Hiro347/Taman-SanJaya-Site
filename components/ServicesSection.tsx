@@ -147,7 +147,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
                 key={item.id}
                 onMouseEnter={() => setActiveIdx(index)}
                 onClick={() => setActiveIdx(index)}
-                className={`relative h-full cursor-pointer overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] flex flex-col justify-between p-6 sm:p-7 border-r border-white/15 last:border-r-0 ${
+                className={`relative h-full cursor-pointer overflow-hidden transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col justify-between p-6 sm:p-7 border-r border-white/15 last:border-r-0 ${
                   isActive ? 'flex-[2] lg:flex-[2.2]' : 'flex-1'
                 }`}
               >
@@ -157,7 +157,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
                   alt={item.title}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className={`object-cover object-center transition-all duration-700 ease-out ${
+                  className={`object-cover object-center transition-all duration-350 ease-out ${
                     isActive
                       ? 'grayscale-0 brightness-[0.92] scale-105'
                       : activeIdx === null
@@ -169,7 +169,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
 
                 {/* Ambient Dark Gradient Overlays for optimal readability */}
                 <div
-                  className={`absolute inset-0 transition-opacity duration-500 pointer-events-none ${
+                  className={`absolute inset-0 transition-opacity duration-300 pointer-events-none ${
                     isActive
                       ? 'bg-gradient-to-t from-black/85 via-black/20 to-black/35'
                       : activeIdx === null
@@ -182,7 +182,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
                 {/* Upper Area: Icon & Uppercase Title                          */}
                 {/* ----------------------------------------------------------- */}
                 <div className="relative z-10 flex flex-col items-center text-center mt-2">
-                  <div className="transition-transform duration-500 hover:scale-110 mb-3">
+                  <div className="transition-transform duration-250 hover:scale-110 mb-3">
                     {item.icon}
                   </div>
 
@@ -194,10 +194,10 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
                   <AnimatePresence>
                     {isActive && (
                       <motion.div
-                        initial={{ opacity: 0, y: 10, scale: 0.9 }}
+                        initial={{ opacity: 0, y: 8, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -5, scale: 0.95 }}
-                        transition={{ duration: 0.3 }}
+                        exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                        transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         className="mt-4 flex flex-col sm:flex-row items-center gap-2"
                       >
                         <a
@@ -232,7 +232,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
                 {/* ----------------------------------------------------------- */}
                 <div className="relative z-10 text-center pb-2">
                   <p
-                    className={`text-white/95 text-xs sm:text-[13px] lg:text-sm leading-relaxed drop-shadow transition-opacity duration-500 font-normal px-1 ${
+                    className={`text-white/95 text-xs sm:text-[13px] lg:text-sm leading-relaxed drop-shadow transition-opacity duration-300 font-normal px-1 ${
                       isActive ? 'opacity-100 max-w-md mx-auto' : 'opacity-85 line-clamp-3'
                     }`}
                   >
@@ -255,7 +255,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
               <div
                 key={item.id}
                 onClick={() => setActiveIdx(isActive ? null : index)}
-                className={`relative w-full rounded-2xl overflow-hidden transition-all duration-500 shadow-lg cursor-pointer ${
+                className={`relative w-full rounded-2xl overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-lg cursor-pointer ${
                   isActive ? 'h-[290px]' : 'h-[92px]'
                 }`}
               >
@@ -265,7 +265,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
                   alt={item.title}
                   fill
                   sizes="100vw"
-                  className={`object-cover transition-all duration-500 ${
+                  className={`object-cover transition-all duration-300 ease-out ${
                     isActive
                       ? 'grayscale-0 brightness-[0.92]'
                       : activeIdx === null
@@ -295,9 +295,9 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
 
                   {isActive && (
                     <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                       className="flex flex-col items-center gap-3 pt-2"
                     >
                       <p className="text-white/90 text-xs leading-relaxed max-w-xs">
