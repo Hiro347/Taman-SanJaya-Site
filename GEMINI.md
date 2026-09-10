@@ -122,13 +122,20 @@ The brand visual language is inspired by high-end architectural monographs, orga
    - **Layout & Navigation**:
      - Card 1 (index 0) is a wide featured banner spanning 2 columns (`md:col-span-2`).
      - Cards 2, 3, 4, 5 form a symmetrical 2x2 grid.
-     - Clicking any project navigates directly in the main window (no pop-up modal, no new tab) to `/proyek/[id]` with an elegant "← Kembali ke Koleksi Proyek" back button.
+     - Clicking any project navigates directly in the main window (no pop-up modal, no new tab) to `/proyek/[id]` with a minimalist circular back arrow icon button.
      - Features index counter (`01`, `02`...), location tag with pin, bold title, photo counter, and refined description.
    - **`components/ProjectDetailView.tsx` (`/proyek/[id]`)**:
-     - Dedicated page matching the architectural master design: large featured stage photo with photo counter (`X / N`) and arrows, 2-column project metadata, IPB assurance badges, full documentation photo gallery grid, and related projects grid.
+     - Dedicated page matching the architectural master design: large featured stage photo with photo counter (`X / N`) and arrows, 2-column project metadata, IPB assurance badges, full documentation photo gallery grid with keyboard navigation, and related projects grid.
 
-6. **`components/CatalogSection.tsx`**:
-   - Curated 4-plant nursery catalog with live search, direct Tokopedia & Shopee marketplace buttons, and care guides. (Category tabs and floating image badges removed for a clean architectural design).
+6. **`components/CatalogSection.tsx` & Dedicated Detail Page (`/katalog/[id]`)**:
+   - Curated 4-plant nursery catalog with live search, direct Tokopedia & Shopee marketplace buttons, and care guides.
+   - Clicking a plant photo or title navigates directly in the main window to `/katalog/[id]` with a minimalist circular back arrow icon button.
+   - **`components/ProductDetailView.tsx` (`/katalog/[id]`)**:
+     - Dedicated e-commerce plant sales detail page matching Shopee/Tokopedia product viewer:
+       - **Atas**: Large primary product photo stage with photo counter (`X / N`), prev/next arrow chevrons, and zoom lightbox.
+       - **Bawah**: Compact horizontal thumbnail strip with crimson `#990633` active border, carousel arrow buttons, and auto-scroll thumbnail centering.
+       - **Constraint**: Strict prohibition of separate documentation galleries below the content; all photos stay within the Shopee/Tokopedia media stage.
+     - 2-column e-commerce layout: Plant name, large price display (`Rp XXX.000`), stock badge ("Tersedia"), direct Tokopedia & Shopee buy buttons, WhatsApp direct order CTA, and related plants grid.
 
 7. **`components/AboutSection.tsx`**:
    - Brand story of *Taman San Jaya (成功之园)* and IPB University plant protection science.

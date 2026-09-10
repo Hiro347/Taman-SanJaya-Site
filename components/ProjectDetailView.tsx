@@ -11,8 +11,6 @@ import {
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
-  Sparkles,
-  Layers,
   CheckCircle2,
 } from 'lucide-react';
 import { Project, SiteSettings } from '@/lib/types';
@@ -44,13 +42,27 @@ export default function ProjectDetailView({
 
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
 
-  const handlePrev = () => {
+  const handlePrev = React.useCallback(() => {
     setActiveImageIndex((prev) => (prev === 0 ? galleryList.length - 1 : prev - 1));
-  };
+  }, [galleryList.length]);
 
-  const handleNext = () => {
+  const handleNext = React.useCallback(() => {
     setActiveImageIndex((prev) => (prev === galleryList.length - 1 ? 0 : prev + 1));
-  };
+  }, [galleryList.length]);
+
+  // Keyboard navigation for smooth browsing
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (galleryList.length <= 1) return;
+      if (e.key === 'ArrowLeft') {
+        handlePrev();
+      } else if (e.key === 'ArrowRight') {
+        handleNext();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [galleryList.length, handlePrev, handleNext]);
 
   const currentPhoto = galleryList[activeImageIndex] || project.image_url;
 
@@ -60,20 +72,15 @@ export default function ProjectDetailView({
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 pb-16">
-      {/* 1. TOP BAR: TOMBOL BACK KE PORTOFOLIO */}
+      {/* 1. TOP BAR: TOMBOL BACK ICON */}
       <div className="flex items-center justify-between mb-5 sm:mb-7">
         <Link
           href="/#project"
-          className="inline-flex items-center gap-2 bg-white/75 hover:bg-white text-brand-earth hover:text-brand-crimson text-xs sm:text-sm font-bold px-4 py-2 rounded-full border border-brand-earth/15 shadow-xs transition-all duration-200 group"
+          aria-label="Kembali ke Koleksi Proyek"
+          className="inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/80 hover:bg-white text-brand-earth hover:text-brand-crimson border border-brand-earth/15 shadow-xs hover:shadow-md transition-all duration-200 group active:scale-95 cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-          <span>Kembali ke Koleksi Proyek</span>
+          <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-0.5" />
         </Link>
-
-        <span className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-brand-crimson tracking-wider uppercase bg-brand-crimson/10 px-3.5 py-1 rounded-full border border-brand-crimson/20">
-          <Sparkles className="w-3 h-3" />
-          <span>Dokumentasi Resmi</span>
-        </span>
       </div>
 
       {/* 2. HERO FOTO UTAMA BESAR */}
@@ -131,11 +138,6 @@ export default function ProjectDetailView({
       <div className="mt-8 sm:mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* Kolom Kiri: Judul & Deskripsi Arsitektur */}
         <div className="lg:col-span-8 space-y-4">
-          <div className="inline-flex items-center gap-2 text-xs font-bold text-brand-crimson uppercase tracking-widest bg-white/80 px-3.5 py-1 rounded-full border border-brand-earth/10">
-            <Layers className="w-3.5 h-3.5" />
-            <span>Kategori: {project.category}</span>
-          </div>
-
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-earth tracking-tight leading-tight">
             {project.title}
           </h1>
@@ -156,37 +158,14 @@ export default function ProjectDetailView({
           </div>
         </div>
 
-        {/* Kolom Kanan: Detail Lokasi & Tombol Konsultasi WhatsApp */}
-        <div className="lg:col-span-4 bg-white/80 rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-brand-earth/15 shadow-sm space-y-5">
-          <div>
-            <span className="text-[11px] font-bold text-brand-earth/60 uppercase tracking-widest block mb-1">
-              Lokasi Pengerjaan
-            </span>
-            <div className="flex items-start gap-2 text-brand-earth font-black text-lg sm:text-xl">
-              <MapPin className="w-5 h-5 text-brand-crimson flex-shrink-0 mt-0.5" />
-              <span>{project.location}</span>
-            </div>
-          </div>
-
-          <div className="pt-3 border-t border-brand-earth/10">
-            <span className="text-[11px] font-bold text-brand-earth/60 uppercase tracking-widest block mb-1">
-              Spesialisasi Konsep
-            </span>
-            <span className="inline-block text-sm font-extrabold text-brand-navy bg-brand-navy-light px-3 py-1 rounded-lg">
-              {project.category}
-            </span>
-          </div>
-
-          <div className="pt-2">
-            <a
-              href={waUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full inline-flex items-center justify-center gap-2.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold text-sm sm:text-base py-3.5 px-6 rounded-full shadow-lg shadow-brand-crimson/30 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-95"
-            >
-              <MessageCircle className="w-4 h-4 fill-current" />
-              <span>Konsultasikan Konsep Serupa</span>
-            </a>
+        {/* Kolom Kanan: Detail Lokasi */}
+        <div className="lg:col-span-4 bg-white/80 rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-brand-earth/15 shadow-sm">
+          <span className="text-[11px] font-bold text-brand-earth/60 uppercase tracking-widest block mb-1.5">
+            Lokasi Pengerjaan
+          </span>
+          <div className="flex items-start gap-2.5 text-brand-earth font-black text-lg sm:text-xl">
+            <MapPin className="w-5 h-5 text-brand-crimson flex-shrink-0 mt-0.5" />
+            <span>{project.location}</span>
           </div>
         </div>
       </div>
@@ -215,7 +194,9 @@ export default function ProjectDetailView({
               return (
                 <button
                   key={idx}
+                  type="button"
                   onClick={() => setActiveImageIndex(idx)}
+                  aria-label={`Lihat foto dokumentasi ${idx + 1}`}
                   className={`relative aspect-[16/11] rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all duration-300 group cursor-pointer focus:outline-hidden ${
                     isSelected
                       ? 'border-brand-crimson ring-4 ring-brand-crimson/20 shadow-md scale-[1.02]'
@@ -226,16 +207,10 @@ export default function ProjectDetailView({
                     src={img}
                     alt={`${project.title} Thumbnail ${idx + 1}`}
                     fill
+                    loading="lazy"
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  {isSelected && (
-                    <div className="absolute inset-0 bg-brand-crimson/15 flex items-center justify-center">
-                      <span className="bg-brand-crimson text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-md shadow-xs">
-                        Aktif
-                      </span>
-                    </div>
-                  )}
                 </button>
               );
             })}
@@ -265,23 +240,24 @@ export default function ProjectDetailView({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
             {otherProjects.map((other) => (
-              <Link
+              <div
                 key={other.id}
-                href={`/proyek/${other.id}`}
                 className="group block bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-300"
               >
-                <div className="relative w-full aspect-[16/10] overflow-hidden bg-brand-sand/20">
+                {/* Pencet Foto Langsung Masuk ke Tab Proyek Terkait */}
+                <Link
+                  href={`/proyek/${other.slug || other.id}`}
+                  className="block relative w-full aspect-[16/10] overflow-hidden bg-brand-sand/20 cursor-pointer"
+                >
                   <Image
                     src={other.image_url}
                     alt={other.title}
                     fill
+                    loading="lazy"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md text-white text-[11px] font-bold">
-                    {other.category}
-                  </div>
-                </div>
+                </Link>
 
                 <div className="p-5">
                   <div className="flex items-center gap-1 text-[11px] font-bold text-brand-crimson uppercase tracking-wider mb-1.5">
@@ -289,13 +265,15 @@ export default function ProjectDetailView({
                     <span>{other.location}</span>
                   </div>
                   <h3 className="font-extrabold text-base sm:text-lg text-brand-earth group-hover:text-brand-crimson transition-colors line-clamp-1">
-                    {other.title}
+                    <Link href={`/proyek/${other.slug || other.id}`} className="hover:text-brand-crimson transition-colors">
+                      {other.title}
+                    </Link>
                   </h3>
                   <p className="mt-2 text-xs sm:text-sm text-brand-earth/70 line-clamp-2 leading-relaxed">
                     {other.description}
                   </p>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>

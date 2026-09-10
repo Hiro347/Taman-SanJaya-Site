@@ -22,11 +22,15 @@ export interface Product {
   description: string;
   care_instructions?: string;
   image_url: string;
+  gallery_images?: string[];
   in_stock: boolean;
   featured?: boolean;
   order_index?: number;
   tokopedia_url?: string;
   shopee_url?: string;
+  light_requirement?: string;
+  watering_schedule?: string;
+  soil_type?: string;
   created_at?: string;
 }
 
@@ -45,6 +49,7 @@ export interface Service {
 export interface Project {
   id: string;
   title: string;
+  slug?: string;
   category: string;
   location: string;
   image_url: string;

@@ -191,6 +191,11 @@ export default function AdminProjectsPage() {
     try {
       const supabase = createClient();
 
+      const slug = formData.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '') + '-' + Date.now();
+
       if (editingId) {
         // Edit existing project
         const { error } = await supabase
@@ -212,6 +217,7 @@ export default function AdminProjectsPage() {
         const { error } = await supabase.from('projects').insert([
           {
             title: formData.title,
+            slug,
             category: formData.category,
             location: formData.location,
             image_url: formData.image_url,

@@ -18,6 +18,7 @@ import {
   Search,
   Sprout,
   ExternalLink,
+  Images,
 } from 'lucide-react';
 
 export default function AdminProductsPage() {
@@ -27,6 +28,8 @@ export default function AdminProductsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
+  const [galleryUrlInput, setGalleryUrlInput] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
@@ -39,6 +42,7 @@ export default function AdminProductsPage() {
     description: '',
     care_instructions: '',
     image_url: '',
+    gallery_images: [] as string[],
     in_stock: true,
     tokopedia_url: '',
     shopee_url: '',
@@ -79,10 +83,12 @@ export default function AdminProductsPage() {
       description: '',
       care_instructions: 'Penyiraman 1-2 kali seminggu.',
       image_url: 'https://images.unsplash.com/photo-1593691509543-c55fb32e7355?auto=format&fit=crop&w=800&q=80',
+      gallery_images: [],
       in_stock: true,
       tokopedia_url: '',
       shopee_url: '',
     });
+    setGalleryUrlInput('');
     setIsModalOpen(true);
   };
 
@@ -96,10 +102,12 @@ export default function AdminProductsPage() {
       description: product.description,
       care_instructions: product.care_instructions || '',
       image_url: product.image_url,
+      gallery_images: Array.isArray(product.gallery_images) ? [...product.gallery_images] : [],
       in_stock: product.in_stock,
       tokopedia_url: product.tokopedia_url || '',
       shopee_url: product.shopee_url || '',
     });
+    setGalleryUrlInput('');
     setIsModalOpen(true);
   };
 
@@ -128,12 +136,71 @@ export default function AdminProductsPage() {
         ...prev,
         image_url: publicUrlData.publicUrl,
       }));
-      setToast({ type: 'success', text: 'Foto tanaman berhasil diunggah!' });
+      setToast({ type: 'success', text: 'Foto utama tanaman berhasil diunggah!' });
     } catch (err: any) {
       setToast({ type: 'error', text: err.message || 'Gagal mengunggah foto.' });
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploadingGallery(true);
+    try {
+      const supabase = createClient();
+      const newUrls: string[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const fileExt = file.name.split('.').pop();
+        const fileName = `product_gallery_${Date.now()}_${i}.${fileExt}`;
+        const filePath = `products/gallery/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('taman-media')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: publicUrlData } = supabase.storage
+          .from('taman-media')
+          .getPublicUrl(filePath);
+
+        if (publicUrlData?.publicUrl) {
+          newUrls.push(publicUrlData.publicUrl);
+        }
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        gallery_images: [...prev.gallery_images, ...newUrls],
+      }));
+      setToast({ type: 'success', text: `${newUrls.length} foto berhasil ditambahkan ke galeri produk!` });
+    } catch (err: any) {
+      setToast({ type: 'error', text: err.message || 'Gagal mengunggah foto galeri.' });
+    } finally {
+      setUploadingGallery(false);
+      e.target.value = '';
+    }
+  };
+
+  const handleAddGalleryUrl = () => {
+    if (!galleryUrlInput.trim()) return;
+    setFormData((prev) => ({
+      ...prev,
+      gallery_images: [...prev.gallery_images, galleryUrlInput.trim()],
+    }));
+    setGalleryUrlInput('');
+  };
+
+  const handleRemoveGalleryImage = (indexToRemove: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      gallery_images: prev.gallery_images.filter((_, idx) => idx !== indexToRemove),
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -161,6 +228,7 @@ export default function AdminProductsPage() {
             description: formData.description,
             care_instructions: formData.care_instructions,
             image_url: formData.image_url,
+            gallery_images: formData.gallery_images,
             in_stock: formData.in_stock,
             tokopedia_url: formData.tokopedia_url || null,
             shopee_url: formData.shopee_url || null,
@@ -180,6 +248,7 @@ export default function AdminProductsPage() {
             description: formData.description,
             care_instructions: formData.care_instructions,
             image_url: formData.image_url,
+            gallery_images: formData.gallery_images,
             in_stock: formData.in_stock,
             tokopedia_url: formData.tokopedia_url || null,
             shopee_url: formData.shopee_url || null,
@@ -208,6 +277,7 @@ export default function AdminProductsPage() {
         description: formData.description,
         care_instructions: formData.care_instructions,
         image_url: formData.image_url,
+        gallery_images: formData.gallery_images,
         in_stock: formData.in_stock,
         tokopedia_url: formData.tokopedia_url,
         shopee_url: formData.shopee_url,
@@ -335,9 +405,17 @@ export default function AdminProductsPage() {
                         <span className="font-bold text-brand-earth block">
                           {p.name}
                         </span>
-                        <span className="text-xs text-brand-earth/60 line-clamp-1">
-                          {p.description}
-                        </span>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-xs text-brand-earth/60 line-clamp-1">
+                            {p.description}
+                          </span>
+                          {p.gallery_images && p.gallery_images.length > 0 && (
+                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-brand-navy bg-brand-navy/10 px-2 py-0.5 rounded-md flex-shrink-0">
+                              <Images className="w-3 h-3" />
+                              <span>{p.gallery_images.length} foto</span>
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -499,10 +577,10 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              {/* Image Preview & Upload */}
+              {/* Image Preview & Upload (Foto Utama) */}
               <div className="space-y-3">
                 <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider">
-                  Foto Tanaman
+                  Foto Utama Tanaman
                 </label>
                 <div className="flex items-center gap-4">
                   <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/40">
@@ -516,7 +594,7 @@ export default function AdminProductsPage() {
                   <div className="flex-1 space-y-2">
                     <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-xl text-xs font-bold text-brand-earth cursor-pointer transition-colors">
                       <Upload className="w-4 h-4 text-brand-crimson" />
-                      <span>{uploading ? 'Mengunggah...' : 'Upload dari HP / Laptop'}</span>
+                      <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
                       <input
                         type="file"
                         accept="image/*"
@@ -527,7 +605,7 @@ export default function AdminProductsPage() {
                     </label>
                     <input
                       type="url"
-                      placeholder="Atau tempel link URL foto..."
+                      placeholder="Atau tempel link URL foto utama..."
                       value={formData.image_url}
                       onChange={(e) =>
                         setFormData({ ...formData, image_url: e.target.value })
@@ -536,6 +614,77 @@ export default function AdminProductsPage() {
                     />
                   </div>
                 </div>
+              </div>
+
+              {/* Galeri Foto Tambahan Tanaman (Shopee / Tokopedia Carousel) */}
+              <div className="space-y-3 p-4 rounded-2xl bg-brand-sand-light/60 border border-brand-sand-dark/40">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-brand-earth uppercase tracking-wider flex items-center gap-1.5">
+                    <Images className="w-4 h-4 text-brand-navy" />
+                    <span>Galeri Foto Tambahan ({formData.gallery_images.length})</span>
+                  </label>
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-navy text-white hover:bg-brand-navy-dark rounded-xl text-xs font-bold cursor-pointer transition-colors">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{uploadingGallery ? 'Mengunggah...' : '+ Upload Foto Galeri'}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleGalleryUpload}
+                      disabled={uploadingGallery}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+
+                <p className="text-xs text-brand-earth/70">
+                  Foto carousel produk gaya Tokopedia/Shopee: sudut daun, media tanam, pot nursery, dsb.
+                </p>
+
+                {/* Input URL Foto Tambahan */}
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    placeholder="Atau tempel URL foto tambahan..."
+                    value={galleryUrlInput}
+                    onChange={(e) => setGalleryUrlInput(e.target.value)}
+                    className="flex-1 px-3 py-2 rounded-xl border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddGalleryUrl}
+                    className="px-3 py-2 bg-brand-earth text-white rounded-xl text-xs font-bold hover:bg-brand-earth-dark transition-colors cursor-pointer"
+                  >
+                    Tambah
+                  </button>
+                </div>
+
+                {/* Thumbnail Preview Grid dengan Individual Delete */}
+                {formData.gallery_images.length > 0 && (
+                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 pt-2">
+                    {formData.gallery_images.map((imgUrl, idx) => (
+                      <div
+                        key={idx}
+                        className="relative group w-full aspect-square rounded-xl overflow-hidden border border-brand-sand-dark/60 bg-white"
+                      >
+                        <Image
+                          src={imgUrl}
+                          alt={`Gallery item ${idx + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveGalleryImage(idx)}
+                          className="absolute top-1 right-1 p-1 bg-red-600 hover:bg-red-700 text-white rounded-md opacity-80 group-hover:opacity-100 transition-opacity shadow-sm cursor-pointer"
+                          title="Hapus foto dari galeri"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div>

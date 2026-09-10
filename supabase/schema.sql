@@ -11,7 +11,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS public.site_settings (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   hero_title TEXT NOT NULL DEFAULT 'Wujudkan Taman Idaman yang Asri, Elegan & Menenangkan',
-  hero_subtitle TEXT NOT NULL DEFAULT 'Solusi profesional landscape design, pembuatan taman minimalis modern, tropis, kolam koi, hingga perawatan berkala dan penyediaan tanaman hias berkualitas.',
+  hero_subtitle TEXT NOT NULL DEFAULT 'Solusi profesional landscape design, pembuatan taman minimalis modern, tropis, air mancur relief batu alam, hingga perawatan berkala dan penyediaan tanaman hias berkualitas.',
   hero_image_url TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1600&q=80',
   whatsapp_number TEXT NOT NULL DEFAULT '6281234567890',
   whatsapp_message TEXT NOT NULL DEFAULT 'Halo Taman San Jaya, saya ingin konsultasi mengenai jasa landscape taman & tanaman hias.',
@@ -151,10 +151,10 @@ VALUES
 (
   'Jasa Pembuatan Taman (Construction & Planting)',
   'jasa-pembuatan',
-  'Eksekusi menyeluruh pembuatan taman baru, hardscaping, kolam ikan koi, relief tebing alami, vertical garden, dan rumput hijau.',
+  'Eksekusi menyeluruh pembuatan taman baru, hardscaping, air mancur relief batu alam, vertical garden, dan hamparan rumput hijau.',
   'Dikerjakan oleh tukang taman berpengalaman dengan teknik tanam tepat agar vegetasi tumbuh subur dan tahan cuaca. Bergaransi tumbuh untuk kenyamanan Anda.',
   'Hammer',
-  '["Pengerjaan Hardscape & Softscape", "Pembuatan Kolam Minimalis & Koi", "Relief Tebing Alami & Air Terjun", "Pemasangan Rumput & Sistem Drainase", "Garansi Tumbuh Tanaman"]'::jsonb,
+  '["Pengerjaan Hardscape & Softscape", "Pembuatan Air Mancur & Relief Batu Alam", "Tebing Alami & Air Terjun Minimalis", "Pemasangan Rumput & Sistem Drainase", "Garansi Tumbuh Tanaman"]'::jsonb,
   'https://images.unsplash.com/photo-1558904541-efa8c4a5c963?auto=format&fit=crop&w=800&q=80',
   2
 ),

@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Droplets } from 'lucide-react';
 import { TokopediaIcon, ShopeeIcon } from '@/components/MarketplaceIcons';
@@ -85,8 +86,11 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                   className="bg-white rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col justify-between group"
                 >
                   <div>
-                    {/* Image Box */}
-                    <div className="relative w-full h-52 sm:h-56 overflow-hidden bg-brand-sand/20">
+                    {/* Image Box - Pencet Foto Masuk ke Detail Produk */}
+                    <Link
+                      href={`/katalog/${product.slug || product.id}`}
+                      className="block relative w-full h-52 sm:h-56 overflow-hidden bg-brand-sand/20 cursor-pointer"
+                    >
                       <Image
                         src={product.image_url}
                         alt={product.name}
@@ -96,7 +100,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                       
                       {/* Stock Tag */}
                       <span
-                        className={`absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-xs ${
+                        className={`absolute top-3 right-3 text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-xs pointer-events-none ${
                           product.in_stock
                             ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                             : 'bg-amber-50 text-amber-700 border border-amber-200'
@@ -104,12 +108,14 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                       >
                         {product.in_stock ? 'Tersedia' : 'Pre-Order'}
                       </span>
-                    </div>
+                    </Link>
 
                     {/* Product Details */}
                     <div className="p-5">
                       <h3 className="font-bold text-lg text-brand-earth group-hover:text-brand-crimson transition-colors line-clamp-1">
-                        {product.name}
+                        <Link href={`/katalog/${product.slug || product.id}`} className="hover:text-brand-crimson transition-colors">
+                          {product.name}
+                        </Link>
                       </h3>
 
                       {/* Price */}
