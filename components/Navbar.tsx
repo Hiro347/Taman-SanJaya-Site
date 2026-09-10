@@ -26,6 +26,51 @@ export default function Navbar({ settings }: NavbarProps) {
     settings.whatsapp_message || 'Halo Taman San Jaya, saya ingin konsultasi mengenai jasa taman.'
   )}`;
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setIsOpen(false);
+
+    const lenis = (window as unknown as { lenis?: { scrollTo: (target: number | HTMLElement, opts?: object) => void } }).lenis;
+
+    const performScroll = () => {
+      if (href === '#home') {
+        if (lenis) {
+          lenis.scrollTo(0, {
+            duration: 1.2,
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        history.pushState(null, '', '#home');
+        return;
+      }
+
+      const targetId = href.replace('#', '');
+      const targetElement = document.getElementById(targetId);
+
+      if (targetElement) {
+        if (lenis) {
+          lenis.scrollTo(targetElement, {
+            offset: -25,
+            duration: 1.2,
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          });
+        } else {
+          const top = targetElement.getBoundingClientRect().top + window.scrollY - 25;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+        history.pushState(null, '', href);
+      }
+    };
+
+    if (isOpen) {
+      setTimeout(performScroll, 50);
+    } else {
+      performScroll();
+    }
+  };
+
   return (
     <header className="w-full px-5 sm:px-8 lg:px-12 pt-6 sm:pt-8 pb-4">
       <motion.div
@@ -35,7 +80,11 @@ export default function Navbar({ settings }: NavbarProps) {
         className="flex items-center justify-between"
       >
         {/* Brand Logo matching Figma mockup */}
-        <Link href="#home" className="flex items-center gap-3.5 group">
+        <Link
+          href="#home"
+          onClick={(e) => handleNavClick(e, '#home')}
+          className="flex items-center gap-3.5 group"
+        >
           <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex-shrink-0 transition-transform group-hover:scale-105">
             <Image
               src="/images/logo.png"
@@ -61,6 +110,7 @@ export default function Navbar({ settings }: NavbarProps) {
             <Link
               key={link.name}
               href={link.href}
+              onClick={(e) => handleNavClick(e, link.href)}
               className="text-brand-earth hover:text-brand-crimson font-medium text-sm lg:text-[16px] transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-brand-crimson hover:after:w-full after:transition-all after:duration-200"
             >
               {link.name}
@@ -97,7 +147,7 @@ export default function Navbar({ settings }: NavbarProps) {
             <Link
               key={link.name}
               href={link.href}
-              onClick={() => setIsOpen(false)}
+              onClick={(e) => handleNavClick(e, link.href)}
               className="text-brand-earth hover:text-brand-crimson font-medium text-base px-3 py-2 rounded-xl hover:bg-white/40 transition-colors"
             >
               {link.name}
