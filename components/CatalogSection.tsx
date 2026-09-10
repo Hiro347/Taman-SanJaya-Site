@@ -76,14 +76,10 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
               return (
                 <motion.div
                   layout
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: '150px 0px' }}
-                  exit={{ opacity: 0, scale: 0.96 }}
-                  transition={{ duration: 0.4 }}
-                  whileHover={{ y: -6 }}
                   key={product.id}
-                  className="bg-white rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col justify-between group"
+                  whileHover={{ y: -6 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  className="bg-white rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between group"
                 >
                   <div>
                     {/* Image Box - Pencet Foto Masuk ke Detail Produk */}
