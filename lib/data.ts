@@ -80,3 +80,30 @@ export async function getProjects(): Promise<Project[]> {
     return defaultProjects;
   }
 }
+
+export async function getProjectById(id: string): Promise<Project | null> {
+  try {
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error || !data) {
+      const fallback = defaultProjects.find((p) => p.id === id);
+      return fallback || null;
+    }
+    return data as Project;
+  } catch (err) {
+    const fallback = defaultProjects.find((p) => p.id === id);
+    return fallback || null;
+  }
+}
+
+export async function getOtherProjects(currentId: string, limit: number = 3): Promise<Project[]> {
+  const allProjects = await getProjects();
+  return allProjects.filter((p) => p.id !== currentId).slice(0, limit);
+}
+

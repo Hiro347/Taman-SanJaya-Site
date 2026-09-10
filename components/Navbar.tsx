@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { Menu, X, PhoneCall } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SiteSettings } from '@/lib/types';
@@ -13,6 +14,8 @@ interface NavbarProps {
 
 export default function Navbar({ settings }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
 
   const navLinks = [
     { name: 'Home', href: '#home' },
@@ -27,8 +30,16 @@ export default function Navbar({ settings }: NavbarProps) {
   )}`;
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
     setIsOpen(false);
+
+    // If currently on subpage (e.g. /proyek/[id]), redirect smoothly to homepage section
+    if (pathname !== '/') {
+      e.preventDefault();
+      router.push(`/${href}`);
+      return;
+    }
+
+    e.preventDefault();
 
     const lenis = (window as unknown as { lenis?: { scrollTo: (target: number | HTMLElement, opts?: object) => void } }).lenis;
 
@@ -81,7 +92,7 @@ export default function Navbar({ settings }: NavbarProps) {
       >
         {/* Brand Logo matching Figma mockup */}
         <Link
-          href="#home"
+          href={pathname === '/' ? '#home' : '/'}
           onClick={(e) => handleNavClick(e, '#home')}
           className="flex items-center gap-3.5 group"
         >
@@ -106,16 +117,19 @@ export default function Navbar({ settings }: NavbarProps) {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-7 lg:gap-10">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              className="text-brand-earth hover:text-brand-crimson font-medium text-sm lg:text-[16px] transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-brand-crimson hover:after:w-full after:transition-all after:duration-200"
-            >
-              {link.name}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const targetHref = pathname === '/' ? link.href : `/${link.href}`;
+            return (
+              <Link
+                key={link.name}
+                href={targetHref}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="text-brand-earth hover:text-brand-crimson font-medium text-sm lg:text-[16px] transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-brand-crimson hover:after:w-full after:transition-all after:duration-200"
+              >
+                {link.name}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Desktop CTA & Mobile Toggle (Shifted to the right for optimal balance) */}
@@ -143,16 +157,19 @@ export default function Navbar({ settings }: NavbarProps) {
       {/* Mobile Drawer */}
       {isOpen && (
         <div className="md:hidden pt-4 pb-3 border-t border-brand-earth/15 mt-4 flex flex-col gap-2">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
-              className="text-brand-earth hover:text-brand-crimson font-medium text-base px-3 py-2 rounded-xl hover:bg-white/40 transition-colors"
-            >
-              {link.name}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const targetHref = pathname === '/' ? link.href : `/${link.href}`;
+            return (
+              <Link
+                key={link.name}
+                href={targetHref}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="text-brand-earth hover:text-brand-crimson font-medium text-base px-3 py-2 rounded-xl hover:bg-white/40 transition-colors"
+              >
+                {link.name}
+              </Link>
+            );
+          })}
           <div className="pt-2">
             <a
               href={waUrl}

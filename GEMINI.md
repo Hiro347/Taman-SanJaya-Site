@@ -114,16 +114,18 @@ The brand visual language is inspired by high-end architectural monographs, orga
      3. **Jasa Perawatan** (Uses `/images/Perawatan.jpg`)
    - Interactive 3-column accordion that expands on hover and returns to neutral balance on mouse leave.
 
-5. **`components/ProjectSection.tsx`**:
+5. **`components/ProjectSection.tsx` & Dedicated Detail Page (`/proyek/[id]`)**:
    - **Clean Architectural Monograph Design**:
      - **NO** category filter buttons ("Semua", "Taman Minimalis", etc. — removed per user request).
      - **NO** floating category badges on images.
      - **NO** clunky "Konsultasi Konsep" buttons at the bottom of cards.
-   - **Layout**:
+   - **Layout & Navigation**:
      - Card 1 (index 0) is a wide featured banner spanning 2 columns (`md:col-span-2`).
      - Cards 2, 3, 4, 5 form a symmetrical 2x2 grid.
-     - Each card is an interactive link opening WhatsApp for project inquiries.
-     - Features index counter (`01`, `02`...), location tag with pin, bold title, and refined description.
+     - Clicking any project navigates directly in the main window (no pop-up modal, no new tab) to `/proyek/[id]` with an elegant "← Kembali ke Koleksi Proyek" back button.
+     - Features index counter (`01`, `02`...), location tag with pin, bold title, photo counter, and refined description.
+   - **`components/ProjectDetailView.tsx` (`/proyek/[id]`)**:
+     - Dedicated page matching the architectural master design: large featured stage photo with photo counter (`X / N`) and arrows, 2-column project metadata, IPB assurance badges, full documentation photo gallery grid, and related projects grid.
 
 6. **`components/CatalogSection.tsx`**:
    - Curated 4-plant nursery catalog with live search, direct Tokopedia & Shopee marketplace buttons, and care guides. (Category tabs and floating image badges removed for a clean architectural design).

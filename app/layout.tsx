@@ -10,6 +10,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://tamansanjaya.com'),
   title: 'Taman San Jaya (成功之园) - Jasa Pembuatan Taman & Tanaman Hias',
   description:
     'Layanan profesional landscape design, perencanaan 3D, pembuatan taman minimalis, tropis, relief tebing alami, air mancur, perawatan berkala, serta katalog tanaman hias berkualitas.',
