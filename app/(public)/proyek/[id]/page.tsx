@@ -1,15 +1,22 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { getProjectById, getOtherProjects, getSiteSettings } from '@/lib/data';
+import { getProjectById, getOtherProjects, getSiteSettings, getProjects } from '@/lib/data';
 import ProjectDetailView from '@/components/ProjectDetailView';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 interface ProjectPageProps {
   params: {
     id: string;
   };
+}
+
+export async function generateStaticParams() {
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    id: project.slug || project.id,
+  }));
 }
 
 export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {

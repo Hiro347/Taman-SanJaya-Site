@@ -1,5 +1,5 @@
+import { cache } from 'react';
 import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
 import { SiteSettings, Product, Service, Project } from './types';
 import {
   defaultSiteSettings,
@@ -8,10 +8,9 @@ import {
   defaultProjects,
 } from './placeholder-data';
 
-export async function getSiteSettings(): Promise<SiteSettings> {
+export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
     const { data, error } = await supabase
       .from('site_settings')
       .select('*')
@@ -25,12 +24,11 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   } catch (err) {
     return defaultSiteSettings;
   }
-}
+});
 
-export async function getServices(): Promise<Service[]> {
+export const getServices = cache(async (): Promise<Service[]> => {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
     const { data, error } = await supabase
       .from('services')
       .select('*')
@@ -43,12 +41,11 @@ export async function getServices(): Promise<Service[]> {
   } catch (err) {
     return defaultServices;
   }
-}
+});
 
-export async function getProducts(): Promise<Product[]> {
+export const getProducts = cache(async (): Promise<Product[]> => {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
     const { data, error } = await supabase
       .from('products')
       .select('*')
@@ -61,12 +58,11 @@ export async function getProducts(): Promise<Product[]> {
   } catch (err) {
     return defaultProducts;
   }
-}
+});
 
-export async function getProjects(): Promise<Project[]> {
+export const getProjects = cache(async (): Promise<Project[]> => {
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
     const { data, error } = await supabase
       .from('projects')
       .select('*')
@@ -79,14 +75,13 @@ export async function getProjects(): Promise<Project[]> {
   } catch (err) {
     return defaultProjects;
   }
-}
+});
 
-export async function getProjectById(id: string): Promise<Project | null> {
+export const getProjectById = cache(async (id: string): Promise<Project | null> => {
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
 
     let query = supabase.from('projects').select('*');
     if (isUuid) {
@@ -106,21 +101,20 @@ export async function getProjectById(id: string): Promise<Project | null> {
     const fallback = defaultProjects.find((p) => p.id === id || p.slug === id);
     return fallback || null;
   }
-}
+});
 
-export async function getOtherProjects(currentId: string, limit: number = 3): Promise<Project[]> {
+export const getOtherProjects = cache(async (currentId: string, limit: number = 3): Promise<Project[]> => {
   const allProjects = await getProjects();
   return allProjects
     .filter((p) => p.id !== currentId && p.slug !== currentId)
     .slice(0, limit);
-}
+});
 
-export async function getProductById(id: string): Promise<Product | null> {
+export const getProductById = cache(async (id: string): Promise<Product | null> => {
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 
   try {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
 
     let query = supabase.from('products').select('*');
     if (isUuid) {
@@ -140,12 +134,12 @@ export async function getProductById(id: string): Promise<Product | null> {
     const fallback = defaultProducts.find((p) => p.id === id || p.slug === id);
     return fallback || null;
   }
-}
+});
 
-export async function getOtherProducts(currentId: string, limit: number = 4): Promise<Product[]> {
+export const getOtherProducts = cache(async (currentId: string, limit: number = 4): Promise<Product[]> => {
   const allProducts = await getProducts();
   return allProducts
     .filter((p) => p.id !== currentId && p.slug !== currentId)
     .slice(0, limit);
-}
+});
 

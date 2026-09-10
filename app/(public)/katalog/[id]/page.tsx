@@ -1,15 +1,22 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
-import { getProductById, getOtherProducts, getSiteSettings } from '@/lib/data';
+import { getProductById, getOtherProducts, getSiteSettings, getProducts } from '@/lib/data';
 import ProductDetailView from '@/components/ProductDetailView';
 
-export const revalidate = 0;
+export const revalidate = 60;
 
 interface ProductPageProps {
   params: {
     id: string;
   };
+}
+
+export async function generateStaticParams() {
+  const products = await getProducts();
+  return products.map((product) => ({
+    id: product.slug || product.id,
+  }));
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {

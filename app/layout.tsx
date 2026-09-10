@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -56,6 +57,18 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${jakarta.variable}`}>
       <body className="min-h-screen bg-[#F7F4EC] text-brand-earth selection:bg-brand-crimson selection:text-white font-sans antialiased">
+        <NextTopLoader
+          color="#990633"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 12px #990633, 0 0 6px #7D052A"
+          zIndex={999999}
+        />
         {children}
       </body>
     </html>
