@@ -15,7 +15,7 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
       .from('site_settings')
       .select('*')
       .limit(1)
-      .single();
+      .maybeSingle();
 
     if (error || !data) {
       return defaultSiteSettings;
@@ -90,7 +90,7 @@ export const getProjectById = cache(async (id: string): Promise<Project | null> 
       query = query.eq('slug', id);
     }
 
-    const { data, error } = await query.single();
+    const { data, error } = await query.maybeSingle();
 
     if (error || !data) {
       const fallback = defaultProjects.find((p) => p.id === id || p.slug === id);
@@ -104,10 +104,35 @@ export const getProjectById = cache(async (id: string): Promise<Project | null> 
 });
 
 export const getOtherProjects = cache(async (currentId: string, limit: number = 3): Promise<Project[]> => {
-  const allProjects = await getProjects();
-  return allProjects
-    .filter((p) => p.id !== currentId && p.slug !== currentId)
-    .slice(0, limit);
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(currentId);
+
+  try {
+    const supabase = createClient();
+    let query = supabase
+      .from('projects')
+      .select('*')
+      .order('order_index', { ascending: true })
+      .limit(limit);
+
+    if (isUuid) {
+      query = query.neq('id', currentId);
+    } else {
+      query = query.neq('slug', currentId);
+    }
+
+    const { data, error } = await query;
+
+    if (error || !data || data.length === 0) {
+      return defaultProjects
+        .filter((p) => p.id !== currentId && p.slug !== currentId)
+        .slice(0, limit);
+    }
+    return data as Project[];
+  } catch (err) {
+    return defaultProjects
+      .filter((p) => p.id !== currentId && p.slug !== currentId)
+      .slice(0, limit);
+  }
 });
 
 export const getProductById = cache(async (id: string): Promise<Product | null> => {
@@ -123,7 +148,7 @@ export const getProductById = cache(async (id: string): Promise<Product | null> 
       query = query.eq('slug', id);
     }
 
-    const { data, error } = await query.single();
+    const { data, error } = await query.maybeSingle();
 
     if (error || !data) {
       const fallback = defaultProducts.find((p) => p.id === id || p.slug === id);
@@ -137,9 +162,57 @@ export const getProductById = cache(async (id: string): Promise<Product | null> 
 });
 
 export const getOtherProducts = cache(async (currentId: string, limit: number = 4): Promise<Product[]> => {
-  const allProducts = await getProducts();
-  return allProducts
-    .filter((p) => p.id !== currentId && p.slug !== currentId)
-    .slice(0, limit);
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(currentId);
+
+  try {
+    const supabase = createClient();
+    let query = supabase
+      .from('products')
+      .select('*')
+      .order('order_index', { ascending: true })
+      .limit(limit);
+
+    if (isUuid) {
+      query = query.neq('id', currentId);
+    } else {
+      query = query.neq('slug', currentId);
+    }
+
+    const { data, error } = await query;
+
+    if (error || !data || data.length === 0) {
+      return defaultProducts
+        .filter((p) => p.id !== currentId && p.slug !== currentId)
+        .slice(0, limit);
+    }
+    return data as Product[];
+  } catch (err) {
+    return defaultProducts
+      .filter((p) => p.id !== currentId && p.slug !== currentId)
+      .slice(0, limit);
+  }
 });
+
+export const getDashboardCounts = async (): Promise<{ products: number; projects: number; services: number }> => {
+  try {
+    const supabase = createClient();
+    const [productsRes, projectsRes, servicesRes] = await Promise.all([
+      supabase.from('products').select('*', { count: 'exact', head: true }),
+      supabase.from('projects').select('*', { count: 'exact', head: true }),
+      supabase.from('services').select('*', { count: 'exact', head: true }),
+    ]);
+
+    return {
+      products: productsRes.count ?? defaultProducts.length,
+      projects: projectsRes.count ?? defaultProjects.length,
+      services: servicesRes.count ?? defaultServices.length,
+    };
+  } catch (err) {
+    return {
+      products: defaultProducts.length,
+      projects: defaultProjects.length,
+      services: defaultServices.length,
+    };
+  }
+};
 

@@ -8,8 +8,8 @@ import AboutSection from '@/components/AboutSection';
 import ContactSection from '@/components/ContactSection';
 import { getSiteSettings, getServices, getProducts, getProjects } from '@/lib/data';
 
-// Dynamically fetch live data from Supabase
-export const revalidate = 0;
+// Revalidate cache every 60 seconds (ISR)
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [settings, services, products, projects] = await Promise.all([

@@ -8,8 +8,8 @@ import { getSiteSettings } from '@/lib/data';
 import ScrollRotatingLogoWrapper from '@/components/ScrollRotatingLogoWrapper';
 import SmoothScroll from '@/components/SmoothScroll';
 
-// Keep page dynamically updated when settings change
-export const revalidate = 0;
+// Keep page cached with 60s ISR revalidation
+export const revalidate = 60;
 
 export default async function PublicLayout({
   children,

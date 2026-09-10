@@ -70,8 +70,17 @@ CREATE TABLE IF NOT EXISTS public.projects (
 );
 
 -- ==============================================================================
+-- INDEXES UNTUK OPTIMASI QUERY (SORTING & FILTERING)
+-- ==============================================================================
+CREATE INDEX IF NOT EXISTS idx_projects_order_index ON public.projects (order_index ASC);
+CREATE INDEX IF NOT EXISTS idx_products_order_index ON public.products (order_index ASC);
+CREATE INDEX IF NOT EXISTS idx_services_order_index ON public.services (order_index ASC);
+CREATE INDEX IF NOT EXISTS idx_products_category ON public.products (category);
+
+-- ==============================================================================
 -- ROW LEVEL SECURITY (RLS)
--- Publik bisa membaca (SELECT), hanya user terautentikasi (Admin) yang bisa edit
+-- Publik bisa membaca (SELECT), hanya user terautentikasi (Admin) yang bisa mutasi
+-- Kebijakan dipisah per aksi (INSERT, UPDATE, DELETE) agar evaluasi SELECT optimal
 -- ==============================================================================
 
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
@@ -81,19 +90,27 @@ ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 
 -- Policy Site Settings
 CREATE POLICY "Public read site_settings" ON public.site_settings FOR SELECT USING (true);
-CREATE POLICY "Admin update site_settings" ON public.site_settings FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Admin insert site_settings" ON public.site_settings FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Admin update site_settings" ON public.site_settings FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Admin delete site_settings" ON public.site_settings FOR DELETE TO authenticated USING (true);
 
 -- Policy Products
 CREATE POLICY "Public read products" ON public.products FOR SELECT USING (true);
-CREATE POLICY "Admin write products" ON public.products FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Admin insert products" ON public.products FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Admin update products" ON public.products FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Admin delete products" ON public.products FOR DELETE TO authenticated USING (true);
 
 -- Policy Services
 CREATE POLICY "Public read services" ON public.services FOR SELECT USING (true);
-CREATE POLICY "Admin write services" ON public.services FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Admin insert services" ON public.services FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Admin update services" ON public.services FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Admin delete services" ON public.services FOR DELETE TO authenticated USING (true);
 
 -- Policy Projects
 CREATE POLICY "Public read projects" ON public.projects FOR SELECT USING (true);
-CREATE POLICY "Admin write projects" ON public.projects FOR ALL TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Admin insert projects" ON public.projects FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Admin update projects" ON public.projects FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+CREATE POLICY "Admin delete projects" ON public.projects FOR DELETE TO authenticated USING (true);
 
 -- ==============================================================================
 -- STORAGE BUCKET UNTUK UPLOAD MEDIA FOTO

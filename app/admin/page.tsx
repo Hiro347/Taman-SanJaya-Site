@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { getSiteSettings, getProducts, getProjects, getServices } from '@/lib/data';
+import { getDashboardCounts } from '@/lib/data';
 import {
   Image as ImageIcon,
   Sprout,
@@ -15,12 +15,7 @@ import {
 export const revalidate = 0;
 
 export default async function AdminDashboardPage() {
-  const [settings, products, projects, services] = await Promise.all([
-    getSiteSettings(),
-    getProducts(),
-    getProjects(),
-    getServices(),
-  ]);
+  const counts = await getDashboardCounts();
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
@@ -59,7 +54,7 @@ export default async function AdminDashboardPage() {
               Katalog Tanaman Hias
             </span>
             <span className="text-2xl font-black text-brand-earth">
-              {products.length} Produk
+              {counts.products} Produk
             </span>
           </div>
         </div>
@@ -73,7 +68,7 @@ export default async function AdminDashboardPage() {
               Portofolio Proyek
             </span>
             <span className="text-2xl font-black text-brand-earth">
-              {projects.length} Proyek
+              {counts.projects} Proyek
             </span>
           </div>
         </div>
@@ -87,7 +82,7 @@ export default async function AdminDashboardPage() {
               Layanan Aktif
             </span>
             <span className="text-2xl font-black text-brand-earth">
-              {services.length} Layanan
+              {counts.services} Layanan
             </span>
           </div>
         </div>

@@ -32,25 +32,27 @@ export const updateSession = async (request: NextRequest) => {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
   // Route protection for /admin routes (except /admin/login)
   const isAccessingAdmin = request.nextUrl.pathname.startsWith('/admin');
   const isLoginPage = request.nextUrl.pathname === '/admin/login';
 
-  if (isAccessingAdmin && !isLoginPage && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/admin/login';
-    return NextResponse.redirect(url);
-  }
+  if (isAccessingAdmin) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  // If already logged in and visiting /admin/login, redirect to /admin
-  if (isLoginPage && user) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/admin';
-    return NextResponse.redirect(url);
+    if (!isLoginPage && !user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin/login';
+      return NextResponse.redirect(url);
+    }
+
+    // If already logged in and visiting /admin/login, redirect to /admin
+    if (isLoginPage && user) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/admin';
+      return NextResponse.redirect(url);
+    }
   }
 
   return supabaseResponse;
