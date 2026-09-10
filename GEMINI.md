@@ -105,7 +105,7 @@ The brand visual language is inspired by high-end architectural monographs, orga
      - Slogan: *"Taman Tropis Asri & Ruang Hijau Impian"* (Serif italic sand `#D8CDAE`)
      - Subtext: *"Spesialis desain lanskap 3D, pembuatan taman tropis, relief tebing alami, & perawatan bergaransi tumbuh 100%."*
      - Button: Single pill button *"Konsultasi Sekarang"* linking to WhatsApp.
-   - **Natural Divider**: The bottom of Hero is framed by [`Group 1.svg`](/images/group-1.svg) spanning 100% full width from edge to edge, clearly visible on the first fold.
+    - **Natural Divider**: The bottom of Hero is framed by [`group-1.webp`](/images/group-1.webp) (with fallback to `group-1.png`) spanning 100% full width from edge to edge, clearly visible on the first fold.
 
 4. **`components/ServicesSection.tsx`**:
    - 3 Pillars:
@@ -151,8 +151,8 @@ All production-served assets reside in `public/images/`, while original raw sour
 | `/images/Pembuatan.jpg` | Landscape Ground Construction & Physical Planting | ServicesSection, ProjectSection |
 | `/images/Perencanaan.jpg` | 3D Blueprint & Architectural Landscape Design | ServicesSection |
 | `/images/Perawatan.jpg` | Plant Pathology & IPB Horticultural Maintenance | ServicesSection |
-| `/images/group-1.svg` | Edge-to-edge natural rockery & flower section divider | HeroSection bottom |
-| `/images/group-3.svg` | Cascading natural bougainvillea floral garland divider | FloralDivider (between Project & Catalog) |
+| `/images/group-1.webp`, `group-1.png` | Edge-to-edge natural rockery & flower section divider | HeroSection bottom |
+| `/images/group-3.webp`, `group-3.png` | Cascading natural bougainvillea floral garland divider | FloralDivider (between Project & Catalog) |
 | `/images/group-2.png`, `group-2.webp` | Edge-to-edge natural wildflower meadow section divider | Footer top crown |
 | `/images/image-13.svg`, `image-13.webp` | Hanging botanical ivy bush | Top-right corner of layout |
 | `/models/LogoTamanSanjaya.glb` | 3D GLB brand logo model (Draco + WebP compressed) | ScrollRotatingLogo3D |
@@ -184,5 +184,5 @@ Before submitting any code change:
 1. **Type & Build Check**: Run `npm run build` — must exit with code 0 without TypeScript or lint errors.
 2. **Koi Prohibition**: Ensure no references to koi fish or koi ponds are introduced.
 3. **Palette Integrity**: Use only official `#D8CDAE`, `#990633`, `#174A73`, `#5C4033` tokens.
-4. **Divider Integrity**: Ensure `Group 1.svg` remains full-width (`w-full`) at the bottom of the Hero Section and `Group 2.svg` remains full-width (`w-full`) crowned above the Footer.
+4. **Divider Integrity**: Ensure `group-1.webp` divider remains full-width (`w-full`) at the bottom of the Hero Section and `group-2.webp` remains full-width (`w-full`) crowned above the Footer.
 5. **3D Logo Rule**: Ensure `ScrollRotatingLogo3D` remains hidden above `#project`.

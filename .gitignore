@@ -32,3 +32,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# raw design assets (preserved locally, ignored from repo/deploy)
+/asset-taman-sanjaya
