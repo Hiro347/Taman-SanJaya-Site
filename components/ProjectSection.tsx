@@ -48,12 +48,9 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
                   setSelectedProject(project);
                 }
               }}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '150px 0px' }}
-              transition={{ duration: 0.5, delay: index * 0.05, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ y: -6 }}
-              className={`group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col justify-between cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-brand-crimson/50 ${
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className={`group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-brand-crimson/50 ${
                 isFeatured ? 'md:col-span-2' : ''
               }`}
             >
@@ -70,6 +67,7 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
                   alt={project.title}
                   fill
                   sizes={isFeatured ? '100vw' : '(max-width: 768px) 100vw, 50vw'}
+                  priority={isFeatured}
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
 
