@@ -1,14 +1,36 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 
 export default function ScrollRotatingLogo3D() {
+  const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const pathnameRef = useRef(pathname);
+  const updateScrollPhysicsRef = useRef<() => void>(() => {});
+
+  pathnameRef.current = pathname;
+
+  // Pantau perpindahan rute untuk menjamin logo 3D disembunyikan di subpage dan di-refresh saat kembali ke Home
+  useEffect(() => {
+    if (pathname !== '/') {
+      setIsVisible(false);
+    } else {
+      const id1 = requestAnimationFrame(() => {
+        updateScrollPhysicsRef.current();
+        const id2 = requestAnimationFrame(() => {
+          updateScrollPhysicsRef.current();
+        });
+        return () => cancelAnimationFrame(id2);
+      });
+      return () => cancelAnimationFrame(id1);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -132,20 +154,37 @@ export default function ScrollRotatingLogo3D() {
 
     const updateScrollPhysics = () => {
       scrollTicking = false;
-      const scrollY = window.scrollY;
-      if (!cachedProjectEl) {
+
+      // 1. Logo 3D HANYA aktif di halaman Home ('/')
+      // Jika di halaman detail (/proyek/*, /katalog/*, dll.), pastikan selalu tersembunyi
+      if (pathnameRef.current !== '/') {
+        if (isCurrentlyVisible) {
+          isCurrentlyVisible = false;
+          setIsVisible(false);
+        }
+        cachedProjectEl = null;
+        targetRotY = 0;
+        targetY = 0.2;
+        return;
+      }
+
+      // 2. Di halaman Home: pastikan referensi elemen #project valid dan masih aktif di DOM (anti-detached DOM)
+      if (!cachedProjectEl || !cachedProjectEl.isConnected) {
         cachedProjectEl = document.getElementById('project');
       }
 
-      if (cachedProjectEl) {
+      if (cachedProjectEl && cachedProjectEl.isConnected) {
         const rect = cachedProjectEl.getBoundingClientRect();
+        // Hanya muncul saat scroll sudah mencapai seksi #project (bottom 25% viewport)
         const inProjectZone = rect.top <= window.innerHeight * 0.75;
+
         if (isCurrentlyVisible !== inProjectZone) {
           isCurrentlyVisible = inProjectZone;
           setIsVisible(inProjectZone);
         }
 
         if (inProjectZone) {
+          const scrollY = window.scrollY;
           const projectPageTop = cachedProjectEl.offsetTop;
           const scrollFromProject = Math.max(0, scrollY - (projectPageTop - window.innerHeight * 0.5));
           const totalRemaining = Math.max(
@@ -162,20 +201,17 @@ export default function ScrollRotatingLogo3D() {
           targetY = 0.2;
         }
       } else {
-        const maxScroll = Math.max(
-          document.documentElement.scrollHeight - window.innerHeight,
-          1
-        );
-        const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
-        const inZone = progress > 0.25;
-        if (isCurrentlyVisible !== inZone) {
-          isCurrentlyVisible = inZone;
-          setIsVisible(inZone);
+        // Jika elemen #project belum ditemukan / belum di-mount di DOM, JANGAN pernah tampilkan di Hero/Services
+        if (isCurrentlyVisible) {
+          isCurrentlyVisible = false;
+          setIsVisible(false);
         }
-        targetRotY = progress * Math.PI * 2;
-        targetY = (progress - 0.5) * -0.35;
+        targetRotY = 0;
+        targetY = 0.2;
       }
     };
+
+    updateScrollPhysicsRef.current = updateScrollPhysics;
 
     const onScroll = () => {
       if (!scrollTicking) {
@@ -192,6 +228,13 @@ export default function ScrollRotatingLogo3D() {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+
+    // Tambahan pendengar event scroll Lenis jika aktif di window
+    const lenisInstance = (window as unknown as { lenis?: { on: (event: string, cb: () => void) => void; off: (event: string, cb: () => void) => void } }).lenis;
+    if (lenisInstance) {
+      lenisInstance.on('scroll', onScroll);
+    }
+
     updateScrollPhysics(); // initial check
 
     // 7. Resize Handler
@@ -247,6 +290,10 @@ export default function ScrollRotatingLogo3D() {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', onResize);
 
+      if (lenisInstance) {
+        lenisInstance.off('scroll', onScroll);
+      }
+
       dracoLoader.dispose();
 
       if (container.contains(renderer.domElement)) {
@@ -262,11 +309,11 @@ export default function ScrollRotatingLogo3D() {
       aria-hidden="true"
       className="fixed inset-0 pointer-events-none z-0 overflow-hidden flex items-center justify-center"
     >
-      {/* 3D WebGL Canvas Container: hanya muncul saat scroll sampai di Koleksi Proyek */}
+      {/* 3D WebGL Canvas Container: hanya muncul saat scroll sampai di Koleksi Proyek di halaman Home */}
       <div
         ref={containerRef}
         className={`w-[360px] h-[360px] sm:w-[500px] sm:h-[500px] lg:w-[650px] lg:h-[650px] transition-all duration-700 ease-out ${
-          isLoaded && isVisible
+          pathname === '/' && isLoaded && isVisible
             ? 'opacity-[0.25] sm:opacity-[0.30] scale-100'
             : 'opacity-0 scale-95 pointer-events-none'
         }`}
