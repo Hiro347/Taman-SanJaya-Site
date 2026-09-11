@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
+import { usePathname } from 'next/navigation';
 
 // Dynamically import the Three.js 3D Logo component with SSR disabled
 const ScrollRotatingLogo3D = dynamic(
@@ -13,10 +14,17 @@ const ScrollRotatingLogo3D = dynamic(
 );
 
 export default function ScrollRotatingLogoWrapper() {
+  const pathname = usePathname();
   const [shouldMount, setShouldMount] = useState(false);
 
   useEffect(() => {
-    // 1. If user is already scrolled down (e.g. page refresh or direct anchor link)
+    // 1. Di halaman detail (/proyek/* atau /katalog/*), langsung mount agar 3D logo langsung ada di awal masuk
+    if (pathname !== '/') {
+      setShouldMount(true);
+      return;
+    }
+
+    // 2. Di halaman Home ('/'): Jika user sudah scroll > 30px
     if (window.scrollY > 30) {
       setShouldMount(true);
       return;
@@ -49,7 +57,7 @@ export default function ScrollRotatingLogoWrapper() {
       cleanup();
       clearTimeout(idleTimer);
     };
-  }, []);
+  }, [pathname]);
 
   if (!shouldMount) return null;
 

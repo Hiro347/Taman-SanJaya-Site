@@ -203,27 +203,20 @@ export default function ScrollRotatingLogo3D() {
       // 2. Logika untuk Halaman Detail (/proyek/*, /katalog/*, dll.)
       cachedProjectEl = null; // Pastikan cache elemen Home tidak tersimpan di subpage
 
+      // Pada halaman detail, logo langsung aktif dan terlihat sejak awal masuk (perlakuan sembunyi hanya ada di Home)
+      if (!isCurrentlyVisible) {
+        isCurrentlyVisible = true;
+        setIsVisible(true);
+      }
+
       const maxScroll = Math.max(
         document.documentElement.scrollHeight - window.innerHeight,
         1
       );
       const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
 
-      // Pada halaman detail, logo aktif saat scroll melewati bagian atas panggung foto (scrollY > 180)
-      const inDetailZone = scrollY > 180;
-
-      if (isCurrentlyVisible !== inDetailZone) {
-        isCurrentlyVisible = inDetailZone;
-        setIsVisible(inDetailZone);
-      }
-
-      if (inDetailZone) {
-        targetRotY = progress * Math.PI * 2.5;
-        targetY = (progress - 0.5) * -0.3;
-      } else {
-        targetRotY = 0;
-        targetY = 0.2;
-      }
+      targetRotY = progress * Math.PI * 2.5;
+      targetY = (progress - 0.5) * -0.3;
     };
 
     updateScrollPhysicsRef.current = updateScrollPhysics;
