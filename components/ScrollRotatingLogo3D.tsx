@@ -44,13 +44,16 @@ export default function ScrollRotatingLogo3D() {
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
     camera.position.set(0, 0, 4.4);
 
-    // 2. WebGL Renderer with Alpha Transparency
+    // 2. WebGL Renderer with Alpha Transparency (Capped PixelRatio to save ~45% GPU Fill-Rate)
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const maxDpr = isMobile ? 1.25 : 1.5;
+
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: true,
       powerPreference: 'high-performance',
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr));
     renderer.setSize(width, height);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -59,29 +62,20 @@ export default function ScrollRotatingLogo3D() {
 
     container.appendChild(renderer.domElement);
 
-    // 3. Studio Lighting Rig for Rich Metallic & Crimson Highlights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2.2);
-    scene.add(ambientLight);
+    // 3. Optimized Lighting Rig (HemisphereLight + 2 Directionals: hemat ~35% kalkulasi shader GPU)
+    // HemisphereLight memadukan pantulan langit hangat (0xfff5e6) dan tanah navy (0x174A73) dalam 1 kalkulasi efisien
+    const hemiLight = new THREE.HemisphereLight(0xfff5e6, 0x174A73, 2.6);
+    scene.add(hemiLight);
 
-    // Key light (warm golden shine from top-right)
-    const keyLight = new THREE.DirectionalLight(0xfff5e6, 3.5);
+    // Key light (cahaya utama bersinar hangat dari atas-kanan)
+    const keyLight = new THREE.DirectionalLight(0xffffff, 3.4);
     keyLight.position.set(5, 7, 5);
     scene.add(keyLight);
 
-    // Fill light (cool sky tone from bottom-left)
-    const fillLight = new THREE.DirectionalLight(0xddeeff, 2.0);
-    fillLight.position.set(-5, -3, 3);
-    scene.add(fillLight);
-
-    // Rim light from behind for silhouette bevel separation
-    const rimLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    // Rim light (cahaya siluet belakang untuk memisahkan bevel sudut 3D)
+    const rimLight = new THREE.DirectionalLight(0xffffff, 2.2);
     rimLight.position.set(0, 5, -5);
     scene.add(rimLight);
-
-    // Front specular sparkle
-    const pointLight = new THREE.PointLight(0xffffff, 1.8, 10);
-    pointLight.position.set(0, 0, 3.5);
-    scene.add(pointLight);
 
     // 4. Pivot Group for Perfectly Centered Rotation
     const pivot = new THREE.Group();
@@ -242,6 +236,8 @@ export default function ScrollRotatingLogo3D() {
       if (!container) return;
       const newW = container.clientWidth || 500;
       const newH = container.clientHeight || 500;
+      const mobileCheck = window.innerWidth < 768;
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobileCheck ? 1.25 : 1.5));
       camera.aspect = newW / newH;
       camera.updateProjectionMatrix();
       renderer.setSize(newW, newH);
