@@ -15,14 +15,11 @@ interface ProjectSectionProps {
 export default function ProjectSection({ projects }: ProjectSectionProps) {
   return (
     <section id="project" className="pt-0 sm:pt-2 pb-2 sm:pb-4 px-3 sm:px-6 max-w-7xl mx-auto">
-      {/* Section Header - Bersih tanpa tab kategori */}
-      <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-11">
+      {/* Section Header */}
+      <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-earth tracking-tight">
-          Koleksi Proyek Taman San Jaya
+          Proyek Kami
         </h2>
-        <p className="mt-3 sm:mt-3.5 text-brand-earth/90 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto font-medium">
-          Dokumentasi karya nyata pengerjaan lanskap hunian privat, villa, kawasan terbuka, dan relief alami bergaransi tumbuh 100%. Klik foto untuk melihat detail & galeri foto lengkap.
-        </p>
       </div>
 
       {/* Projects Grid - Desain Kartu Editorial Bersih & Elegan */}

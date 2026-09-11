@@ -16,31 +16,31 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   const prevPathnameRef = useRef<string>(pathname);
 
   useEffect(() => {
-    // Inisialisasi Lenis Smooth Scroll dengan pembatasan kecepatan maksimum (Anti-Lag & Anti-Flicker)
+    // Inisialisasi Lenis Smooth Scroll dengan kecepatan responsif & kontrol batas maksimum (Anti-Lag)
     const lenis = new Lenis({
-      duration: 1.0, // Dioptimasi dari 1.2 agar scroll lebih responsif dan momentum tidak menumpuk berlebih
+      duration: 0.9, // Ditingkatkan responsivitasnya agar scroll terasa lincah dan tidak lambat
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.85, // Mencegah lonjakan scroll yang terlalu agresif pada mouse wheel
-      touchMultiplier: 1.0,  // Standar 1.0 pada layar sentuh agar tidak melesat kencang saat di-swipe
+      wheelMultiplier: 1.0, // Multiplier alami 1.0 agar putaran mouse wheel terasa direct dan pas
+      touchMultiplier: 1.1,  // Responsif pada layar sentuh tanpa melesat liar
       // Batasi kecepatan scroll maksimum per tick dan cegah runaway accumulation
       virtualScroll: (data) => {
-        // 1. Batasi delta maksimum per event scroll agar tidak ada lonjakan pixel instan yang ekstrem
-        const MAX_TICK_DELTA = 90;
+        // 1. Batasi delta maksimum per event scroll agar ada batas atas kecepatan yang tetap nyaman
+        const MAX_TICK_DELTA = 150;
         if (Math.abs(data.deltaY) > MAX_TICK_DELTA) {
           data.deltaY = Math.sign(data.deltaY) * MAX_TICK_DELTA;
         }
 
-        // 2. Batasi akumulasi jarak target terhadap posisi scroll aktif (mencegah scroll terbang terlalu jauh)
+        // 2. Batasi akumulasi jarak target terhadap posisi scroll aktif (mencegah scroll melesat tak terkendali)
         const activeLenis = lenisRef.current as (Lenis & { targetScroll?: number }) | null;
         if (activeLenis && typeof activeLenis.targetScroll === 'number') {
           const distanceAhead = Math.abs(activeLenis.targetScroll - activeLenis.scroll);
-          const MAX_AHEAD_DISTANCE = 320; // Batas toleransi jarak target di depan posisi render
+          const MAX_AHEAD_DISTANCE = 500; // Toleransi jarak target di depan posisi render
 
           if (distanceAhead > MAX_AHEAD_DISTANCE) {
-            const dampingFactor = Math.max(0.1, 1 - (distanceAhead - MAX_AHEAD_DISTANCE) / 200);
+            const dampingFactor = Math.max(0.15, 1 - (distanceAhead - MAX_AHEAD_DISTANCE) / 300);
             data.deltaY *= dampingFactor;
           }
         }

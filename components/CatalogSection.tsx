@@ -33,15 +33,10 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
       <div className="bg-brand-sand/40 border border-brand-sand-dark/40 rounded-[32px] sm:rounded-[44px] p-5 sm:p-9 lg:p-11">
         
         {/* Section Heading */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-7 sm:mb-9">
-          <div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-earth tracking-tight">
-              Katalog Tanaman Pilihan
-            </h2>
-            <p className="mt-2.5 text-brand-earth/90 text-base sm:text-lg max-w-2xl font-medium">
-              Aneka tanaman hias indoor, outdoor, pohon peneduh eksotis, hingga bonsai berkualitas terbaik siap menghiasi hunian Anda.
-            </p>
-          </div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-earth tracking-tight">
+            Produk Kami
+          </h2>
 
           {/* Search Box */}
           <div className="relative w-full md:w-72">
