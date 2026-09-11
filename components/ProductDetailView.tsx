@@ -342,7 +342,7 @@ export default function ProductDetailView({
             <h3 className="text-xs font-bold uppercase tracking-wider text-brand-earth/70">
               Deskripsi Tanaman
             </h3>
-            <p className="text-sm sm:text-base text-brand-earth/85 leading-relaxed font-normal">
+            <p className="text-sm sm:text-base text-brand-earth/95 leading-relaxed font-medium">
               {product.description}
             </p>
           </div>
@@ -464,7 +464,7 @@ export default function ProductDetailView({
                       <div className="mt-1 text-brand-crimson font-extrabold text-base">
                         {other.price_display || `Rp ${other.price.toLocaleString('id-ID')}`}
                       </div>
-                      <p className="mt-1.5 text-xs text-brand-earth/70 line-clamp-2 leading-relaxed">
+                      <p className="mt-1.5 text-xs text-brand-earth/90 font-medium line-clamp-2 leading-relaxed">
                         {other.description}
                       </p>
                     </div>

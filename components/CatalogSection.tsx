@@ -28,20 +28,17 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
   }, [products, searchQuery]);
 
   return (
-    <section id="catalog" className="-mt-14 sm:-mt-20 lg:-mt-28 pb-16 sm:pb-20 px-3 sm:px-6 max-w-7xl mx-auto relative z-20">
+    <section id="catalog" className="-mt-16 sm:-mt-24 lg:-mt-32 pb-14 sm:pb-18 px-3 sm:px-6 max-w-7xl mx-auto relative z-20">
       {/* Outer Sand Background Canvas */}
-      <div className="bg-brand-sand/40 border border-brand-sand-dark/40 rounded-[32px] sm:rounded-[44px] p-6 sm:p-10 lg:p-12">
+      <div className="bg-brand-sand/40 border border-brand-sand-dark/40 rounded-[32px] sm:rounded-[44px] p-5 sm:p-9 lg:p-11">
         
         {/* Section Heading */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-7 sm:mb-9">
           <div>
-            <span className="inline-block text-xs font-bold tracking-widest text-brand-crimson uppercase bg-white px-4 py-1.5 rounded-full mb-3 shadow-xs">
-              Koleksi Nursery & Tanaman Hias
-            </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-earth tracking-tight">
               Katalog Tanaman Pilihan
             </h2>
-            <p className="mt-3 text-brand-earth/80 text-base sm:text-lg max-w-2xl">
+            <p className="mt-2.5 text-brand-earth/90 text-base sm:text-lg max-w-2xl font-medium">
               Aneka tanaman hias indoor, outdoor, pohon peneduh eksotis, hingga bonsai berkualitas terbaik siap menghiasi hunian Anda.
             </p>
           </div>
@@ -121,13 +118,13 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                         </span>
                       </div>
 
-                      <p className="mt-2.5 text-brand-earth/75 text-xs sm:text-sm line-clamp-2 leading-relaxed">
+                      <p className="mt-2.5 text-brand-earth/90 text-xs sm:text-sm font-medium line-clamp-2 leading-relaxed">
                         {product.description}
                       </p>
 
                       {/* Care Tip */}
                       {product.care_instructions && (
-                        <div className="mt-3.5 pt-3 border-t border-brand-earth/10 flex items-start gap-1.5 text-[11px] text-brand-earth/70">
+                        <div className="mt-3.5 pt-3 border-t border-brand-earth/10 flex items-start gap-1.5 text-[11px] text-brand-earth/85 font-medium">
                           <Droplets className="w-3.5 h-3.5 text-brand-navy flex-shrink-0 mt-0.5" />
                           <span className="line-clamp-1">{product.care_instructions}</span>
                         </div>

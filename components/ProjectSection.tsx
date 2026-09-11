@@ -14,16 +14,13 @@ interface ProjectSectionProps {
 
 export default function ProjectSection({ projects }: ProjectSectionProps) {
   return (
-    <section id="project" className="pt-2 sm:pt-4 pb-2 sm:pb-4 px-3 sm:px-6 max-w-7xl mx-auto">
+    <section id="project" className="pt-0 sm:pt-2 pb-2 sm:pb-4 px-3 sm:px-6 max-w-7xl mx-auto">
       {/* Section Header - Bersih tanpa tab kategori */}
-      <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
-        <span className="inline-block text-xs font-bold tracking-widest text-brand-crimson uppercase bg-white/80 border border-brand-earth/15 px-4 py-1.5 rounded-full mb-3 shadow-xs">
-          Portofolio Karya & Dedikasi
-        </span>
+      <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-11">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-earth tracking-tight">
           Koleksi Proyek Taman San Jaya
         </h2>
-        <p className="mt-3.5 sm:mt-4 text-brand-earth/80 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+        <p className="mt-3 sm:mt-3.5 text-brand-earth/90 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto font-medium">
           Dokumentasi karya nyata pengerjaan lanskap hunian privat, villa, kawasan terbuka, dan relief alami bergaransi tumbuh 100%. Klik foto untuk melihat detail & galeri foto lengkap.
         </p>
       </div>
@@ -101,7 +98,7 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
                   </h3>
 
                   {/* Description */}
-                  <p className="mt-2.5 text-brand-earth/75 text-sm sm:text-base leading-relaxed font-normal line-clamp-3 sm:line-clamp-none">
+                  <p className="mt-2.5 text-brand-earth/90 text-sm sm:text-base leading-relaxed font-medium line-clamp-3 sm:line-clamp-none">
                     {project.description}
                   </p>
                 </div>

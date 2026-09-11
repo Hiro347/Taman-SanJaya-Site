@@ -163,7 +163,7 @@ export default function ProjectDetailView({
             {project.title}
           </h1>
 
-          <p className="text-brand-earth/85 text-base sm:text-lg leading-relaxed pt-2 font-normal">
+          <p className="text-brand-earth/95 text-base sm:text-lg leading-relaxed pt-2 font-medium">
             {project.description}
           </p>
 
@@ -290,7 +290,7 @@ export default function ProjectDetailView({
                       {other.title}
                     </Link>
                   </h3>
-                  <p className="mt-2 text-xs sm:text-sm text-brand-earth/70 line-clamp-2 leading-relaxed">
+                  <p className="mt-2 text-xs sm:text-sm text-brand-earth/90 font-medium line-clamp-2 leading-relaxed">
                     {other.description}
                   </p>
                 </div>
