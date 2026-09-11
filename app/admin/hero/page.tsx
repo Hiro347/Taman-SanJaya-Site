@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
 import { defaultSiteSettings } from '@/lib/placeholder-data';
 import { SiteSettings } from '@/lib/types';
+import { revalidateSite } from '@/app/actions';
 import {
   Save,
   Upload,
@@ -130,6 +131,8 @@ export default function AdminHeroPage() {
           .insert([payload]);
         if (error) throw error;
       }
+
+      await revalidateSite('/');
 
       setStatusMsg({
         type: 'success',

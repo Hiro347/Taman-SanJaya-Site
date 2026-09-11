@@ -8,8 +8,8 @@ import AboutSection from '@/components/AboutSection';
 import ContactSection from '@/components/ContactSection';
 import { getSiteSettings, getServices, getProducts, getProjects } from '@/lib/data';
 
-// Revalidate cache every 60 seconds (ISR)
-export const revalidate = 60;
+// High-performance static Edge CDN caching (ISR 1 hour), invalidated on-demand when admin updates data
+export const revalidate = 3600;
 
 export default async function HomePage() {
   const [settings, services, products, projects] = await Promise.all([

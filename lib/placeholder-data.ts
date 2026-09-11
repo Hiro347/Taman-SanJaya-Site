@@ -184,17 +184,6 @@ export const defaultProjects: Project[] = [
     order_index: 3,
   },
   {
-    id: 'proj4',
-    title: 'Taman Air Mancur Relief Batu Alam & Gazebo Bersantai',
-    slug: 'taman-air-mancur-relief-batu-alam',
-    category: 'Relief Tebing & Air',
-    location: 'Courtyard Hunian Tropis',
-    image_url: '/images/proyek-3.jpg',
-    gallery_images: ['/images/proyek-3.jpg', '/images/proyek-2.jpg', '/images/Pembuatan.jpg', '/images/proyek-4.avif'],
-    description: 'Ornamen air mancur bertingkat relief batu alam berpadu dengan gazebo kayu tradisional dan pepohonan tropis yang menyejukkan.',
-    order_index: 4,
-  },
-  {
     id: 'proj5',
     title: 'Konstruksi & Eksekusi Pembuatan Lanskap Riil',
     slug: 'konstruksi-eksekusi-lanskap',
@@ -203,6 +192,6 @@ export const defaultProjects: Project[] = [
     image_url: '/images/Pembuatan.jpg',
     gallery_images: ['/images/Pembuatan.jpg', '/images/proyek-1.jpeg', '/images/proyek-3.jpg', '/images/Perawatan.jpg'],
     description: 'Eksekusi fisik pengerjaan lanskap dari olah lahan, seleksi bibit unggul, pemupukan organik, hingga penataan hardscape bergaransi tumbuh 100%.',
-    order_index: 5,
+    order_index: 4,
   },
 ];

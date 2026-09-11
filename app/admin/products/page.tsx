@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
 import { defaultProducts } from '@/lib/placeholder-data';
 import { Product } from '@/lib/types';
+import { revalidateSite } from '@/app/actions';
 import { TokopediaIcon, ShopeeIcon } from '@/components/MarketplaceIcons';
 import {
   Plus,
@@ -263,6 +264,7 @@ export default function AdminProductsPage() {
           ? 'Produk tanaman berhasil diperbarui!'
           : 'Produk tanaman baru berhasil ditambahkan!',
       });
+      await revalidateSite('/');
       setIsModalOpen(false);
       fetchProducts();
     } catch (err: any) {
@@ -290,6 +292,7 @@ export default function AdminProductsPage() {
       } else {
         setProducts((prev) => [newProduct, ...prev]);
       }
+      await revalidateSite('/');
       setIsModalOpen(false);
       setToast({
         type: 'success',
@@ -309,9 +312,11 @@ export default function AdminProductsPage() {
         await supabase.from('products').delete().eq('id', id);
       }
       setProducts((prev) => prev.filter((p) => p.id !== id));
+      await revalidateSite('/');
       setToast({ type: 'success', text: 'Produk berhasil dihapus.' });
     } catch (err) {
       setProducts((prev) => prev.filter((p) => p.id !== id));
+      await revalidateSite('/');
       setToast({ type: 'success', text: 'Produk berhasil dihapus.' });
     }
   };

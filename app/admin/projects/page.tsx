@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
 import { defaultProjects } from '@/lib/placeholder-data';
 import { Project } from '@/lib/types';
+import { revalidateSite } from '@/app/actions';
 import {
   Plus,
   Trash2,
@@ -230,6 +231,7 @@ export default function AdminProjectsPage() {
         setToast({ type: 'success', text: 'Proyek baru berhasil ditambahkan!' });
       }
 
+      await revalidateSite('/');
       setIsModalOpen(false);
       fetchProjects();
     } catch (err: any) {
@@ -264,6 +266,7 @@ export default function AdminProjectsPage() {
         setProjects((prev) => [newProj, ...prev]);
         setToast({ type: 'success', text: 'Proyek ditambahkan ke website!' });
       }
+      await revalidateSite('/');
       setIsModalOpen(false);
     } finally {
       setSubmitting(false);
@@ -279,9 +282,11 @@ export default function AdminProjectsPage() {
         await supabase.from('projects').delete().eq('id', id);
       }
       setProjects((prev) => prev.filter((p) => p.id !== id));
+      await revalidateSite('/');
       setToast({ type: 'success', text: 'Proyek berhasil dihapus.' });
     } catch (err) {
       setProjects((prev) => prev.filter((p) => p.id !== id));
+      await revalidateSite('/');
       setToast({ type: 'success', text: 'Proyek berhasil dihapus.' });
     }
   };
