@@ -16,20 +16,16 @@ export default function ScrollRotatingLogo3D() {
 
   pathnameRef.current = pathname;
 
-  // Pantau perpindahan rute untuk menjamin logo 3D disembunyikan di subpage dan di-refresh saat kembali ke Home
+  // Pantau perpindahan rute untuk menjamin sinkronisasi posisi scroll di Home maupun Detail Page
   useEffect(() => {
-    if (pathname !== '/') {
-      setIsVisible(false);
-    } else {
-      const id1 = requestAnimationFrame(() => {
+    const id1 = requestAnimationFrame(() => {
+      updateScrollPhysicsRef.current();
+      const id2 = requestAnimationFrame(() => {
         updateScrollPhysicsRef.current();
-        const id2 = requestAnimationFrame(() => {
-          updateScrollPhysicsRef.current();
-        });
-        return () => cancelAnimationFrame(id2);
       });
-      return () => cancelAnimationFrame(id1);
-    }
+      return () => cancelAnimationFrame(id2);
+    });
+    return () => cancelAnimationFrame(id1);
   }, [pathname]);
 
   useEffect(() => {
@@ -157,58 +153,74 @@ export default function ScrollRotatingLogo3D() {
 
     const updateScrollPhysics = () => {
       scrollTicking = false;
+      const scrollY = window.scrollY;
 
-      // 1. Logo 3D HANYA aktif di halaman Home ('/')
-      // Jika di halaman detail (/proyek/*, /katalog/*, dll.), pastikan selalu tersembunyi
-      if (pathnameRef.current !== '/') {
-        if (isCurrentlyVisible) {
-          isCurrentlyVisible = false;
-          setIsVisible(false);
-        }
-        cachedProjectEl = null;
-        targetRotY = 0;
-        targetY = 0.2;
-        return;
-      }
-
-      // 2. Di halaman Home: pastikan referensi elemen #project valid dan masih aktif di DOM (anti-detached DOM)
-      if (!cachedProjectEl || !cachedProjectEl.isConnected) {
-        cachedProjectEl = document.getElementById('project');
-      }
-
-      if (cachedProjectEl && cachedProjectEl.isConnected) {
-        const rect = cachedProjectEl.getBoundingClientRect();
-        // Hanya muncul saat scroll sudah mencapai seksi #project (bottom 25% viewport)
-        const inProjectZone = rect.top <= window.innerHeight * 0.75;
-
-        if (isCurrentlyVisible !== inProjectZone) {
-          isCurrentlyVisible = inProjectZone;
-          setIsVisible(inProjectZone);
+      // 1. Logika untuk Halaman Home ('/')
+      if (pathnameRef.current === '/') {
+        // Pastikan referensi elemen #project valid dan masih aktif di DOM (anti-detached DOM)
+        if (!cachedProjectEl || !cachedProjectEl.isConnected) {
+          cachedProjectEl = document.getElementById('project');
         }
 
-        if (inProjectZone) {
-          const scrollY = window.scrollY;
-          const projectPageTop = cachedProjectEl.offsetTop;
-          const scrollFromProject = Math.max(0, scrollY - (projectPageTop - window.innerHeight * 0.5));
-          const totalRemaining = Math.max(
-            document.documentElement.scrollHeight - (projectPageTop - window.innerHeight * 0.5) - window.innerHeight,
-            1
-          );
-          const progress = Math.min(Math.max(scrollFromProject / totalRemaining, 0), 1);
+        if (cachedProjectEl && cachedProjectEl.isConnected) {
+          const rect = cachedProjectEl.getBoundingClientRect();
+          // Hanya muncul saat scroll sudah mencapai seksi #project (bottom 25% viewport)
+          const inProjectZone = rect.top <= window.innerHeight * 0.75;
 
-          // Rotasi anggun selama berada di seksi proyek hingga bawah
-          targetRotY = progress * Math.PI * 2.5;
-          targetY = (progress - 0.5) * -0.3;
+          if (isCurrentlyVisible !== inProjectZone) {
+            isCurrentlyVisible = inProjectZone;
+            setIsVisible(inProjectZone);
+          }
+
+          if (inProjectZone) {
+            const projectPageTop = cachedProjectEl.offsetTop;
+            const scrollFromProject = Math.max(0, scrollY - (projectPageTop - window.innerHeight * 0.5));
+            const totalRemaining = Math.max(
+              document.documentElement.scrollHeight - (projectPageTop - window.innerHeight * 0.5) - window.innerHeight,
+              1
+            );
+            const progress = Math.min(Math.max(scrollFromProject / totalRemaining, 0), 1);
+
+            // Rotasi anggun selama berada di seksi proyek hingga bawah
+            targetRotY = progress * Math.PI * 2.5;
+            targetY = (progress - 0.5) * -0.3;
+          } else {
+            targetRotY = 0;
+            targetY = 0.2;
+          }
         } else {
+          // Jika elemen #project belum ditemukan / belum di-mount di DOM, JANGAN pernah tampilkan di Hero/Services
+          if (isCurrentlyVisible) {
+            isCurrentlyVisible = false;
+            setIsVisible(false);
+          }
           targetRotY = 0;
           targetY = 0.2;
         }
+        return;
+      }
+
+      // 2. Logika untuk Halaman Detail (/proyek/*, /katalog/*, dll.)
+      cachedProjectEl = null; // Pastikan cache elemen Home tidak tersimpan di subpage
+
+      const maxScroll = Math.max(
+        document.documentElement.scrollHeight - window.innerHeight,
+        1
+      );
+      const progress = Math.min(Math.max(scrollY / maxScroll, 0), 1);
+
+      // Pada halaman detail, logo aktif saat scroll melewati bagian atas panggung foto (scrollY > 180)
+      const inDetailZone = scrollY > 180;
+
+      if (isCurrentlyVisible !== inDetailZone) {
+        isCurrentlyVisible = inDetailZone;
+        setIsVisible(inDetailZone);
+      }
+
+      if (inDetailZone) {
+        targetRotY = progress * Math.PI * 2.5;
+        targetY = (progress - 0.5) * -0.3;
       } else {
-        // Jika elemen #project belum ditemukan / belum di-mount di DOM, JANGAN pernah tampilkan di Hero/Services
-        if (isCurrentlyVisible) {
-          isCurrentlyVisible = false;
-          setIsVisible(false);
-        }
         targetRotY = 0;
         targetY = 0.2;
       }
@@ -314,11 +326,11 @@ export default function ScrollRotatingLogo3D() {
       aria-hidden="true"
       className="fixed inset-0 pointer-events-none z-0 overflow-hidden flex items-center justify-center"
     >
-      {/* 3D WebGL Canvas Container: hanya muncul saat scroll sampai di Koleksi Proyek di halaman Home */}
+      {/* 3D WebGL Canvas Container: aktif saat scroll mencapai seksi konten (Home maupun Detail) */}
       <div
         ref={containerRef}
         className={`w-[360px] h-[360px] sm:w-[500px] sm:h-[500px] lg:w-[650px] lg:h-[650px] transition-all duration-700 ease-out ${
-          pathname === '/' && isLoaded && isVisible
+          isLoaded && isVisible
             ? 'opacity-[0.25] sm:opacity-[0.30] scale-100'
             : 'opacity-0 scale-95 pointer-events-none'
         }`}
