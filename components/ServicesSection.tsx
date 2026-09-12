@@ -56,33 +56,6 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
       ),
     },
     {
-      id: 'perawatan',
-      title: 'JASA PERAWATAN',
-      desc: 'Perawatan rutin berkala: pemangkasan dahan pohon, pemupukan nutrisi organik, penggemburan tanah, serta pengendalian hama & jamur berbasis Proteksi Tanaman IPB.',
-      imageUrl: '/images/Perawatan.jpg',
-      slug: 'jasa-perawatan',
-      icon: (
-        <svg
-          viewBox="0 0 64 64"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="w-12 h-12 sm:w-14 sm:h-14 text-white drop-shadow-md"
-        >
-          {/* Botanical leaf shield */}
-          <path d="M32 8 C44 14, 50 20, 50 36 C50 48, 32 56, 32 56 C32 56, 14 48, 14 36 C14 20, 20 14, 32 8 Z" />
-          {/* Vein / stem of leaf */}
-          <path d="M32 18 L32 46" />
-          <path d="M32 26 C38 22, 42 26, 42 30" />
-          <path d="M32 34 C26 30, 22 34, 22 38" />
-          {/* Health luster sparkle */}
-          <path d="M46 12 L48 16 L52 18 L48 20 L46 24 L44 20 L40 18 L44 16 Z" fill="currentColor" opacity="0.8" />
-        </svg>
-      ),
-    },
-    {
       id: 'pembuatan',
       title: 'JASA PEMBUATAN',
       desc: 'Pembuatan taman tropis modern, taman minimalis, relief tebing air terjun alami, stepping stone, hardscape, dan penanaman bergaransi tumbuh 100%.',
@@ -109,6 +82,33 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
           <path d="M32 24 C36 16, 44 14, 48 18 C48 25, 42 28, 32 30" />
           {/* Dew drop */}
           <circle cx="32" cy="10" r="2" />
+        </svg>
+      ),
+    },
+    {
+      id: 'perawatan',
+      title: 'JASA PERAWATAN',
+      desc: 'Perawatan rutin berkala: pemangkasan dahan pohon, pemupukan nutrisi organik, penggemburan tanah, serta pengendalian hama & jamur berbasis Proteksi Tanaman IPB.',
+      imageUrl: '/images/Perawatan.jpg',
+      slug: 'jasa-perawatan',
+      icon: (
+        <svg
+          viewBox="0 0 64 64"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="w-12 h-12 sm:w-14 sm:h-14 text-white drop-shadow-md"
+        >
+          {/* Botanical leaf shield */}
+          <path d="M32 8 C44 14, 50 20, 50 36 C50 48, 32 56, 32 56 C32 56, 14 48, 14 36 C14 20, 20 14, 32 8 Z" />
+          {/* Vein / stem of leaf */}
+          <path d="M32 18 L32 46" />
+          <path d="M32 26 C38 22, 42 26, 42 30" />
+          <path d="M32 34 C26 30, 22 34, 22 38" />
+          {/* Health luster sparkle */}
+          <path d="M46 12 L48 16 L52 18 L48 20 L46 24 L44 20 L40 18 L44 16 Z" fill="currentColor" opacity="0.8" />
         </svg>
       ),
     },
