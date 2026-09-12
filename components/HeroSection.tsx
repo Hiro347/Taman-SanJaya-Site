@@ -160,22 +160,32 @@ export default function HeroSection({ settings }: HeroSectionProps) {
           {/* 3. CENTER CONTENT: TAMAN SAN JAYA + SLOGAN SINGKAT PENDUKUNG      */}
           {/* ================================================================= */}
           <div className="relative z-10 flex flex-col items-center text-center my-auto py-2 sm:py-4 max-w-4xl mx-auto">
-            {/* Main Brand Title */}
-            <motion.h1
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-wider leading-[1.08] drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)] uppercase font-sans"
-            >
-              TAMAN SAN JAYA
-            </motion.h1>
+            {/* Main Brand Title with Mandarin Subtitle */}
+            <div className="flex flex-col items-center">
+              <motion.h1
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-serif italic text-white tracking-wider leading-[1.08] drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)] uppercase"
+              >
+                TAMAN SAN JAYA
+              </motion.h1>
+              <motion.span
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+                className="text-sm sm:text-base md:text-lg lg:text-xl tracking-[0.28em] text-brand-sand font-medium font-sans drop-shadow-md mt-1 sm:mt-1.5"
+              >
+                成功之园
+              </motion.span>
+            </div>
 
             {/* Slogan Singkat Pendukung Produk */}
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-1 sm:mt-1.5 text-base sm:text-2xl lg:text-3xl font-serif italic font-bold text-brand-sand drop-shadow-md tracking-wide"
+              transition={{ duration: 0.7, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-2 sm:mt-3 text-base sm:text-2xl lg:text-3xl font-serif italic font-bold text-brand-sand drop-shadow-md tracking-wide"
             >
               Specialist Landscape Architecture
             </motion.p>
