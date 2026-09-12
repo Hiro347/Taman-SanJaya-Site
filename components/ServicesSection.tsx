@@ -25,36 +25,6 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
 
   const serviceItems: ServiceItem[] = [
     {
-      id: 'pembuatan',
-      title: 'JASA PEMBUATAN',
-      desc: 'Pembuatan taman tropis modern, taman minimalis, relief tebing air terjun alami, stepping stone, hardscape, dan penanaman bergaransi tumbuh 100%.',
-      imageUrl: '/images/Pembuatan.jpg',
-      slug: 'jasa-pembuatan',
-      icon: (
-        <svg
-          viewBox="0 0 64 64"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="w-12 h-12 sm:w-14 sm:h-14 text-white drop-shadow-md"
-        >
-          {/* Construction Foundation Structure */}
-          <rect x="12" y="34" width="40" height="20" rx="3" />
-          <line x1="12" y1="44" x2="52" y2="44" />
-          <line x1="32" y1="34" x2="32" y2="44" />
-          <line x1="22" y1="44" x2="22" y2="54" />
-          <line x1="42" y1="44" x2="42" y2="54" />
-          {/* Sprout emerging from construction stone */}
-          <path d="M32 34 C32 20, 24 16, 16 18 C16 26, 22 30, 32 34" />
-          <path d="M32 24 C36 16, 44 14, 48 18 C48 25, 42 28, 32 30" />
-          {/* Dew drop */}
-          <circle cx="32" cy="10" r="2" />
-        </svg>
-      ),
-    },
-    {
       id: 'perencanaan',
       title: 'JASA PERENCANAAN',
       desc: 'Visualisasi desain konsep 2D & 3D realistis, survei pengukuran lahan, tata letak vegetasi adaptif, sistem drainase, dan rancangan anggaran biaya (RAB) transparan.',
@@ -109,6 +79,36 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
           <path d="M32 34 C26 30, 22 34, 22 38" />
           {/* Health luster sparkle */}
           <path d="M46 12 L48 16 L52 18 L48 20 L46 24 L44 20 L40 18 L44 16 Z" fill="currentColor" opacity="0.8" />
+        </svg>
+      ),
+    },
+    {
+      id: 'pembuatan',
+      title: 'JASA PEMBUATAN',
+      desc: 'Pembuatan taman tropis modern, taman minimalis, relief tebing air terjun alami, stepping stone, hardscape, dan penanaman bergaransi tumbuh 100%.',
+      imageUrl: '/images/Pembuatan.jpg',
+      slug: 'jasa-pembuatan',
+      icon: (
+        <svg
+          viewBox="0 0 64 64"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="w-12 h-12 sm:w-14 sm:h-14 text-white drop-shadow-md"
+        >
+          {/* Construction Foundation Structure */}
+          <rect x="12" y="34" width="40" height="20" rx="3" />
+          <line x1="12" y1="44" x2="52" y2="44" />
+          <line x1="32" y1="34" x2="32" y2="44" />
+          <line x1="22" y1="44" x2="22" y2="54" />
+          <line x1="42" y1="44" x2="42" y2="54" />
+          {/* Sprout emerging from construction stone */}
+          <path d="M32 34 C32 20, 24 16, 16 18 C16 26, 22 30, 32 34" />
+          <path d="M32 24 C36 16, 44 14, 48 18 C48 25, 42 28, 32 30" />
+          {/* Dew drop */}
+          <circle cx="32" cy="10" r="2" />
         </svg>
       ),
     },

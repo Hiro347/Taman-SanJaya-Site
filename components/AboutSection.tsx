@@ -23,10 +23,19 @@ export default function AboutSection({ settings }: AboutSectionProps) {
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           <div className="lg:col-span-7">
-            <div className="flex items-center gap-2 text-brand-sand font-bold text-xs sm:text-sm tracking-widest uppercase mb-3">
-              <span>Tentang Taman San Jaya</span>
-              <span>•</span>
-              <span className="font-serif italic text-base text-brand-crimson-light">成功之园</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3.5 mb-4">
+              <span className="text-brand-sand font-bold text-xs sm:text-sm tracking-widest uppercase">
+                Tentang
+              </span>
+              <span className="hidden sm:inline text-brand-sand/40">•</span>
+              <div className="flex flex-col">
+                <span className="font-serif italic font-bold tracking-wider text-white text-lg sm:text-xl lg:text-2xl leading-tight">
+                  TAMAN SAN JAYA
+                </span>
+                <span className="text-xs sm:text-[13px] tracking-widest text-brand-sand font-medium font-sans">
+                  成功之园
+                </span>
+              </div>
             </div>
 
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black leading-tight text-white">

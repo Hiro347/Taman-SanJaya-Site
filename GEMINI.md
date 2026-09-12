@@ -109,9 +109,9 @@ The brand visual language is inspired by high-end architectural monographs, orga
 
 4. **`components/ServicesSection.tsx`**:
    - 3 Pillars:
-     1. **Jasa Pembuatan** (Uses `/images/Pembuatan.jpg`)
-     2. **Jasa Perencanaan** (Uses `/images/Perencanaan.jpg`)
-     3. **Jasa Perawatan** (Uses `/images/Perawatan.jpg`)
+     1. **Jasa Perencanaan** (Uses `/images/Perencanaan.jpg`)
+     2. **Jasa Perawatan** (Uses `/images/Perawatan.jpg`)
+     3. **Jasa Pembuatan** (Uses `/images/Pembuatan.jpg`)
    - Interactive 3-column accordion that expands on hover and returns to neutral balance on mouse leave.
 
 5. **`components/ProjectSection.tsx` & Dedicated Detail Page (`/proyek/[id]`)**:

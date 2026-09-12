@@ -15,23 +15,6 @@ export const defaultSiteSettings: SiteSettings = {
 
 export const defaultServices: Service[] = [
   {
-    id: '1',
-    title: 'Jasa Pembuatan',
-    slug: 'jasa-pembuatan',
-    short_desc: 'Pembuatan taman tropis modern, taman minimalis, relief tebing air terjun alami, stepping stone, hardscape, dan penanaman bergaransi tumbuh 100%.',
-    full_desc: 'Eksekusi konstruksi lanskap menyeluruh dari olah lahan, instalasi drainase, pembuatan dinding batu andesit relief, penanaman rumput jepang, hingga penataan tanaman tropis dengan garansi tumbuh 100%.',
-    icon_name: 'Hammer',
-    features: [
-      'Taman Tropis, Minimalis Modern & Zen Garden',
-      'Relief Tebing Air Terjun & Air Mancur Alami',
-      'Decking Kayu Ulin, Pergola, & Gazebo Santai',
-      'Pemasangan Rumput & Sistem Drainase Alami',
-      'Garansi Hidup & Tumbuh Tanaman 100%',
-    ],
-    image_url: '/images/Pembuatan.jpg',
-    order_index: 1,
-  },
-  {
     id: '2',
     title: 'Jasa Perencanaan',
     slug: 'jasa-perencanaan',
@@ -45,7 +28,7 @@ export const defaultServices: Service[] = [
       'Rancangan Anggaran Biaya (RAB) Rinci & Transparan',
     ],
     image_url: '/images/Perencanaan.jpg',
-    order_index: 2,
+    order_index: 1,
   },
   {
     id: '3',
@@ -62,6 +45,23 @@ export const defaultServices: Service[] = [
       'Paket Kunjungan Berkala Mingguan & Bulanan',
     ],
     image_url: '/images/Perawatan.jpg',
+    order_index: 2,
+  },
+  {
+    id: '1',
+    title: 'Jasa Pembuatan',
+    slug: 'jasa-pembuatan',
+    short_desc: 'Pembuatan taman tropis modern, taman minimalis, relief tebing air terjun alami, stepping stone, hardscape, dan penanaman bergaransi tumbuh 100%.',
+    full_desc: 'Eksekusi konstruksi lanskap menyeluruh dari olah lahan, instalasi drainase, pembuatan dinding batu andesit relief, penanaman rumput jepang, hingga penataan tanaman tropis dengan garansi tumbuh 100%.',
+    icon_name: 'Hammer',
+    features: [
+      'Taman Tropis, Minimalis Modern & Zen Garden',
+      'Relief Tebing Air Terjun & Air Mancur Alami',
+      'Decking Kayu Ulin, Pergola, & Gazebo Santai',
+      'Pemasangan Rumput & Sistem Drainase Alami',
+      'Garansi Hidup & Tumbuh Tanaman 100%',
+    ],
+    image_url: '/images/Pembuatan.jpg',
     order_index: 3,
   },
 ];
