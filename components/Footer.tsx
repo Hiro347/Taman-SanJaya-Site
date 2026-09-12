@@ -30,13 +30,13 @@ export default function Footer({ settings }: FooterProps) {
           
           {/* Brand Info */}
           <div className="lg:col-span-5 flex flex-col">
-            <div className="flex items-center gap-3">
-              <div className="relative w-11 h-11 bg-white rounded-full p-1 flex-shrink-0">
+            <div className="flex items-center gap-3.5">
+              <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex-shrink-0">
                 <Image
                   src="/images/logo.png"
                   alt="Taman San Jaya Logo"
                   fill
-                  className="object-contain p-1"
+                  className="object-contain"
                 />
               </div>
               <div>
