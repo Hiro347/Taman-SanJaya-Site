@@ -49,14 +49,15 @@ export const getProducts = cache(async (): Promise<Product[]> => {
     const { data, error } = await supabase
       .from('products')
       .select('*')
+      .neq('is_active', false)
       .order('order_index', { ascending: true });
 
     if (error || !data || data.length === 0) {
-      return defaultProducts;
+      return defaultProducts.filter((p) => p.is_active !== false);
     }
     return data as Product[];
   } catch (err) {
-    return defaultProducts;
+    return defaultProducts.filter((p) => p.is_active !== false);
   }
 });
 
@@ -151,12 +152,17 @@ export const getProductById = cache(async (id: string): Promise<Product | null> 
     const { data, error } = await query.maybeSingle();
 
     if (error || !data) {
-      const fallback = defaultProducts.find((p) => p.id === id || p.slug === id);
+      const fallback = defaultProducts.find((p) => (p.id === id || p.slug === id) && p.is_active !== false);
       return fallback || null;
     }
+
+    if (data.is_active === false) {
+      return null;
+    }
+
     return data as Product;
   } catch (err) {
-    const fallback = defaultProducts.find((p) => p.id === id || p.slug === id);
+    const fallback = defaultProducts.find((p) => (p.id === id || p.slug === id) && p.is_active !== false);
     return fallback || null;
   }
 });
@@ -169,6 +175,7 @@ export const getOtherProducts = cache(async (currentId: string, limit: number = 
     let query = supabase
       .from('products')
       .select('*')
+      .neq('is_active', false)
       .order('order_index', { ascending: true })
       .limit(limit);
 
@@ -182,13 +189,13 @@ export const getOtherProducts = cache(async (currentId: string, limit: number = 
 
     if (error || !data || data.length === 0) {
       return defaultProducts
-        .filter((p) => p.id !== currentId && p.slug !== currentId)
+        .filter((p) => p.id !== currentId && p.slug !== currentId && p.is_active !== false)
         .slice(0, limit);
     }
     return data as Product[];
   } catch (err) {
     return defaultProducts
-      .filter((p) => p.id !== currentId && p.slug !== currentId)
+      .filter((p) => p.id !== currentId && p.slug !== currentId && p.is_active !== false)
       .slice(0, limit);
   }
 });

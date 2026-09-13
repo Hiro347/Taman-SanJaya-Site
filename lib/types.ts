@@ -24,6 +24,7 @@ export interface Product {
   image_url: string;
   gallery_images?: string[];
   in_stock: boolean;
+  is_active?: boolean;
   featured?: boolean;
   order_index?: number;
   tokopedia_url?: string;

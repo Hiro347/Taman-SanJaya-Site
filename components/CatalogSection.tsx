@@ -55,15 +55,12 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
         <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <AnimatePresence>
             {filteredProducts.map((product) => {
-              const tokopediaLink =
+              const hasTokopedia = Boolean(
                 product.tokopedia_url && product.tokopedia_url.trim() !== ''
-                  ? product.tokopedia_url
-                  : `https://www.tokopedia.com/search?st=product&q=${encodeURIComponent(product.name)}`;
-
-              const shopeeLink =
+              );
+              const hasShopee = Boolean(
                 product.shopee_url && product.shopee_url.trim() !== ''
-                  ? product.shopee_url
-                  : `https://shopee.co.id/search?keyword=${encodeURIComponent(product.name)}`;
+              );
 
               return (
                 <motion.div
@@ -128,28 +125,62 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                   </div>
 
                   {/* Marketplace Direct Buy Buttons (Tokopedia & Shopee) */}
-                  <div className="p-5 pt-0 grid grid-cols-2 gap-2">
-                    <a
-                      href={tokopediaLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 w-full bg-[#03AC0E] hover:bg-[#029B0D] active:scale-[0.98] text-white text-xs sm:text-[13px] font-bold py-2.5 px-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
-                      title={`Beli ${product.name} di Tokopedia`}
-                    >
-                      <TokopediaIcon className="w-4 h-4 flex-shrink-0 text-white" />
-                      <span className="truncate">Tokopedia</span>
-                    </a>
+                  <div className="p-5 pt-0">
+                    {hasTokopedia && hasShopee ? (
+                      <div className="grid grid-cols-2 gap-2">
+                        <a
+                          href={product.tokopedia_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-1.5 w-full bg-[#03AC0E] hover:bg-[#029B0D] active:scale-[0.98] text-white text-xs sm:text-[13px] font-bold py-2.5 px-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                          title={`Beli ${product.name} di Tokopedia`}
+                        >
+                          <TokopediaIcon className="w-4 h-4 flex-shrink-0 text-white" />
+                          <span className="truncate">Tokopedia</span>
+                        </a>
 
-                    <a
-                      href={shopeeLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 w-full bg-[#EE4D2D] hover:bg-[#D73211] active:scale-[0.98] text-white text-xs sm:text-[13px] font-bold py-2.5 px-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
-                      title={`Beli ${product.name} di Shopee`}
-                    >
-                      <ShopeeIcon className="w-4 h-4 flex-shrink-0 text-white" />
-                      <span className="truncate">Shopee</span>
-                    </a>
+                        <a
+                          href={product.shopee_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-1.5 w-full bg-[#EE4D2D] hover:bg-[#D73211] active:scale-[0.98] text-white text-xs sm:text-[13px] font-bold py-2.5 px-2 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                          title={`Beli ${product.name} di Shopee`}
+                        >
+                          <ShopeeIcon className="w-4 h-4 flex-shrink-0 text-white" />
+                          <span className="truncate">Shopee</span>
+                        </a>
+                      </div>
+                    ) : hasTokopedia ? (
+                      <a
+                        href={product.tokopedia_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-1.5 w-full bg-[#03AC0E] hover:bg-[#029B0D] active:scale-[0.98] text-white text-xs sm:text-[13px] font-bold py-2.5 px-3 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                        title={`Beli ${product.name} di Tokopedia`}
+                      >
+                        <TokopediaIcon className="w-4 h-4 flex-shrink-0 text-white" />
+                        <span>Beli di Tokopedia</span>
+                      </a>
+                    ) : hasShopee ? (
+                      <a
+                        href={product.shopee_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-1.5 w-full bg-[#EE4D2D] hover:bg-[#D73211] active:scale-[0.98] text-white text-xs sm:text-[13px] font-bold py-2.5 px-3 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                        title={`Beli ${product.name} di Shopee`}
+                      >
+                        <ShopeeIcon className="w-4 h-4 flex-shrink-0 text-white" />
+                        <span>Beli di Shopee</span>
+                      </a>
+                    ) : (
+                      <Link
+                        href={`/katalog/${product.slug || product.id}`}
+                        className="flex items-center justify-center gap-1.5 w-full bg-brand-sand/60 hover:bg-brand-sand text-brand-earth active:scale-[0.98] text-xs sm:text-[13px] font-bold py-2.5 px-3 rounded-xl shadow-xs hover:shadow-md transition-all duration-200 border border-brand-sand-dark/40"
+                        title={`Lihat detail ${product.name}`}
+                      >
+                        <span>Lihat Detail Produk</span>
+                      </Link>
+                    )}
                   </div>
                 </motion.div>
               );

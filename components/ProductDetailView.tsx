@@ -135,15 +135,13 @@ export default function ProductDetailView({
 
   const currentPhoto = galleryList[activeImageIndex] || product.image_url;
 
-  const tokopediaLink =
+  const hasTokopedia = Boolean(
     product.tokopedia_url && product.tokopedia_url.trim() !== ''
-      ? product.tokopedia_url
-      : `https://www.tokopedia.com/search?st=product&q=${encodeURIComponent(product.name)}`;
+  );
 
-  const shopeeLink =
+  const hasShopee = Boolean(
     product.shopee_url && product.shopee_url.trim() !== ''
-      ? product.shopee_url
-      : `https://shopee.co.id/search?keyword=${encodeURIComponent(product.name)}`;
+  );
 
   const waOrderUrl = `https://wa.me/${settings.whatsapp_number}?text=${encodeURIComponent(
     `Halo Taman San Jaya, saya tertarik memesan produk tanaman "${product.name}" (${
@@ -349,32 +347,40 @@ export default function ProductDetailView({
 
           {/* Direct Purchase Action Buttons */}
           <div className="space-y-3 pt-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-earth/70 block">
-              Beli Langsung / Marketplace
-            </span>
+            {(hasTokopedia || hasShopee) && (
+              <>
+                <span className="text-xs font-bold uppercase tracking-wider text-brand-earth/70 block">
+                  Beli Langsung / Marketplace
+                </span>
 
-            {/* Dual Marketplace Buttons */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <a
-                href={tokopediaLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2.5 bg-[#03AC0E] hover:bg-[#029B0D] text-white font-bold py-3.5 px-4 rounded-2xl shadow-xs hover:shadow-md transition-all active:scale-[0.98] text-sm"
-              >
-                <TokopediaIcon className="w-5 h-5 text-white flex-shrink-0" />
-                <span>Beli di Tokopedia</span>
-              </a>
+                {/* Marketplace Buttons */}
+                <div className={`grid gap-3 ${hasTokopedia && hasShopee ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+                  {hasTokopedia && (
+                    <a
+                      href={product.tokopedia_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2.5 bg-[#03AC0E] hover:bg-[#029B0D] text-white font-bold py-3.5 px-4 rounded-2xl shadow-xs hover:shadow-md transition-all active:scale-[0.98] text-sm"
+                    >
+                      <TokopediaIcon className="w-5 h-5 text-white flex-shrink-0" />
+                      <span>Beli di Tokopedia</span>
+                    </a>
+                  )}
 
-              <a
-                href={shopeeLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2.5 bg-[#EE4D2D] hover:bg-[#D73211] text-white font-bold py-3.5 px-4 rounded-2xl shadow-xs hover:shadow-md transition-all active:scale-[0.98] text-sm"
-              >
-                <ShopeeIcon className="w-5 h-5 text-white flex-shrink-0" />
-                <span>Beli di Shopee</span>
-              </a>
-            </div>
+                  {hasShopee && (
+                    <a
+                      href={product.shopee_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2.5 bg-[#EE4D2D] hover:bg-[#D73211] text-white font-bold py-3.5 px-4 rounded-2xl shadow-xs hover:shadow-md transition-all active:scale-[0.98] text-sm"
+                    >
+                      <ShopeeIcon className="w-5 h-5 text-white flex-shrink-0" />
+                      <span>Beli di Shopee</span>
+                    </a>
+                  )}
+                </div>
+              </>
+            )}
 
             {/* WhatsApp Direct Order Button */}
             <a
@@ -412,15 +418,12 @@ export default function ProductDetailView({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {otherProducts.map((other) => {
-              const otherTokopedia =
+              const otherHasTokopedia = Boolean(
                 other.tokopedia_url && other.tokopedia_url.trim() !== ''
-                  ? other.tokopedia_url
-                  : `https://www.tokopedia.com/search?st=product&q=${encodeURIComponent(other.name)}`;
-
-              const otherShopee =
+              );
+              const otherHasShopee = Boolean(
                 other.shopee_url && other.shopee_url.trim() !== ''
-                  ? other.shopee_url
-                  : `https://shopee.co.id/search?keyword=${encodeURIComponent(other.name)}`;
+              );
 
               return (
                 <div
@@ -471,25 +474,56 @@ export default function ProductDetailView({
                   </div>
 
                   {/* Marketplace CTAs */}
-                  <div className="p-4 pt-0 grid grid-cols-2 gap-2">
-                    <a
-                      href={otherTokopedia}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1 bg-[#03AC0E] hover:bg-[#029B0D] text-white text-xs font-bold py-2 px-1.5 rounded-xl transition-all"
-                    >
-                      <TokopediaIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
-                      <span className="truncate">Tokopedia</span>
-                    </a>
-                    <a
-                      href={otherShopee}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1 bg-[#EE4D2D] hover:bg-[#D73211] text-white text-xs font-bold py-2 px-1.5 rounded-xl transition-all"
-                    >
-                      <ShopeeIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
-                      <span className="truncate">Shopee</span>
-                    </a>
+                  <div className="p-4 pt-0">
+                    {otherHasTokopedia && otherHasShopee ? (
+                      <div className="grid grid-cols-2 gap-2">
+                        <a
+                          href={other.tokopedia_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-1 bg-[#03AC0E] hover:bg-[#029B0D] text-white text-xs font-bold py-2 px-1.5 rounded-xl transition-all"
+                        >
+                          <TokopediaIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
+                          <span className="truncate">Tokopedia</span>
+                        </a>
+                        <a
+                          href={other.shopee_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-1 bg-[#EE4D2D] hover:bg-[#D73211] text-white text-xs font-bold py-2 px-1.5 rounded-xl transition-all"
+                        >
+                          <ShopeeIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
+                          <span className="truncate">Shopee</span>
+                        </a>
+                      </div>
+                    ) : otherHasTokopedia ? (
+                      <a
+                        href={other.tokopedia_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-1.5 w-full bg-[#03AC0E] hover:bg-[#029B0D] text-white text-xs font-bold py-2 px-2 rounded-xl transition-all"
+                      >
+                        <TokopediaIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
+                        <span>Beli di Tokopedia</span>
+                      </a>
+                    ) : otherHasShopee ? (
+                      <a
+                        href={other.shopee_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-1.5 w-full bg-[#EE4D2D] hover:bg-[#D73211] text-white text-xs font-bold py-2 px-2 rounded-xl transition-all"
+                      >
+                        <ShopeeIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
+                        <span>Beli di Shopee</span>
+                      </a>
+                    ) : (
+                      <Link
+                        href={`/katalog/${other.slug || other.id}`}
+                        className="flex items-center justify-center gap-1.5 w-full bg-brand-sand/60 hover:bg-brand-sand text-brand-earth text-xs font-bold py-2 px-2 rounded-xl border border-brand-sand-dark/40 transition-all"
+                      >
+                        <span>Lihat Detail</span>
+                      </Link>
+                    )}
                   </div>
                 </div>
               );
