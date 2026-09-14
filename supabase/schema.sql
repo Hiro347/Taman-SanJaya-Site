@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
   hero_title TEXT NOT NULL DEFAULT 'Wujudkan Taman Idaman yang Asri, Elegan & Menenangkan',
   hero_subtitle TEXT NOT NULL DEFAULT 'Solusi profesional landscape design, pembuatan taman minimalis modern, tropis, air mancur relief batu alam, hingga perawatan berkala dan penyediaan tanaman hias berkualitas.',
   hero_image_url TEXT NOT NULL DEFAULT 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1600&q=80',
-  whatsapp_number TEXT NOT NULL DEFAULT '6281234567890',
+  whatsapp_number TEXT NOT NULL DEFAULT '6282110998588',
   whatsapp_message TEXT NOT NULL DEFAULT 'Halo Taman San Jaya, saya ingin konsultasi mengenai jasa landscape taman & tanaman hias.',
-  address TEXT NOT NULL DEFAULT 'Jl. Raya Hijau Indah No. 88, Workshop Nursery Taman San Jaya',
+  address TEXT NOT NULL DEFAULT 'Jl Taman Pajajaran Blok A7 no 30, Katulampa, Kota Bogor 16144',
   google_maps_url TEXT DEFAULT 'https://maps.google.com',
   instagram_url TEXT DEFAULT 'https://instagram.com',
   opening_hours TEXT DEFAULT 'Senin - Minggu: 08.00 - 18.00 WIB',
@@ -143,13 +143,14 @@ USING (bucket_id = 'taman-media');
 -- ==============================================================================
 
 -- Site Settings awal
-INSERT INTO public.site_settings (id, hero_title, hero_subtitle, hero_image_url, whatsapp_number)
+INSERT INTO public.site_settings (id, hero_title, hero_subtitle, hero_image_url, whatsapp_number, address)
 VALUES (
   '00000000-0000-0000-0000-000000000001',
   'Wujudkan Taman Asri & Bernilai Estetika Tinggi',
   'Layanan lengkap landscape design, pengerjaan taman hunian & komersial, air mancur relief batu alam, serta katalog tanaman hias terpilih.',
   'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1600&q=80',
-  '6281234567890'
+  '6282110998588',
+  'Jl Taman Pajajaran Blok A7 no 30, Katulampa, Kota Bogor 16144'
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Layanan Jasa

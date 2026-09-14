@@ -107,7 +107,24 @@ export default function Footer({ settings }: FooterProps) {
             <ul className="space-y-3 text-xs sm:text-sm text-white/80">
               <li className="flex items-start gap-2.5">
                 <Phone className="w-4 h-4 text-brand-sand flex-shrink-0 mt-0.5" />
-                <span>+{settings.whatsapp_number} (Konsultasi Cepat)</span>
+                <a
+                  href={`https://wa.me/${(settings.whatsapp_number || '6282110998588').replace(/\D/g, '')}?text=${encodeURIComponent(
+                    settings.whatsapp_message || 'Halo Taman San Jaya, saya ingin konsultasi mengenai jasa landscape taman & pemesanan tanaman.'
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-brand-sand transition-colors"
+                >
+                  {(() => {
+                    const num = settings.whatsapp_number || '6282110998588';
+                    const digits = num.replace(/\D/g, '');
+                    if (digits.startsWith('62') && digits.length === 13) {
+                      return `+${digits.slice(0, 2)} ${digits.slice(2, 5)}-${digits.slice(5, 9)}-${digits.slice(9)}`;
+                    }
+                    if (num.startsWith('+')) return num;
+                    return `+${num}`;
+                  })()} (Konsultasi Cepat)
+                </a>
               </li>
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-brand-sand flex-shrink-0 mt-0.5" />

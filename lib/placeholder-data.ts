@@ -5,9 +5,9 @@ export const defaultSiteSettings: SiteSettings = {
   hero_subtitle: 'Solusi lengkap mulai dari desain, pembuatan, perawatan, hingga ketersediaan tanaman segar dan dekorasi taman berkualitas.',
   // Exact landscape garden image from Figma mockup
   hero_image_url: '/images/hero-garden.jpg',
-  whatsapp_number: '6281234567890',
+  whatsapp_number: '6282110998588',
   whatsapp_message: 'Halo Taman San Jaya, saya ingin konsultasi mengenai jasa landscape taman & pemesanan tanaman.',
-  address: 'Jl. Raya Hijau Asri No. 88, Workshop & Nursery Taman San Jaya',
+  address: 'Jl Taman Pajajaran Blok A7 no 30, Katulampa, Kota Bogor 16144',
   google_maps_url: 'https://maps.google.com',
   instagram_url: 'https://instagram.com/tamansanjaya',
   opening_hours: 'Senin - Minggu: 08.00 - 18.00 WIB',
