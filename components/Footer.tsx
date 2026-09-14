@@ -44,14 +44,19 @@ export default function Footer({ settings }: FooterProps) {
                   TAMAN SAN JAYA
                 </span>
                 <span className="text-xs tracking-widest text-brand-sand block font-sans">
-                  成功之园 • Landscape Architecture & Nursery
+                  成功之园
                 </span>
               </div>
             </div>
 
-            <p className="mt-4 text-white/75 text-sm leading-relaxed max-w-md">
-              Penyedia jasa landscape profesional, perencanaan visual taman 2D/3D, pembuatan taman tropis & minimalis, relief tebing alami, perawatan berkala, serta katalog ragam tanaman hias berkualitas tinggi.
-            </p>
+            <div className="mt-4 space-y-1 max-w-md">
+              <p className="text-brand-sand font-serif italic font-bold text-sm sm:text-base">
+                Spesialis Penyedia Lanskap
+              </p>
+              <p className="text-white/75 text-sm leading-relaxed">
+                Solusi lengkap mulai dari desain, pembuatan, perawatan, hingga ketersediaan tanaman segar dan dekorasi taman berkualitas.
+              </p>
+            </div>
 
             <div className="mt-6 flex items-center gap-3">
               <span className="text-xs text-brand-sand font-medium">Melayani Survei Seluruh Wilayah</span>

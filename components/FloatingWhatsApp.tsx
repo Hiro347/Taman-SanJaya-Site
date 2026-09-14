@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MessageCircle } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/MarketplaceIcons';
 import { SiteSettings } from '@/lib/types';
 
 interface FloatingWhatsAppProps {
@@ -29,7 +29,7 @@ export default function FloatingWhatsApp({ settings }: FloatingWhatsAppProps) {
         className="relative group flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95"
       >
         <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-25" />
-        <MessageCircle className="w-7 h-7 relative z-10" />
+        <WhatsAppIcon className="w-8 h-8 relative z-10" />
       </a>
     </div>
   );

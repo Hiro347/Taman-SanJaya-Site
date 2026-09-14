@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, MessageSquare } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/MarketplaceIcons';
 import { Service, SiteSettings } from '@/lib/types';
 
 interface ServicesSectionProps {
@@ -219,7 +220,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
                           }}
                           className="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white text-[11px] font-bold px-3 py-1.5 rounded-full border border-white/40 transition-colors"
                         >
-                          <MessageSquare className="w-3.5 h-3.5 fill-[#25D366] text-[#25D366]" />
+                          <WhatsAppIcon className="w-3.5 h-3.5 flex-shrink-0" />
                           <span>Konsultasi WA</span>
                         </a>
                       </motion.div>
@@ -318,7 +319,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 bg-white/20 text-white text-xs font-bold px-3 py-2 rounded-full border border-white/30"
                         >
-                          <MessageSquare className="w-3.5 h-3.5 fill-[#25D366] text-[#25D366]" />
+                          <WhatsAppIcon className="w-3.5 h-3.5 flex-shrink-0" />
                           <span>WA</span>
                         </a>
                       </div>

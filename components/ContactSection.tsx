@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { MessageCircle } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/MarketplaceIcons';
 import { motion } from 'framer-motion';
 import { SiteSettings } from '@/lib/types';
 
@@ -66,7 +66,7 @@ export default function ContactSection({ settings }: ContactSectionProps) {
             whileTap={{ scale: 0.95 }}
             className="inline-flex items-center justify-center gap-3.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-base sm:text-lg font-bold px-9 sm:px-12 py-4 sm:py-5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 group"
           >
-            <MessageCircle className="w-6 h-6 fill-[#25D366] text-[#25D366] flex-shrink-0 group-hover:rotate-12 transition-transform duration-300" />
+            <WhatsAppIcon className="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0 group-hover:rotate-12 transition-transform duration-300" />
             <span className="tracking-wide uppercase text-sm sm:text-base">BOOKING SEKARANG</span>
           </motion.a>
         </motion.div>

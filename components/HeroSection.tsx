@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import {
-  MessageCircle,
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
   MapPin,
 } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/MarketplaceIcons';
 import { SiteSettings } from '@/lib/types';
 
 interface HeroSectionProps {
@@ -215,7 +215,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold text-xs sm:text-sm lg:text-base px-7 sm:px-9 py-2.5 sm:py-3.5 rounded-full shadow-2xl shadow-brand-crimson/50 border border-white/20 transition-all group"
               >
-                <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 fill-[#25D366] text-[#25D366] transition-transform group-hover:rotate-12 flex-shrink-0" />
+                <WhatsAppIcon className="w-5 h-5 sm:w-6 sm:h-6 transition-transform group-hover:rotate-12 flex-shrink-0" />
                 <span>Konsultasi Sekarang</span>
                 <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
               </motion.a>

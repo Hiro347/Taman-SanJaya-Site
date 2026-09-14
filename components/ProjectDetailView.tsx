@@ -8,12 +8,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft,
   MapPin,
-  MessageCircle,
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
   CheckCircle2,
 } from 'lucide-react';
+import { WhatsAppIcon } from '@/components/MarketplaceIcons';
 import { Project, SiteSettings } from '@/lib/types';
 
 interface ProjectDetailViewProps {
@@ -327,7 +327,7 @@ export default function ProjectDetailView({
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs sm:text-sm font-bold px-8 py-3.5 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95"
           >
-            <MessageCircle className="w-5 h-5 fill-[#25D366] text-[#25D366] flex-shrink-0" />
+            <WhatsAppIcon className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
             <span>Hubungi WhatsApp Taman San Jaya</span>
           </a>
         </div>
