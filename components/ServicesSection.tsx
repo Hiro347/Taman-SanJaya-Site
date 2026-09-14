@@ -27,7 +27,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
     {
       id: 'perencanaan',
       title: 'JASA PERENCANAAN',
-      desc: 'Visualisasi desain konsep 2D & 3D realistis, survei pengukuran lahan, tata letak vegetasi adaptif, sistem drainase, dan rancangan anggaran biaya (RAB) transparan.',
+      desc: 'Mulai dari survei lahan dan tata letak. Visualisasi 2D dan 3D berbasis AutoCAD dan SketchUp. Serta estimasi RAB yang transparan.',
       imageUrl: '/images/Perencanaan.jpg',
       slug: 'jasa-perencanaan',
       icon: (
@@ -88,7 +88,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
     {
       id: 'perawatan',
       title: 'JASA PERAWATAN',
-      desc: 'Perawatan rutin berkala: pemangkasan dahan pohon, pemupukan nutrisi organik, penggemburan tanah, serta pengendalian hama & jamur berbasis Proteksi Tanaman IPB.',
+      desc: 'Perawatan dan monitoring, pemangkasan dahan, pemupukan, serta pengendalian hama dan penyakit secara terpadu.',
       imageUrl: '/images/Perawatan.jpg',
       slug: 'jasa-perawatan',
       icon: (

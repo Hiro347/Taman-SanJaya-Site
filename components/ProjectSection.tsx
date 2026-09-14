@@ -74,10 +74,15 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
               {/* Project Details */}
               <div className="p-5 sm:p-7 flex flex-col justify-between flex-1">
                 <div>
-                  {/* Location Meta */}
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-brand-crimson uppercase tracking-wider mb-2">
-                    <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span>{project.location}</span>
+                  {/* Category & Location Meta */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-brand-crimson text-white">
+                      {project.category}
+                    </span>
+                    <span className="flex items-center gap-1 text-xs font-bold text-brand-earth/70">
+                      <MapPin className="w-3.5 h-3.5 text-brand-earth/80 flex-shrink-0" />
+                      <span>{project.location}</span>
+                    </span>
                   </div>
 
                   {/* Title - Juga dapat diklik menuju detail proyek */}

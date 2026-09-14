@@ -28,10 +28,11 @@ export default function AdminProjectsPage() {
   const [galleryUrlInput, setGalleryUrlInput] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
 
   const [formData, setFormData] = useState({
     title: '',
-    category: 'Taman Tropis',
+    category: 'Perencanaan',
     location: '',
     image_url: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
     gallery_images: [] as string[],
@@ -68,7 +69,7 @@ export default function AdminProjectsPage() {
     setGalleryUrlInput('');
     setFormData({
       title: '',
-      category: 'Taman Tropis',
+      category: 'Perencanaan',
       location: 'Jakarta Selatan',
       image_url: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
       gallery_images: [],
@@ -82,7 +83,7 @@ export default function AdminProjectsPage() {
     setGalleryUrlInput('');
     setFormData({
       title: proj.title,
-      category: proj.category || 'Taman Tropis',
+      category: proj.category || 'Perencanaan',
       location: proj.location,
       image_url: proj.image_url,
       gallery_images: Array.isArray(proj.gallery_images) ? [...proj.gallery_images] : [],
@@ -329,87 +330,142 @@ export default function AdminProjectsPage() {
         </div>
       )}
 
-      {/* Projects Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {projects.map((proj) => {
-          const galleryCount = (proj.gallery_images?.length || 0) + (proj.image_url ? 1 : 0);
-
+      {/* Category Filter Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        {['Semua', 'Perencanaan', 'Pembuatan', 'Perawatan'].map((cat) => {
+          const count =
+            cat === 'Semua'
+              ? projects.length
+              : projects.filter((p) => p.category === cat).length;
+          const isActive = selectedCategory === cat;
           return (
-            <div
-              key={proj.id}
-              className="bg-white rounded-3xl overflow-hidden border border-brand-sand-dark/40 shadow-xs flex flex-col justify-between"
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                isActive
+                  ? 'bg-brand-crimson text-white shadow-sm'
+                  : 'bg-white text-brand-earth/80 hover:bg-brand-sand-light border border-brand-sand-dark/40'
+              }`}
             >
-              <div>
-                <div className="relative w-full h-56 sm:h-64 overflow-hidden bg-brand-sand/30">
-                  <Image
-                    src={proj.image_url}
-                    alt={proj.title}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute top-3 left-3 flex items-center gap-2">
-                    <span className="bg-brand-earth/80 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full">
-                      {proj.category}
-                    </span>
-                    <span className="bg-black/60 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1">
-                      <Images className="w-3 h-3" />
-                      <span>{galleryCount} Foto</span>
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <div className="flex items-center gap-1.5 text-xs text-brand-navy font-semibold mb-1.5">
-                    <MapPin className="w-3.5 h-3.5" />
-                    <span>{proj.location}</span>
-                  </div>
-                  <h3 className="font-bold text-lg text-brand-earth">{proj.title}</h3>
-                  <p className="mt-2 text-xs sm:text-sm text-brand-earth/75 leading-relaxed">
-                    {proj.description}
-                  </p>
-
-                  {/* Gallery preview pills */}
-                  {proj.gallery_images && proj.gallery_images.length > 0 && (
-                    <div className="mt-4 pt-3 border-t border-brand-sand/40">
-                      <span className="text-xs font-bold text-brand-earth/60 uppercase tracking-wider block mb-2">
-                        Galeri ({proj.gallery_images.length} foto tambahan):
-                      </span>
-                      <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                        {proj.gallery_images.map((img, i) => (
-                          <div
-                            key={i}
-                            className="relative w-12 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-stone-100 border border-brand-sand-dark/40"
-                          >
-                            <Image src={img} alt="" fill className="object-cover" />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="p-6 pt-0 flex items-center justify-between border-t border-brand-sand/30 mt-4">
-                <button
-                  onClick={() => openEditModal(proj)}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-navy hover:bg-brand-navy/10 px-3 py-2 rounded-xl transition-colors"
-                >
-                  <Pencil className="w-4 h-4" />
-                  <span>Edit Proyek & Galeri</span>
-                </button>
-
-                <button
-                  onClick={() => handleDelete(proj.id)}
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 px-3 py-2 rounded-xl transition-colors"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  <span>Hapus</span>
-                </button>
-              </div>
-            </div>
+              <span>{cat}</span>
+              <span
+                className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                  isActive ? 'bg-white/20 text-white' : 'bg-brand-sand/50 text-brand-earth'
+                }`}
+              >
+                {count}
+              </span>
+            </button>
           );
         })}
       </div>
+
+      {/* Projects Grid */}
+      {projects.filter((p) => selectedCategory === 'Semua' || p.category === selectedCategory).length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-3xl border border-brand-sand-dark/40 p-8">
+          <p className="text-sm font-semibold text-brand-earth/70">
+            Belum ada proyek di kategori &quot;{selectedCategory}&quot;.
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              openAddModal();
+              if (selectedCategory !== 'Semua') {
+                setFormData((prev) => ({ ...prev, category: selectedCategory }));
+              }
+            }}
+            className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-brand-crimson hover:underline cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            <span>Tambah proyek {selectedCategory !== 'Semua' ? selectedCategory : ''} baru</span>
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {projects
+            .filter((p) => selectedCategory === 'Semua' || p.category === selectedCategory)
+            .map((proj) => {
+              const galleryCount = (proj.gallery_images?.length || 0) + (proj.image_url ? 1 : 0);
+
+              return (
+                <div
+                  key={proj.id}
+                  className="bg-white rounded-3xl overflow-hidden border border-brand-sand-dark/40 shadow-xs flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="relative w-full h-56 sm:h-64 overflow-hidden bg-brand-sand/30">
+                      <Image
+                        src={proj.image_url}
+                        alt={proj.title}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute top-3 left-3 flex items-center gap-2">
+                        <span className="bg-brand-earth/80 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full">
+                          {proj.category}
+                        </span>
+                        <span className="bg-black/60 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1">
+                          <Images className="w-3 h-3" />
+                          <span>{galleryCount} Foto</span>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-6">
+                      <div className="flex items-center gap-1.5 text-xs text-brand-navy font-semibold mb-1.5">
+                        <MapPin className="w-3.5 h-3.5" />
+                        <span>{proj.location}</span>
+                      </div>
+                      <h3 className="font-bold text-lg text-brand-earth">{proj.title}</h3>
+                      <p className="mt-2 text-xs sm:text-sm text-brand-earth/75 leading-relaxed">
+                        {proj.description}
+                      </p>
+
+                      {/* Gallery preview pills */}
+                      {proj.gallery_images && proj.gallery_images.length > 0 && (
+                        <div className="mt-4 pt-3 border-t border-brand-sand/40">
+                          <span className="text-xs font-bold text-brand-earth/60 uppercase tracking-wider block mb-2">
+                            Galeri ({proj.gallery_images.length} foto tambahan):
+                          </span>
+                          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                            {proj.gallery_images.map((img, i) => (
+                              <div
+                                key={i}
+                                className="relative w-12 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-stone-100 border border-brand-sand-dark/40"
+                              >
+                                <Image src={img} alt="" fill className="object-cover" />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="p-6 pt-0 flex items-center justify-between border-t border-brand-sand/30 mt-4">
+                    <button
+                      onClick={() => openEditModal(proj)}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-navy hover:bg-brand-navy/10 px-3 py-2 rounded-xl transition-colors cursor-pointer"
+                    >
+                      <Pencil className="w-4 h-4" />
+                      <span>Edit Proyek & Galeri</span>
+                    </button>
+
+                    <button
+                      onClick={() => handleDelete(proj.id)}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 px-3 py-2 rounded-xl transition-colors cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      <span>Hapus</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      )}
 
       {/* Add / Edit Project Modal */}
       {isModalOpen && (
@@ -452,12 +508,9 @@ export default function AdminProjectsPage() {
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth bg-white"
                   >
-                    <option value="Taman Tropis">Taman Tropis</option>
-                    <option value="Taman Minimalis">Taman Minimalis</option>
-                    <option value="Perencanaan 3D">Perencanaan 3D Lanskap</option>
-                    <option value="Relief Tebing & Air">Relief Tebing & Air Mancur</option>
-                    <option value="Pengerjaan Lanskap">Pengerjaan & Konstruksi Lanskap</option>
-                    <option value="Vertical Garden">Vertical Garden</option>
+                    <option value="Perencanaan">Perencanaan</option>
+                    <option value="Pembuatan">Pembuatan</option>
+                    <option value="Perawatan">Perawatan</option>
                   </select>
                 </div>
 

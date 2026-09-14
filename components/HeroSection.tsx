@@ -18,38 +18,38 @@ interface HeroSectionProps {
 const heroSlides = [
   {
     id: 1,
-    title: 'Taman Minimalis Modern & Rumput Hijau Rapat',
-    category: 'Taman Minimalis',
-    location: 'Hunian Residensial Mewah',
-    image: '/images/proyek-4.avif',
-  },
-  {
-    id: 2,
-    title: 'Taman Tropis Alami & Jalan Setapak Villa',
-    category: 'Taman Tropis',
-    location: 'Kawasan Villa & Resort',
-    image: '/images/proyek-2.jpg',
-  },
-  {
-    id: 3,
-    title: 'Perencanaan Desain Lanskap 3D Kawasan',
-    category: 'Perencanaan 3D',
+    title: 'Perencanaan Desain Lanskap 3D Kawasan & Masterplan',
+    category: 'Perencanaan',
     location: 'Masterplan Kawasan Terbuka',
     image: '/images/proyek-1.jpeg',
   },
   {
+    id: 2,
+    title: 'Taman Minimalis Modern & Rumput Hijau Rapat',
+    category: 'Pembuatan',
+    location: 'Hunian Residensial Mewah',
+    image: '/images/proyek-4.avif',
+  },
+  {
+    id: 3,
+    title: 'Taman Tropis Alami & Jalan Setapak Villa',
+    category: 'Pembuatan',
+    location: 'Kawasan Villa & Resort',
+    image: '/images/proyek-2.jpg',
+  },
+  {
     id: 4,
     title: 'Taman Air Mancur Relief Batu Alam & Gazebo',
-    category: 'Relief Tebing & Air',
+    category: 'Pembuatan',
     location: 'Courtyard Hunian Asri',
     image: '/images/proyek-3.jpg',
   },
   {
     id: 5,
-    title: 'Pengerjaan & Konstruksi Lanskap Riil',
-    category: 'Konstruksi Lanskap',
-    location: 'Workshop & Nursery',
-    image: '/images/Pembuatan.jpg',
+    title: 'Perawatan Berkala & Pemulihan Nutrisi Tanaman',
+    category: 'Perawatan',
+    location: 'Kawasan Residensial & Komersial',
+    image: '/images/Perawatan.jpg',
   },
 ];
 
@@ -174,7 +174,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="text-sm sm:text-base md:text-lg lg:text-xl tracking-[0.28em] text-brand-sand font-medium font-sans drop-shadow-md mt-1 sm:mt-1.5"
+                className="text-sm sm:text-base md:text-lg lg:text-xl tracking-[0.28em] text-white font-medium font-sans drop-shadow-md mt-1 sm:mt-1.5"
               >
                 成功之园
               </motion.span>
@@ -187,7 +187,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               transition={{ duration: 0.7, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
               className="mt-2 sm:mt-3 text-base sm:text-2xl lg:text-3xl font-serif italic font-bold text-brand-sand drop-shadow-md tracking-wide"
             >
-              Specialist Landscape Architecture
+              Spesialis Penyedia Lanskap
             </motion.p>
 
             {/* Ringkasan Produk Pendukung */}
@@ -197,7 +197,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="mt-2 sm:mt-2.5 text-white/90 text-xs sm:text-sm lg:text-base max-w-2xl mx-auto font-normal drop-shadow leading-relaxed"
             >
-              Spesialis desain lanskap 3D, pembuatan taman tropis, relief tebing alami, & perawatan bergaransi tumbuh 100%.
+              Solusi lengkap mulai dari desain, pembuatan, perawatan, hingga ketersediaan tanaman segar dan dekorasi taman berkualitas.
             </motion.p>
 
             {/* Call to Action - Consultation Button */}

@@ -179,14 +179,25 @@ export default function ProjectDetailView({
           </div>
         </div>
 
-        {/* Kolom Kanan: Detail Lokasi */}
-        <div className="lg:col-span-4 bg-white/80 rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-brand-earth/15 shadow-sm">
-          <span className="text-[11px] font-bold text-brand-earth/60 uppercase tracking-widest block mb-1.5">
-            Lokasi Pengerjaan
-          </span>
-          <div className="flex items-start gap-2.5 text-brand-earth font-black text-lg sm:text-xl">
-            <MapPin className="w-5 h-5 text-brand-crimson flex-shrink-0 mt-0.5" />
-            <span>{project.location}</span>
+        {/* Kolom Kanan: Detail Kategori & Lokasi */}
+        <div className="lg:col-span-4 bg-white/80 rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-brand-earth/15 shadow-sm space-y-4">
+          <div>
+            <span className="text-[11px] font-bold text-brand-earth/60 uppercase tracking-widest block mb-1.5">
+              Kategori Proyek
+            </span>
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-crimson text-white">
+              {project.category}
+            </span>
+          </div>
+
+          <div>
+            <span className="text-[11px] font-bold text-brand-earth/60 uppercase tracking-widest block mb-1.5">
+              Lokasi Pengerjaan
+            </span>
+            <div className="flex items-start gap-2.5 text-brand-earth font-black text-lg sm:text-xl">
+              <MapPin className="w-5 h-5 text-brand-crimson flex-shrink-0 mt-0.5" />
+              <span>{project.location}</span>
+            </div>
           </div>
         </div>
       </div>
