@@ -432,13 +432,13 @@ export default function AdminProductsPage() {
           <table className="w-full text-left text-sm text-brand-earth">
             <thead className="bg-brand-sand/40 text-brand-earth uppercase text-[11px] font-bold tracking-wider border-b border-brand-sand-dark/30">
               <tr>
-                <th className="px-6 py-4">Foto & Nama Tanaman</th>
-                <th className="px-6 py-4">Kategori</th>
-                <th className="px-6 py-4">Harga</th>
-                <th className="px-6 py-4">Status Stok</th>
-                <th className="px-6 py-4">Tampil di Web</th>
-                <th className="px-6 py-4">Marketplace</th>
-                <th className="px-6 py-4 text-right">Aksi</th>
+                <th className="px-5 py-4 min-w-[260px]">Foto & Nama Tanaman</th>
+                <th className="px-5 py-4 whitespace-nowrap min-w-[140px]">Kategori</th>
+                <th className="px-5 py-4 whitespace-nowrap min-w-[120px]">Harga</th>
+                <th className="px-5 py-4 whitespace-nowrap min-w-[120px]">Status Stok</th>
+                <th className="px-5 py-4 whitespace-nowrap min-w-[130px]">Tampil di Web</th>
+                <th className="px-5 py-4 whitespace-nowrap min-w-[160px]">Marketplace</th>
+                <th className="px-5 py-4 whitespace-nowrap text-right min-w-[90px]">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-brand-sand-dark/20">
@@ -456,7 +456,7 @@ export default function AdminProductsPage() {
                         : 'bg-gray-50/80 opacity-75 hover:bg-gray-100/80'
                     }`}
                   >
-                    <td className="px-6 py-4">
+                    <td className="px-5 py-4">
                       <div className="flex items-center gap-3.5">
                         <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/30">
                           <Image
@@ -491,56 +491,60 @@ export default function AdminProductsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-brand-sand/60 text-brand-earth">
+                    <td className="px-5 py-4 whitespace-nowrap">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-brand-sand/50 text-brand-earth border border-brand-sand-dark/40 shadow-2xs whitespace-nowrap">
                         {p.category}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <span className="font-bold text-brand-crimson">
+                    <td className="px-5 py-4 whitespace-nowrap">
+                      <span className="text-sm font-bold text-brand-crimson tabular-nums whitespace-nowrap">
                         {p.price_display || `Rp ${p.price.toLocaleString('id-ID')}`}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-5 py-4 whitespace-nowrap">
                       <span
-                        className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
+                        className={`inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg border ${
                           p.in_stock
-                            ? 'bg-emerald-50 text-emerald-700'
-                            : 'bg-amber-50 text-amber-700'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                            : 'bg-amber-50 text-amber-700 border-amber-200'
                         }`}
                       >
                         {p.in_stock ? 'Tersedia' : 'Pre-Order / Habis'}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
-                      <button
-                        type="button"
-                        onClick={() => toggleActive(p)}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer shadow-xs ${
-                          isActive
-                            ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-800'
-                            : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                        }`}
-                        title={
-                          isActive
-                            ? 'Klik untuk menyembunyikan produk dari website'
-                            : 'Klik untuk mengaktifkan dan menampilkan di website'
-                        }
-                      >
-                        {isActive ? (
-                          <>
-                            <Eye className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>Aktif</span>
-                          </>
-                        ) : (
-                          <>
-                            <EyeOff className="w-3.5 h-3.5 text-gray-500" />
-                            <span>Non-Aktif</span>
-                          </>
-                        )}
-                      </button>
+                    <td className="px-5 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2.5">
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={isActive}
+                          onClick={() => toggleActive(p)}
+                          className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-crimson/30 ${
+                            isActive ? 'bg-emerald-500' : 'bg-gray-300'
+                          }`}
+                          title={
+                            isActive
+                              ? 'Aktif: Klik untuk menyembunyikan dari website (OFF)'
+                              : 'Nonaktif: Klik untuk menampilkan di website (ON)'
+                          }
+                        >
+                          <span
+                            aria-hidden="true"
+                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                              isActive ? 'translate-x-5' : 'translate-x-0'
+                            }`}
+                          />
+                        </button>
+                        <span
+                          className={`text-xs font-bold select-none ${
+                            isActive ? 'text-emerald-700' : 'text-gray-400'
+                          }`}
+                        >
+                          {isActive ? 'ON' : 'OFF'}
+                        </span>
+                      </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-5 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         {hasTokopedia && (
                           <a
@@ -575,7 +579,7 @@ export default function AdminProductsPage() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-5 py-4 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openEditModal(p)}
