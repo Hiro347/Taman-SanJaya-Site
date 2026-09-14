@@ -389,7 +389,7 @@ export default function ProductDetailView({
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-2.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all active:scale-[0.98] text-sm sm:text-base"
             >
-              <MessageCircle className="w-5 h-5 fill-current flex-shrink-0" />
+              <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 fill-[#25D366] text-[#25D366] flex-shrink-0" />
               <span>Pesan via WhatsApp (Konsultasi Bebas Biaya)</span>
             </a>
           </div>

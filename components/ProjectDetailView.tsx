@@ -174,7 +174,7 @@ export default function ProjectDetailView({
             </div>
             <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-brand-earth/90 bg-white/60 p-3 rounded-xl border border-brand-earth/10">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-              <span>Perawatan Nutrisi Berbasis Sains IPB</span>
+              <span>Perawatan Nutrisi Berbasis Sains</span>
             </div>
           </div>
         </div>
@@ -208,10 +208,10 @@ export default function ProjectDetailView({
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-2xl sm:text-3xl font-black text-brand-earth tracking-tight">
-                Galeri Foto Dokumentasi
+                Kolase
               </h2>
-              <p className="text-xs sm:text-sm text-brand-earth/75 mt-1">
-                Klik salah satu foto untuk melihatnya di panggung utama di atas.
+              <p className="text-xs sm:text-sm text-brand-earth/75 mt-1 font-medium">
+                Eksplorasi sudut lanskap, detail vegetasi, dan dokumentasi pengerjaan nyata di lokasi.
               </p>
             </div>
             <span className="text-xs font-bold text-brand-crimson bg-white px-3 py-1 rounded-full border border-brand-earth/10">
@@ -318,7 +318,7 @@ export default function ProjectDetailView({
           Ingin Membangun Taman Asri Serupa di Hunian Anda?
         </h3>
         <p className="text-xs sm:text-sm text-white/80 max-w-xl mx-auto leading-relaxed">
-          Konsultasikan kebutuhan lanskap Anda langsung dengan tim ahli Proteksi Tanaman IPB University. Kami melayani survei lokasi bebas biaya awal.
+          Konsultasikan kebutuhan lanskap Anda langsung dengan tim ahli kami. Kami melayani survei lokasi bebas biaya awal.
         </p>
         <div className="pt-2">
           <a
@@ -327,7 +327,7 @@ export default function ProjectDetailView({
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs sm:text-sm font-bold px-8 py-3.5 rounded-full shadow-lg transition-transform hover:scale-105 active:scale-95"
           >
-            <MessageCircle className="w-4 h-4 fill-current" />
+            <MessageCircle className="w-5 h-5 fill-[#25D366] text-[#25D366] flex-shrink-0" />
             <span>Hubungi WhatsApp Taman San Jaya</span>
           </a>
         </div>
