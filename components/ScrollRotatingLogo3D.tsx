@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 
 export default function ScrollRotatingLogo3D() {
   const pathname = usePathname();
@@ -89,12 +90,13 @@ export default function ScrollRotatingLogo3D() {
 
     let modelMesh: THREE.Group | null = null;
 
-    // 5. Load GLB Model with DRACOLoader
+    // 5. Load GLB Model with DRACOLoader & MeshoptDecoder
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('/draco/');
 
     const loader = new GLTFLoader();
     loader.setDRACOLoader(dracoLoader);
+    loader.setMeshoptDecoder(MeshoptDecoder);
 
     loader.load(
       '/models/LogoTamanSanjaya.glb',
@@ -112,7 +114,7 @@ export default function ScrollRotatingLogo3D() {
         const scaleFactor = 2.2 / (maxDim || 1);
         pivot.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-        // Enhance material aesthetics (double-sided, glossy metal & lacquer)
+        // Enhance material aesthetics (front-sided, glossy metal & lacquer)
         modelMesh.traverse((child) => {
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;
@@ -120,7 +122,7 @@ export default function ScrollRotatingLogo3D() {
             mesh.receiveShadow = false;
             if (mesh.material) {
               const mat = mesh.material as THREE.MeshStandardMaterial;
-              mat.side = THREE.DoubleSide;
+              mat.side = THREE.FrontSide;
               mat.roughness = Math.min(mat.roughness ?? 0.35, 0.4);
               mat.metalness = Math.max(mat.metalness ?? 0.3, 0.4);
               mat.needsUpdate = true;
@@ -258,11 +260,17 @@ export default function ScrollRotatingLogo3D() {
     };
     window.addEventListener('resize', onResize);
 
-    // 8. 60 FPS Render Loop with Inertial Spring Physics
+    // 8. 60 FPS Render Loop with Inertial Spring Physics & Page Visibility API
     const clock = new THREE.Clock();
     let animId: number;
+    let isRunning = true;
 
     const animate = () => {
+      if (document.hidden) {
+        isRunning = false;
+        return;
+      }
+
       animId = requestAnimationFrame(animate);
 
       // Smooth interpolation (lerp) for buttery luxury motion
@@ -291,11 +299,26 @@ export default function ScrollRotatingLogo3D() {
       renderer.render(scene, camera);
     };
 
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(animId);
+        isRunning = false;
+      } else if (!isRunning) {
+        isRunning = true;
+        clock.start();
+        updateScrollPhysics();
+        animId = requestAnimationFrame(animate);
+      }
+    };
+
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
     animate();
 
     // 9. Cleanup on Unmount
     return () => {
       cancelAnimationFrame(animId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('resize', onResize);
