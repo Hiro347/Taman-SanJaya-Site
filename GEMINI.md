@@ -164,7 +164,7 @@ All production-served assets reside in `public/images/`, while original raw sour
 | `/images/group-3.webp`, `group-3.png` | Cascading natural bougainvillea floral garland divider | FloralDivider (between Project & Catalog) |
 | `/images/group-2.png`, `group-2.webp` | Edge-to-edge natural wildflower meadow section divider | Footer top crown |
 | `/images/image-13.svg`, `image-13.webp` | Hanging botanical ivy bush | Top-right corner of layout |
-| `/models/LogoTamanSanjaya.glb` | 3D GLB brand logo model (Draco + WebP compressed) | ScrollRotatingLogo3D |
+| `/models/LogoTamanSanjaya.glb` | 3D GLB brand logo model (Meshopt + WebP compressed) | ScrollRotatingLogo3D |
 | `/images/logo.png` | Official brand logo | Navbar, Footer |
 | `/images/founder.jpg`, `founder.webp` | Founder portrait (Ergoputra Kusuma Sanjaya) | AboutSection |
 | `/images/lidah-mertua.jpg` | Sansevieria plant photography | CatalogSection |

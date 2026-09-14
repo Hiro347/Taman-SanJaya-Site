@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 
 export default function ScrollRotatingLogo3D() {
@@ -90,12 +89,8 @@ export default function ScrollRotatingLogo3D() {
 
     let modelMesh: THREE.Group | null = null;
 
-    // 5. Load GLB Model with DRACOLoader & MeshoptDecoder
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('/draco/');
-
+    // 5. Load GLB Model with MeshoptDecoder
     const loader = new GLTFLoader();
-    loader.setDRACOLoader(dracoLoader);
     loader.setMeshoptDecoder(MeshoptDecoder);
 
     loader.load(
@@ -326,8 +321,6 @@ export default function ScrollRotatingLogo3D() {
       if (lenisInstance) {
         lenisInstance.off('scroll', onScroll);
       }
-
-      dracoLoader.dispose();
 
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
