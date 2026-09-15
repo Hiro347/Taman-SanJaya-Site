@@ -12,7 +12,7 @@ export default function ProductDetailLoading() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* LEFT COLUMN: PANGGUNG FOTO & THUMBNAILS SKELETON */}
         <div className="lg:col-span-6 space-y-4">
-          <div className="relative w-full aspect-square rounded-3xl bg-white/70 border border-brand-earth/15 shadow-md flex items-center justify-center">
+          <div className="relative w-full aspect-square rounded-xl sm:rounded-2xl bg-white/70 border border-brand-earth/15 shadow-md flex items-center justify-center">
             <div className="w-16 h-16 rounded-full bg-brand-earth/10 animate-ping" />
           </div>
 
@@ -21,7 +21,7 @@ export default function ProductDetailLoading() {
             {[1, 2, 3, 4].map((n) => (
               <div
                 key={n}
-                className="w-18 h-18 sm:w-20 sm:h-20 aspect-square rounded-2xl bg-white/70 border border-brand-earth/15 flex-shrink-0"
+                className="w-18 h-18 sm:w-20 sm:h-20 aspect-square rounded-lg sm:rounded-xl bg-white/70 border border-brand-earth/15 flex-shrink-0"
               />
             ))}
           </div>
@@ -35,9 +35,9 @@ export default function ProductDetailLoading() {
               <div className="h-6 w-24 bg-brand-earth/15 rounded-full" />
             </div>
 
-            <div className="h-10 sm:h-12 w-4/5 bg-brand-earth/15 rounded-2xl" />
+            <div className="h-10 sm:h-12 w-4/5 bg-brand-earth/15 rounded-xl" />
 
-            <div className="h-16 w-3/5 bg-white/70 rounded-2xl border border-brand-earth/15" />
+            <div className="h-16 w-3/5 bg-white/70 rounded-xl border border-brand-earth/15" />
           </div>
 
           {/* Description Skeleton */}
@@ -52,10 +52,10 @@ export default function ProductDetailLoading() {
           <div className="space-y-3 pt-2">
             <div className="h-4 w-40 bg-brand-earth/10 rounded" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="h-12 bg-white/70 rounded-2xl border border-brand-earth/15" />
-              <div className="h-12 bg-white/70 rounded-2xl border border-brand-earth/15" />
+              <div className="h-12 bg-white/70 rounded-xl border border-brand-earth/15" />
+              <div className="h-12 bg-white/70 rounded-xl border border-brand-earth/15" />
             </div>
-            <div className="h-14 bg-brand-crimson/20 rounded-2xl border border-brand-crimson/25" />
+            <div className="h-14 bg-brand-crimson/20 rounded-xl border border-brand-crimson/25" />
           </div>
         </div>
       </div>

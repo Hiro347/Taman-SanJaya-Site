@@ -138,7 +138,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
         {/* ================================================================= */}
         <div
           onMouseLeave={() => setActiveIdx(null)}
-          className="hidden md:flex flex-row w-full h-[540px] lg:h-[600px] xl:h-[640px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-black/10 bg-brand-earth"
+          className="hidden md:flex flex-row w-full h-[540px] lg:h-[600px] xl:h-[640px] rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border border-black/10 bg-brand-earth"
         >
           {serviceItems.map((item, index) => {
             const isActive = activeIdx === index;
@@ -256,7 +256,7 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
               <div
                 key={item.id}
                 onClick={() => setActiveIdx(isActive ? null : index)}
-                className={`relative w-full rounded-2xl overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-lg cursor-pointer ${
+                className={`relative w-full rounded-xl overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] shadow-lg cursor-pointer ${
                   isActive ? 'h-[290px]' : 'h-[92px]'
                 }`}
               >

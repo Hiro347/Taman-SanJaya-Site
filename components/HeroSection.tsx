@@ -112,7 +112,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
           style={{ y: heroParallax }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="relative w-full rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden shadow-2xl border-2 border-white/60 bg-black/40 ring-1 ring-brand-earth/15 group aspect-[16/11] sm:aspect-auto min-h-[250px] sm:min-h-[420px] lg:min-h-[460px] flex flex-col justify-between p-2.5 sm:p-6 lg:p-8"
+          className="relative w-full rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl border-2 border-white/60 bg-black/40 ring-1 ring-brand-earth/15 group aspect-[16/11] sm:aspect-auto min-h-[250px] sm:min-h-[420px] lg:min-h-[460px] flex flex-col justify-between p-2.5 sm:p-6 lg:p-8"
         >
           {/* ================================================================= */}
           {/* 1. BACKGROUND SLIDING IMAGES (BERGANTI KE SAMPING OTOMATIS)       */}

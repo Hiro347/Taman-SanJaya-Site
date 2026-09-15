@@ -306,7 +306,7 @@ export default function AdminProjectsPage() {
 
         <button
           onClick={openAddModal}
-          className="inline-flex items-center gap-2 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs sm:text-sm font-bold px-5 py-3 rounded-2xl shadow-sm transition-colors whitespace-nowrap"
+          className="inline-flex items-center gap-2 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs sm:text-sm font-bold px-5 py-3 rounded-xl shadow-sm transition-colors whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
           <span>Tambah Dokumentasi Proyek</span>
@@ -315,7 +315,7 @@ export default function AdminProjectsPage() {
 
       {toast && (
         <div
-          className={`p-4 rounded-2xl text-xs sm:text-sm flex items-start gap-3 border ${
+          className={`p-4 rounded-xl text-xs sm:text-sm flex items-start gap-3 border ${
             toast.type === 'success'
               ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
               : 'bg-red-50 text-red-800 border-red-200'
@@ -343,7 +343,7 @@ export default function AdminProjectsPage() {
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
                 isActive
                   ? 'bg-brand-crimson text-white shadow-sm'
                   : 'bg-white text-brand-earth/80 hover:bg-brand-sand-light border border-brand-sand-dark/40'
@@ -364,7 +364,7 @@ export default function AdminProjectsPage() {
 
       {/* Projects Grid */}
       {projects.filter((p) => selectedCategory === 'Semua' || p.category === selectedCategory).length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-3xl border border-brand-sand-dark/40 p-8">
+        <div className="text-center py-12 bg-white rounded-xl border border-brand-sand-dark/40 p-8">
           <p className="text-sm font-semibold text-brand-earth/70">
             Belum ada proyek di kategori &quot;{selectedCategory}&quot;.
           </p>
@@ -392,7 +392,7 @@ export default function AdminProjectsPage() {
               return (
                 <div
                   key={proj.id}
-                  className="bg-white rounded-3xl overflow-hidden border border-brand-sand-dark/40 shadow-xs flex flex-col justify-between"
+                  className="bg-white rounded-xl overflow-hidden border border-brand-sand-dark/40 shadow-xs flex flex-col justify-between"
                 >
                   <div>
                     <div className="relative w-full h-56 sm:h-64 overflow-hidden bg-brand-sand/30">
@@ -447,7 +447,7 @@ export default function AdminProjectsPage() {
                   <div className="p-6 pt-0 flex items-center justify-between border-t border-brand-sand/30 mt-4">
                     <button
                       onClick={() => openEditModal(proj)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-navy hover:bg-brand-navy/10 px-3 py-2 rounded-xl transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-navy hover:bg-brand-navy/10 px-3 py-2 rounded-lg transition-colors cursor-pointer"
                     >
                       <Pencil className="w-4 h-4" />
                       <span>Edit Proyek & Galeri</span>
@@ -455,7 +455,7 @@ export default function AdminProjectsPage() {
 
                     <button
                       onClick={() => handleDelete(proj.id)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 px-3 py-2 rounded-xl transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors cursor-pointer"
                     >
                       <Trash2 className="w-4 h-4" />
                       <span>Hapus</span>
@@ -470,14 +470,14 @@ export default function AdminProjectsPage() {
       {/* Add / Edit Project Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-3xl w-full max-w-2xl p-6 sm:p-8 shadow-2xl border border-brand-sand-dark/40 max-h-[92vh] flex flex-col">
+          <div className="bg-white rounded-2xl w-full max-w-2xl p-6 sm:p-8 shadow-2xl border border-brand-sand-dark/40 max-h-[92vh] flex flex-col">
             <div className="flex items-center justify-between pb-4 border-b border-brand-sand-dark/30 mb-6 flex-shrink-0">
               <h2 className="text-xl font-bold text-brand-earth">
                 {editingId ? 'Edit Proyek & Galeri Foto' : 'Tambah Proyek Portofolio'}
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-xl hover:bg-brand-sand/40 text-brand-earth"
+                className="p-1.5 rounded-lg hover:bg-brand-sand/40 text-brand-earth"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -494,7 +494,7 @@ export default function AdminProjectsPage() {
                   placeholder="Contoh: Taman Minimalis & Rumput Hijau Residensial"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                  className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
               </div>
 
@@ -506,7 +506,7 @@ export default function AdminProjectsPage() {
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth bg-white"
+                    className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth bg-white"
                   >
                     <option value="Perencanaan">Perencanaan</option>
                     <option value="Pembuatan">Pembuatan</option>
@@ -524,7 +524,7 @@ export default function AdminProjectsPage() {
                     placeholder="Contoh: BSD City, Tangerang Selatan"
                     value={formData.location}
                     onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                    className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                   />
                 </div>
               </div>
@@ -535,7 +535,7 @@ export default function AdminProjectsPage() {
                   Foto Utama Proyek (Landscape)
                 </label>
                 <div className="flex items-center gap-4">
-                  <div className="relative w-28 h-20 rounded-2xl overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/40">
+                  <div className="relative w-28 h-20 rounded-xl overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/40">
                     <Image
                       src={formData.image_url}
                       alt="Preview"
@@ -544,7 +544,7 @@ export default function AdminProjectsPage() {
                     />
                   </div>
                   <div className="flex-1 space-y-2">
-                    <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-xl text-xs font-bold text-brand-earth cursor-pointer transition-colors">
+                    <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-lg text-xs font-bold text-brand-earth cursor-pointer transition-colors">
                       <Upload className="w-4 h-4 text-brand-crimson" />
                       <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
                       <input
@@ -562,20 +562,20 @@ export default function AdminProjectsPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, image_url: e.target.value })
                       }
-                      className="w-full px-3 py-2 rounded-xl border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none"
+                      className="w-full px-3 py-2 rounded-lg border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Galeri Foto Tambahan */}
-              <div className="space-y-3 p-4 rounded-2xl bg-brand-sand-light/60 border border-brand-sand-dark/40">
+              <div className="space-y-3 p-4 rounded-xl bg-brand-sand-light/60 border border-brand-sand-dark/40">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-brand-earth uppercase tracking-wider flex items-center gap-1.5">
                     <Images className="w-4 h-4 text-brand-navy" />
                     <span>Galeri Foto Tambahan ({formData.gallery_images.length})</span>
                   </label>
-                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-navy text-white hover:bg-brand-navy-dark rounded-xl text-xs font-bold cursor-pointer transition-colors">
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-navy text-white hover:bg-brand-navy-dark rounded-lg text-xs font-bold cursor-pointer transition-colors">
                     <Upload className="w-3.5 h-3.5" />
                     <span>{uploadingGallery ? 'Mengunggah...' : '+ Upload Foto Galeri'}</span>
                     <input
@@ -600,12 +600,12 @@ export default function AdminProjectsPage() {
                     placeholder="Atau tempel URL foto lalu klik Tambah..."
                     value={galleryUrlInput}
                     onChange={(e) => setGalleryUrlInput(e.target.value)}
-                    className="flex-1 px-3 py-2 rounded-xl border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white"
+                    className="flex-1 px-3 py-2 rounded-lg border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white"
                   />
                   <button
                     type="button"
                     onClick={handleAddGalleryUrl}
-                    className="px-3 py-2 bg-brand-earth text-white rounded-xl text-xs font-bold hover:bg-brand-earth-dark transition-colors"
+                    className="px-3 py-2 bg-brand-earth text-white rounded-lg text-xs font-bold hover:bg-brand-earth-dark transition-colors"
                   >
                     Tambah
                   </button>
@@ -649,7 +649,7 @@ export default function AdminProjectsPage() {
                   placeholder="Jelaskan elemen taman yang dipasang: jenis rumput, tanaman peneduh, batuan koral, atau fitur air relief batu alam..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                  className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
               </div>
 
@@ -657,14 +657,14 @@ export default function AdminProjectsPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl border border-brand-sand-dark/60 text-sm font-semibold text-brand-earth hover:bg-brand-sand/30"
+                  className="px-5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-sm font-semibold text-brand-earth hover:bg-brand-sand/30"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={submitting || uploading || uploadingGallery}
-                  className="px-6 py-2.5 rounded-xl bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white text-sm font-bold shadow-md transition-colors"
+                  className="px-6 py-2.5 rounded-lg bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white text-sm font-bold shadow-md transition-colors"
                 >
                   {submitting ? 'Menyimpan...' : editingId ? 'Perbarui Proyek' : 'Simpan ke Portofolio'}
                 </button>

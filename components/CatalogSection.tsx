@@ -30,7 +30,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
   return (
     <section id="catalog" className="-mt-16 sm:-mt-24 lg:-mt-32 pb-14 sm:pb-18 px-3 sm:px-6 max-w-7xl mx-auto relative z-20">
       {/* Outer Sand Background Canvas */}
-      <div className="bg-brand-sand/40 border border-brand-sand-dark/40 rounded-[32px] sm:rounded-[44px] p-5 sm:p-9 lg:p-11">
+      <div className="bg-brand-sand/40 border border-brand-sand-dark/40 rounded-2xl sm:rounded-3xl p-5 sm:p-9 lg:p-11">
         
         {/* Section Heading */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
@@ -46,7 +46,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
               placeholder="Cari nama tanaman..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-white rounded-2xl border border-brand-sand-dark/60 text-sm text-brand-earth placeholder:text-brand-earth/50 focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 transition-all shadow-xs"
+              className="w-full pl-10 pr-4 py-3 bg-white rounded-xl border border-brand-sand-dark/60 text-sm text-brand-earth placeholder:text-brand-earth/50 focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 transition-all shadow-xs"
             />
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                   key={product.id}
                   whileHover={{ y: -6 }}
                   transition={{ duration: 0.25, ease: 'easeOut' }}
-                  className="bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between group"
+                  className="bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between group"
                 >
                   <div>
                     {/* Image Box - Pencet Foto Masuk ke Detail Produk */}
@@ -133,7 +133,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                           href={product.tokopedia_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-1 w-full bg-[#03AC0E] hover:bg-[#029B0D] active:scale-[0.98] text-white text-[10px] sm:text-[13px] font-bold py-1.5 sm:py-2.5 px-1 sm:px-2 rounded-lg sm:rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                          className="flex items-center justify-center gap-1 w-full bg-[#03AC0E] hover:bg-[#029B0D] active:scale-[0.98] text-white text-[10px] sm:text-[13px] font-bold py-1.5 sm:py-2.5 px-1 sm:px-2 rounded-lg shadow-xs hover:shadow-md transition-all duration-200"
                           title={`Beli ${product.name} di Tokopedia`}
                         >
                           <TokopediaIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 text-white" />
@@ -144,7 +144,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                           href={product.shopee_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-1 w-full bg-[#EE4D2D] hover:bg-[#D73211] active:scale-[0.98] text-white text-[10px] sm:text-[13px] font-bold py-1.5 sm:py-2.5 px-1 sm:px-2 rounded-lg sm:rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                          className="flex items-center justify-center gap-1 w-full bg-[#EE4D2D] hover:bg-[#D73211] active:scale-[0.98] text-white text-[10px] sm:text-[13px] font-bold py-1.5 sm:py-2.5 px-1 sm:px-2 rounded-lg shadow-xs hover:shadow-md transition-all duration-200"
                           title={`Beli ${product.name} di Shopee`}
                         >
                           <ShopeeIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 text-white" />
@@ -156,7 +156,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                         href={product.tokopedia_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-1 w-full bg-[#03AC0E] hover:bg-[#029B0D] active:scale-[0.98] text-white text-[10px] sm:text-[13px] font-bold py-1.5 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                        className="flex items-center justify-center gap-1 w-full bg-[#03AC0E] hover:bg-[#029B0D] active:scale-[0.98] text-white text-[10px] sm:text-[13px] font-bold py-1.5 sm:py-2.5 px-2 sm:px-3 rounded-lg shadow-xs hover:shadow-md transition-all duration-200"
                         title={`Beli ${product.name} di Tokopedia`}
                       >
                         <TokopediaIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 text-white" />
@@ -167,7 +167,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                         href={product.shopee_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-1 w-full bg-[#EE4D2D] hover:bg-[#D73211] active:scale-[0.98] text-white text-[10px] sm:text-[13px] font-bold py-1.5 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                        className="flex items-center justify-center gap-1 w-full bg-[#EE4D2D] hover:bg-[#D73211] active:scale-[0.98] text-white text-[10px] sm:text-[13px] font-bold py-1.5 sm:py-2.5 px-2 sm:px-3 rounded-lg shadow-xs hover:shadow-md transition-all duration-200"
                         title={`Beli ${product.name} di Shopee`}
                       >
                         <ShopeeIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 text-white" />
@@ -176,7 +176,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                     ) : (
                       <Link
                         href={`/katalog/${product.slug || product.id}`}
-                        className="flex items-center justify-center gap-1 w-full bg-brand-sand/60 hover:bg-brand-sand text-brand-earth active:scale-[0.98] text-[10px] sm:text-[13px] font-bold py-1.5 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl shadow-xs hover:shadow-md transition-all duration-200 border border-brand-sand-dark/40"
+                        className="flex items-center justify-center gap-1 w-full bg-brand-sand/60 hover:bg-brand-sand text-brand-earth active:scale-[0.98] text-[10px] sm:text-[13px] font-bold py-1.5 sm:py-2.5 px-2 sm:px-3 rounded-lg shadow-xs hover:shadow-md transition-all duration-200 border border-brand-sand-dark/40"
                         title={`Lihat detail ${product.name}`}
                       >
                         <span>Detail</span>

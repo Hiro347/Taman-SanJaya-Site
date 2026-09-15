@@ -54,7 +54,7 @@ export default async function PublicLayout({
             </picture>
           </div>
 
-          <div className="bg-[#D8CDAE] rounded-[28px] sm:rounded-[36px] lg:rounded-[44px] shadow-2xl border border-[#c5b791]/60 overflow-hidden flex flex-col min-h-[92vh] relative">
+          <div className="bg-[#D8CDAE] rounded-2xl sm:rounded-3xl shadow-2xl border border-[#c5b791]/60 overflow-hidden flex flex-col min-h-[92vh] relative">
             {/* 3D Rotating Logo Ambient Background on Scroll (Lazy-loaded) */}
             <ScrollRotatingLogoWrapper />
 

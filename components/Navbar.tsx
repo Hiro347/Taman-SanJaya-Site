@@ -146,7 +146,7 @@ export default function Navbar({ settings }: NavbarProps) {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2.5 rounded-2xl bg-white/80 hover:bg-white text-brand-earth border border-brand-sand-dark/60 shadow-xs backdrop-blur-md transition-all focus:outline-none active:scale-95"
+            className="md:hidden p-2.5 rounded-xl bg-white/80 hover:bg-white text-brand-earth border border-brand-sand-dark/60 shadow-xs backdrop-blur-md transition-all focus:outline-none active:scale-95"
             aria-label="Buka Menu"
           >
             {isOpen ? <X className="w-5 h-5 text-brand-crimson" /> : <Menu className="w-5 h-5 text-brand-earth" />}
@@ -164,7 +164,7 @@ export default function Navbar({ settings }: NavbarProps) {
                 key={link.name}
                 href={targetHref}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="text-brand-earth hover:text-brand-crimson font-medium text-base px-3 py-2 rounded-xl hover:bg-white/40 transition-colors"
+                className="text-brand-earth hover:text-brand-crimson font-medium text-base px-3 py-2 rounded-lg hover:bg-white/40 transition-colors"
               >
                 {link.name}
               </Link>

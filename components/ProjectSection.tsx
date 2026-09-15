@@ -33,7 +33,7 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
               key={project.id}
               whileHover={{ y: -6 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              className={`group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between h-full ${
+              className={`group bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-2xl transition-shadow duration-300 flex flex-col justify-between h-full ${
                 isFeatured ? 'md:col-span-2' : ''
               }`}
             >

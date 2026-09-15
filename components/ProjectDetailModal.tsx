@@ -96,7 +96,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 16 }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-4xl bg-[#171412] text-stone-100 rounded-2xl sm:rounded-3xl border border-stone-800/90 shadow-2xl overflow-hidden z-10 my-auto flex flex-col max-h-[92vh]"
+          className="relative w-full max-w-4xl bg-[#171412] text-stone-100 rounded-xl sm:rounded-2xl border border-stone-800/90 shadow-2xl overflow-hidden z-10 my-auto flex flex-col max-h-[92vh]"
         >
           {/* Close Button */}
           <button
@@ -226,7 +226,7 @@ export default function ProjectDetailModal({ project, onClose }: ProjectDetailMo
                           key={idx}
                           type="button"
                           onClick={() => setActiveImageIndex(idx)}
-                          className={`relative flex-shrink-0 w-24 sm:w-28 md:w-32 aspect-[16/10] rounded-xl overflow-hidden transition-all duration-200 border-2 ${
+                          className={`relative flex-shrink-0 w-24 sm:w-28 md:w-32 aspect-[16/10] rounded-lg overflow-hidden transition-all duration-200 border-2 ${
                             isActive
                               ? 'border-brand-sand ring-2 ring-brand-sand/40 scale-105 opacity-100 shadow-md'
                               : 'border-stone-800/80 hover:border-stone-600 opacity-60 hover:opacity-90'

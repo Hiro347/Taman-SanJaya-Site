@@ -31,7 +31,7 @@ export default function Footer({ settings }: FooterProps) {
           {/* Brand Info */}
           <div className="lg:col-span-5 flex flex-col">
             <div className="flex items-center gap-3.5">
-              <div className="relative w-12 h-12 sm:w-14 sm:h-14 p-1.5 bg-white rounded-xl sm:rounded-2xl flex-shrink-0 shadow-sm border border-white/20 flex items-center justify-center">
+              <div className="relative w-12 h-12 sm:w-14 sm:h-14 p-1.5 bg-white rounded-full flex-shrink-0 shadow-sm border border-white/20 flex items-center justify-center">
                 <div className="relative w-full h-full">
                   <Image
                     src="/images/logo.png"

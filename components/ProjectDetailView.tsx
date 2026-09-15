@@ -105,7 +105,7 @@ export default function ProjectDetailView({
       </div>
 
       {/* 2. HERO FOTO UTAMA BESAR */}
-      <div className="relative w-full aspect-[16/10] sm:aspect-[21/10] md:max-h-[520px] rounded-2xl sm:rounded-3xl lg:rounded-[32px] overflow-hidden bg-black/40 border border-brand-earth/20 shadow-xl group">
+      <div className="relative w-full aspect-[16/10] sm:aspect-[21/10] md:max-h-[520px] rounded-xl sm:rounded-2xl overflow-hidden bg-black/40 border border-brand-earth/20 shadow-xl group">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPhoto}
@@ -168,11 +168,11 @@ export default function ProjectDetailView({
           </p>
 
           <div className="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-brand-earth/90 bg-white/60 p-3 rounded-xl border border-brand-earth/10">
+            <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-brand-earth/90 bg-white/60 p-3 rounded-lg border border-brand-earth/10">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
               <span>Garansi Tumbuh 100% Bersertifikat</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-brand-earth/90 bg-white/60 p-3 rounded-xl border border-brand-earth/10">
+            <div className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-brand-earth/90 bg-white/60 p-3 rounded-lg border border-brand-earth/10">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
               <span>Perawatan Nutrisi Berbasis Sains</span>
             </div>
@@ -180,7 +180,7 @@ export default function ProjectDetailView({
         </div>
 
         {/* Kolom Kanan: Detail Kategori & Lokasi */}
-        <div className="lg:col-span-4 bg-white/80 rounded-2xl sm:rounded-3xl p-6 sm:p-7 border border-brand-earth/15 shadow-sm space-y-4">
+        <div className="lg:col-span-4 bg-white/80 rounded-xl sm:rounded-2xl p-6 sm:p-7 border border-brand-earth/15 shadow-sm space-y-4">
           <div>
             <span className="text-[11px] font-bold text-brand-earth/60 uppercase tracking-widest block mb-1.5">
               Kategori Proyek
@@ -229,7 +229,7 @@ export default function ProjectDetailView({
                   type="button"
                   onClick={() => setActiveImageIndex(idx)}
                   aria-label={`Lihat foto dokumentasi ${idx + 1}`}
-                  className={`relative aspect-[16/11] rounded-xl sm:rounded-2xl overflow-hidden border-2 transition-all duration-300 group cursor-pointer focus:outline-hidden ${
+                  className={`relative aspect-[16/11] rounded-lg sm:rounded-xl overflow-hidden border-2 transition-all duration-300 group cursor-pointer focus:outline-hidden ${
                     isSelected
                       ? 'border-brand-crimson ring-4 ring-brand-crimson/20 shadow-md scale-[1.02]'
                       : 'border-white/80 hover:border-brand-crimson/50 opacity-80 hover:opacity-100'
@@ -274,7 +274,7 @@ export default function ProjectDetailView({
             {otherProjects.map((other) => (
               <div
                 key={other.id}
-                className="group block bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-300"
+                className="group block bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-300"
               >
                 {/* Pencet Foto Langsung Masuk ke Tab Proyek Terkait */}
                 <Link
@@ -312,7 +312,7 @@ export default function ProjectDetailView({
       )}
 
       {/* 6. BOTTOM CALL TO ACTION */}
-      <div className="mt-16 sm:mt-20 bg-brand-earth text-white rounded-2xl sm:rounded-3xl p-6 sm:p-10 text-center space-y-4">
+      <div className="mt-16 sm:mt-20 bg-brand-earth text-white rounded-xl sm:rounded-2xl p-6 sm:p-10 text-center space-y-4">
         <ShieldCheck className="w-10 h-10 text-brand-sand mx-auto" />
         <h3 className="text-xl sm:text-2xl lg:text-3xl font-black">
           Ingin Membangun Taman Asri Serupa di Hunian Anda?

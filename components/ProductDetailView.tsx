@@ -169,7 +169,7 @@ export default function ProductDetailView({
         {/* ========================================================================= */}
         <div className="lg:col-span-6 space-y-4">
           {/* A. Panggung Foto Utama (Large Primary Stage) */}
-          <div className="relative w-full aspect-square rounded-3xl overflow-hidden bg-white border border-brand-earth/15 shadow-md group">
+          <div className="relative w-full aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-white border border-brand-earth/15 shadow-md group">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentPhoto}
@@ -258,7 +258,7 @@ export default function ProductDetailView({
                       type="button"
                       onClick={() => setActiveImageIndex(idx)}
                       aria-label={`Pilih foto ${idx + 1}`}
-                      className={`relative w-18 h-18 sm:w-20 sm:h-20 aspect-square rounded-2xl overflow-hidden flex-shrink-0 transition-all duration-200 cursor-pointer focus:outline-hidden ${
+                      className={`relative w-18 h-18 sm:w-20 sm:h-20 aspect-square rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0 transition-all duration-200 cursor-pointer focus:outline-hidden ${
                         isSelected
                           ? 'border-2 border-brand-crimson ring-2 ring-brand-crimson/25 shadow-md scale-105'
                           : 'border border-brand-earth/20 opacity-70 hover:opacity-100 hover:border-brand-crimson/50'
@@ -324,7 +324,7 @@ export default function ProductDetailView({
             </h1>
 
             {/* Price Box */}
-            <div className="mt-4 p-4 rounded-2xl bg-white/70 border border-brand-earth/15 flex items-baseline gap-3">
+            <div className="mt-4 p-4 rounded-xl bg-white/70 border border-brand-earth/15 flex items-baseline gap-3">
               <span className="text-3xl sm:text-4xl font-black text-brand-crimson">
                 {product.price_display || `Rp ${product.price.toLocaleString('id-ID')}`}
               </span>
@@ -359,7 +359,7 @@ export default function ProductDetailView({
                       href={product.tokopedia_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2.5 bg-[#03AC0E] hover:bg-[#029B0D] text-white font-bold py-3.5 px-4 rounded-2xl shadow-xs hover:shadow-md transition-all active:scale-[0.98] text-sm"
+                      className="flex items-center justify-center gap-2.5 bg-[#03AC0E] hover:bg-[#029B0D] text-white font-bold py-3.5 px-4 rounded-xl shadow-xs hover:shadow-md transition-all active:scale-[0.98] text-sm"
                     >
                       <TokopediaIcon className="w-5 h-5 text-white flex-shrink-0" />
                       <span>Beli di Tokopedia</span>
@@ -371,7 +371,7 @@ export default function ProductDetailView({
                       href={product.shopee_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-2.5 bg-[#EE4D2D] hover:bg-[#D73211] text-white font-bold py-3.5 px-4 rounded-2xl shadow-xs hover:shadow-md transition-all active:scale-[0.98] text-sm"
+                      className="flex items-center justify-center gap-2.5 bg-[#EE4D2D] hover:bg-[#D73211] text-white font-bold py-3.5 px-4 rounded-xl shadow-xs hover:shadow-md transition-all active:scale-[0.98] text-sm"
                     >
                       <ShopeeIcon className="w-5 h-5 text-white flex-shrink-0" />
                       <span>Beli di Shopee</span>
@@ -386,7 +386,7 @@ export default function ProductDetailView({
               href={waOrderUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold py-4 px-6 rounded-2xl shadow-md hover:shadow-lg transition-all active:scale-[0.98] text-sm sm:text-base"
+              className="w-full flex items-center justify-center gap-2.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold py-4 px-6 rounded-xl shadow-md hover:shadow-lg transition-all active:scale-[0.98] text-sm sm:text-base"
             >
               <WhatsAppIcon className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
               <span>Pesan via WhatsApp (Konsultasi Bebas Biaya)</span>
@@ -427,7 +427,7 @@ export default function ProductDetailView({
               return (
                 <div
                   key={other.id}
-                  className="bg-white rounded-3xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
+                  className="bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
                 >
                   <div>
                     {/* Pencet Foto Langsung Masuk ke Detail Produk Terkait */}
@@ -480,7 +480,7 @@ export default function ProductDetailView({
                           href={other.tokopedia_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-1 bg-[#03AC0E] hover:bg-[#029B0D] text-white text-xs font-bold py-2 px-1.5 rounded-xl transition-all"
+                          className="flex items-center justify-center gap-1 bg-[#03AC0E] hover:bg-[#029B0D] text-white text-xs font-bold py-2 px-1.5 rounded-lg transition-all"
                         >
                           <TokopediaIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
                           <span className="truncate">Tokopedia</span>
@@ -489,7 +489,7 @@ export default function ProductDetailView({
                           href={other.shopee_url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-1 bg-[#EE4D2D] hover:bg-[#D73211] text-white text-xs font-bold py-2 px-1.5 rounded-xl transition-all"
+                          className="flex items-center justify-center gap-1 bg-[#EE4D2D] hover:bg-[#D73211] text-white text-xs font-bold py-2 px-1.5 rounded-lg transition-all"
                         >
                           <ShopeeIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
                           <span className="truncate">Shopee</span>
@@ -500,7 +500,7 @@ export default function ProductDetailView({
                         href={other.tokopedia_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-1.5 w-full bg-[#03AC0E] hover:bg-[#029B0D] text-white text-xs font-bold py-2 px-2 rounded-xl transition-all"
+                        className="flex items-center justify-center gap-1.5 w-full bg-[#03AC0E] hover:bg-[#029B0D] text-white text-xs font-bold py-2 px-2 rounded-lg transition-all"
                       >
                         <TokopediaIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
                         <span>Beli di Tokopedia</span>
@@ -510,7 +510,7 @@ export default function ProductDetailView({
                         href={other.shopee_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-1.5 w-full bg-[#EE4D2D] hover:bg-[#D73211] text-white text-xs font-bold py-2 px-2 rounded-xl transition-all"
+                        className="flex items-center justify-center gap-1.5 w-full bg-[#EE4D2D] hover:bg-[#D73211] text-white text-xs font-bold py-2 px-2 rounded-lg transition-all"
                       >
                         <ShopeeIcon className="w-3.5 h-3.5 text-white flex-shrink-0" />
                         <span>Beli di Shopee</span>
@@ -518,7 +518,7 @@ export default function ProductDetailView({
                     ) : (
                       <Link
                         href={`/katalog/${other.slug || other.id}`}
-                        className="flex items-center justify-center gap-1.5 w-full bg-brand-sand/60 hover:bg-brand-sand text-brand-earth text-xs font-bold py-2 px-2 rounded-xl border border-brand-sand-dark/40 transition-all"
+                        className="flex items-center justify-center gap-1.5 w-full bg-brand-sand/60 hover:bg-brand-sand text-brand-earth text-xs font-bold py-2 px-2 rounded-lg border border-brand-sand-dark/40 transition-all"
                       >
                         <span>Lihat Detail</span>
                       </Link>
@@ -552,7 +552,7 @@ export default function ProductDetailView({
             </button>
 
             <div
-              className="relative w-full max-w-4xl max-h-[85vh] aspect-square rounded-2xl overflow-hidden"
+              className="relative w-full max-w-4xl max-h-[85vh] aspect-square rounded-xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <Image

@@ -101,7 +101,7 @@ export default function AdminLayout({
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="p-2 rounded-xl bg-brand-sand/50 text-brand-earth"
+          className="p-2 rounded-lg bg-brand-sand/50 text-brand-earth"
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -148,7 +148,7 @@ export default function AdminLayout({
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold transition-all ${
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
                     isActive
                       ? 'bg-brand-crimson text-white shadow-sm'
                       : 'text-brand-earth/80 hover:bg-brand-sand/50 hover:text-brand-earth'
@@ -168,7 +168,7 @@ export default function AdminLayout({
           <Link
             href="/"
             target="_blank"
-            className="flex items-center justify-between w-full px-4 py-2.5 rounded-xl bg-brand-sand/40 hover:bg-brand-sand text-brand-earth text-xs font-semibold transition-colors"
+            className="flex items-center justify-between w-full px-4 py-2.5 rounded-lg bg-brand-sand/40 hover:bg-brand-sand text-brand-earth text-xs font-semibold transition-colors"
           >
             <span className="flex items-center gap-2">
               <ExternalLink className="w-4 h-4 text-brand-navy" />
@@ -187,7 +187,7 @@ export default function AdminLayout({
           {/* Logout Button */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 w-full px-4 py-2.5 rounded-xl text-red-600 hover:bg-red-50 text-xs font-bold transition-colors"
+            className="flex items-center gap-2 w-full px-4 py-2.5 rounded-lg text-red-600 hover:bg-red-50 text-xs font-bold transition-colors"
           >
             <LogOut className="w-4 h-4" />
             <span>Keluar (Logout)</span>

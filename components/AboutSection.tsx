@@ -19,7 +19,7 @@ export default function AboutSection({ settings }: AboutSectionProps) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '150px 0px' }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="bg-brand-earth text-white rounded-[24px] sm:rounded-[44px] p-5 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl border border-white/10"
+        className="bg-brand-earth text-white rounded-2xl sm:rounded-3xl p-5 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl border border-white/10"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-center">
           <div className="lg:col-span-7">
@@ -52,19 +52,19 @@ export default function AboutSection({ settings }: AboutSectionProps) {
 
             {/* Pillar Grid - 2 Kolom Kompak di Mobile */}
             <div className="mt-4 sm:mt-8 grid grid-cols-2 gap-2 sm:gap-4">
-              <div className="flex items-center gap-2 sm:gap-3 bg-white/10 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors">
+              <div className="flex items-center gap-2 sm:gap-3 bg-white/10 p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors">
                 <ShieldCheck className="w-4 h-4 sm:w-6 sm:h-6 text-brand-sand flex-shrink-0" />
                 <span className="text-[11px] sm:text-sm font-semibold leading-tight">Garansi Tumbuh Tanaman</span>
               </div>
-              <div className="flex items-center gap-2 sm:gap-3 bg-white/10 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors">
+              <div className="flex items-center gap-2 sm:gap-3 bg-white/10 p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors">
                 <HeartHandshake className="w-4 h-4 sm:w-6 sm:h-6 text-brand-sand flex-shrink-0" />
                 <span className="text-[11px] sm:text-sm font-semibold leading-tight">Survei & Konsultasi Ramah</span>
               </div>
-              <div className="flex items-center gap-2 sm:gap-3 bg-white/10 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors">
+              <div className="flex items-center gap-2 sm:gap-3 bg-white/10 p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors">
                 <Award className="w-4 h-4 sm:w-6 sm:h-6 text-brand-sand flex-shrink-0" />
                 <span className="text-[11px] sm:text-sm font-semibold leading-tight">Kualitas Nursery A</span>
               </div>
-              <div className="flex items-center gap-2 sm:gap-3 bg-white/10 p-2.5 sm:p-3.5 rounded-xl sm:rounded-2xl backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors">
+              <div className="flex items-center gap-2 sm:gap-3 bg-white/10 p-2.5 sm:p-3.5 rounded-lg sm:rounded-xl backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors">
                 <Clock className="w-4 h-4 sm:w-6 sm:h-6 text-brand-sand flex-shrink-0" />
                 <span className="text-[11px] sm:text-sm font-semibold leading-tight">Pengerjaan Disiplin</span>
               </div>
@@ -74,7 +74,7 @@ export default function AboutSection({ settings }: AboutSectionProps) {
           <div className="lg:col-span-5 flex justify-center">
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="relative w-full max-w-[280px] sm:max-w-sm aspect-[4/3] sm:aspect-[4/5] rounded-2xl sm:rounded-[32px] overflow-hidden border-2 sm:border-4 border-brand-sand/40 shadow-2xl group"
+              className="relative w-full max-w-[280px] sm:max-w-sm aspect-[4/3] sm:aspect-[4/5] rounded-xl sm:rounded-2xl overflow-hidden border-2 sm:border-4 border-brand-sand/40 shadow-2xl group"
             >
               <Image
                 src="/images/founder.jpg"

@@ -171,7 +171,7 @@ export default function AdminHeroPage() {
       {/* Status Notification */}
       {statusMsg && (
         <div
-          className={`p-4 rounded-2xl text-xs sm:text-sm flex items-start gap-3 border ${
+          className={`p-4 rounded-xl text-xs sm:text-sm flex items-start gap-3 border ${
             statusMsg.type === 'success'
               ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
               : 'bg-red-50 text-red-800 border-red-200'
@@ -188,7 +188,7 @@ export default function AdminHeroPage() {
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Section 1: Hero Banner Image */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-xs space-y-6">
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-xs space-y-6">
           <h2 className="text-lg font-bold text-brand-earth">
             1. Foto Banner Hero (Pemandangan Taman)
           </h2>
@@ -198,7 +198,7 @@ export default function AdminHeroPage() {
             <label className="block text-xs font-bold text-brand-earth/70 uppercase">
               Pratinjau Foto Saat Ini
             </label>
-            <div className="relative w-full h-56 sm:h-72 rounded-2xl overflow-hidden bg-brand-sand/30 border border-brand-sand-dark/40">
+            <div className="relative w-full h-56 sm:h-72 rounded-xl overflow-hidden bg-brand-sand/30 border border-brand-sand-dark/40">
               <Image
                 src={settings.hero_image_url}
                 alt="Pratinjau Hero"
@@ -214,7 +214,7 @@ export default function AdminHeroPage() {
               <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-2">
                 Unggah File Foto dari HP / Laptop
               </label>
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-brand-sand-dark hover:border-brand-crimson rounded-2xl p-6 cursor-pointer bg-brand-sand/20 hover:bg-brand-sand/40 transition-colors">
+              <label className="flex flex-col items-center justify-center border-2 border-dashed border-brand-sand-dark hover:border-brand-crimson rounded-xl p-6 cursor-pointer bg-brand-sand/20 hover:bg-brand-sand/40 transition-colors">
                 <Upload className="w-8 h-8 text-brand-crimson mb-2" />
                 <span className="text-xs font-bold text-brand-earth">
                   {uploading ? 'Sedang Mengunggah...' : 'Pilih Foto Baru'}
@@ -245,7 +245,7 @@ export default function AdminHeroPage() {
                   onChange={(e) =>
                     setSettings({ ...settings, hero_image_url: e.target.value })
                   }
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-brand-sand-dark/60 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-brand-sand-dark/60 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
               </div>
               <p className="text-[11px] text-brand-earth/60 mt-2">
@@ -256,7 +256,7 @@ export default function AdminHeroPage() {
         </div>
 
         {/* Section 2: Headline & Tagline */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-xs space-y-5">
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-xs space-y-5">
           <h2 className="text-lg font-bold text-brand-earth">
             2. Teks Promosi & Headline Beranda
           </h2>
@@ -272,7 +272,7 @@ export default function AdminHeroPage() {
               onChange={(e) =>
                 setSettings({ ...settings, hero_title: e.target.value })
               }
-              className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth font-bold"
+              className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth font-bold"
             />
           </div>
 
@@ -287,13 +287,13 @@ export default function AdminHeroPage() {
               onChange={(e) =>
                 setSettings({ ...settings, hero_subtitle: e.target.value })
               }
-              className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth leading-relaxed"
+              className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth leading-relaxed"
             />
           </div>
         </div>
 
         {/* Section 3: WhatsApp & Contacts */}
-        <div className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-xs space-y-5">
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-xs space-y-5">
           <h2 className="text-lg font-bold text-brand-earth">
             3. Nomor WhatsApp & Informasi Kontak
           </h2>
@@ -313,7 +313,7 @@ export default function AdminHeroPage() {
                   onChange={(e) =>
                     setSettings({ ...settings, whatsapp_number: e.target.value })
                   }
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
               </div>
             </div>
@@ -331,7 +331,7 @@ export default function AdminHeroPage() {
                   onChange={(e) =>
                     setSettings({ ...settings, opening_hours: e.target.value })
                   }
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
               </div>
             </div>
@@ -349,7 +349,7 @@ export default function AdminHeroPage() {
                 onChange={(e) =>
                   setSettings({ ...settings, address: e.target.value })
                 }
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
               />
             </div>
           </div>
@@ -367,7 +367,7 @@ export default function AdminHeroPage() {
                 onChange={(e) =>
                   setSettings({ ...settings, instagram_url: e.target.value })
                 }
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
               />
             </div>
           </div>
@@ -378,7 +378,7 @@ export default function AdminHeroPage() {
           <button
             type="submit"
             disabled={saving || uploading}
-            className="flex items-center justify-center gap-2 w-full sm:w-auto bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-all"
+            className="flex items-center justify-center gap-2 w-full sm:w-auto bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white font-bold py-4 px-8 rounded-xl shadow-xl transition-all"
           >
             <Save className="w-5 h-5" />
             <span>{saving ? 'Menyimpan Perubahan...' : 'Simpan Semua Perubahan'}</span>

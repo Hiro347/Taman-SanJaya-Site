@@ -20,7 +20,7 @@ export default async function AdminDashboardPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Top Banner */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <span className="text-xs font-bold uppercase tracking-widest text-brand-crimson">
             Selamat Datang di Backoffice
@@ -36,7 +36,7 @@ export default async function AdminDashboardPage() {
         <Link
           href="/"
           target="_blank"
-          className="inline-flex items-center gap-2 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs sm:text-sm font-bold px-5 py-3 rounded-2xl shadow-sm transition-colors whitespace-nowrap"
+          className="inline-flex items-center gap-2 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs sm:text-sm font-bold px-5 py-3 rounded-xl shadow-sm transition-colors whitespace-nowrap"
         >
           <span>Buka Website Publik</span>
           <ExternalLink className="w-4 h-4" />
@@ -45,8 +45,8 @@ export default async function AdminDashboardPage() {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        <div className="bg-white rounded-3xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
-          <div className="p-3.5 bg-emerald-50 text-emerald-600 rounded-2xl">
+        <div className="bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
+          <div className="p-3.5 bg-emerald-50 text-emerald-600 rounded-lg">
             <Sprout className="w-7 h-7" />
           </div>
           <div>
@@ -59,8 +59,8 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
-          <div className="p-3.5 bg-blue-50 text-brand-navy rounded-2xl">
+        <div className="bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
+          <div className="p-3.5 bg-blue-50 text-brand-navy rounded-lg">
             <Briefcase className="w-7 h-7" />
           </div>
           <div>
@@ -73,8 +73,8 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-3xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
-          <div className="p-3.5 bg-brand-sand/50 text-brand-crimson rounded-2xl">
+        <div className="bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
+          <div className="p-3.5 bg-brand-sand/50 text-brand-crimson rounded-lg">
             <ImageIcon className="w-7 h-7" />
           </div>
           <div>
@@ -98,10 +98,10 @@ export default async function AdminDashboardPage() {
           {/* Card 1: Hero Settings */}
           <Link
             href="/admin/hero"
-            className="group bg-white rounded-3xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="group bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="p-3 bg-brand-sand/50 w-fit rounded-2xl text-brand-earth group-hover:bg-brand-crimson group-hover:text-white transition-colors mb-4">
+              <div className="p-3 bg-brand-sand/50 w-fit rounded-lg text-brand-earth group-hover:bg-brand-crimson group-hover:text-white transition-colors mb-4">
                 <ImageIcon className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-base text-brand-earth group-hover:text-brand-crimson transition-colors">
@@ -120,10 +120,10 @@ export default async function AdminDashboardPage() {
           {/* Card 2: Products */}
           <Link
             href="/admin/products"
-            className="group bg-white rounded-3xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="group bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="p-3 bg-emerald-50 w-fit rounded-2xl text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors mb-4">
+              <div className="p-3 bg-emerald-50 w-fit rounded-lg text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors mb-4">
                 <Sprout className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-base text-brand-earth group-hover:text-emerald-700 transition-colors">
@@ -142,10 +142,10 @@ export default async function AdminDashboardPage() {
           {/* Card 3: Projects */}
           <Link
             href="/admin/projects"
-            className="group bg-white rounded-3xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+            className="group bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
-              <div className="p-3 bg-blue-50 w-fit rounded-2xl text-brand-navy group-hover:bg-brand-navy group-hover:text-white transition-colors mb-4">
+              <div className="p-3 bg-blue-50 w-fit rounded-lg text-brand-navy group-hover:bg-brand-navy group-hover:text-white transition-colors mb-4">
                 <Briefcase className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-base text-brand-earth group-hover:text-brand-navy transition-colors">
@@ -165,9 +165,9 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Supabase Integration Card */}
-      <div className="bg-brand-sand/30 rounded-3xl p-6 border border-brand-sand-dark/50">
+      <div className="bg-brand-sand/30 rounded-xl p-6 border border-brand-sand-dark/50">
         <div className="flex items-start gap-3.5">
-          <div className="p-2.5 bg-brand-crimson/10 rounded-xl text-brand-crimson">
+          <div className="p-2.5 bg-brand-crimson/10 rounded-lg text-brand-crimson">
             <Database className="w-5 h-5" />
           </div>
           <div>

@@ -389,7 +389,7 @@ export default function AdminProductsPage() {
 
         <button
           onClick={openAddModal}
-          className="inline-flex items-center gap-2 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs sm:text-sm font-bold px-5 py-3 rounded-2xl shadow-sm transition-colors whitespace-nowrap"
+          className="inline-flex items-center gap-2 bg-brand-crimson hover:bg-brand-crimson-hover text-white text-xs sm:text-sm font-bold px-5 py-3 rounded-xl shadow-sm transition-colors whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
           <span>Tambah Tanaman Baru</span>
@@ -399,7 +399,7 @@ export default function AdminProductsPage() {
       {/* Toast Alert */}
       {toast && (
         <div
-          className={`p-4 rounded-2xl text-xs sm:text-sm flex items-start gap-3 border ${
+          className={`p-4 rounded-xl text-xs sm:text-sm flex items-start gap-3 border ${
             toast.type === 'success'
               ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
               : 'bg-red-50 text-red-800 border-red-200'
@@ -415,7 +415,7 @@ export default function AdminProductsPage() {
       )}
 
       {/* Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-brand-sand-dark/40 shadow-xs flex items-center gap-3">
+      <div className="bg-white p-4 rounded-xl border border-brand-sand-dark/40 shadow-xs flex items-center gap-3">
         <Search className="w-5 h-5 text-brand-earth/50" />
         <input
           type="text"
@@ -427,7 +427,7 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Products Table / Cards */}
-      <div className="bg-white rounded-3xl border border-brand-sand-dark/40 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-xl border border-brand-sand-dark/40 shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-brand-earth">
             <thead className="bg-brand-sand/40 text-brand-earth uppercase text-[11px] font-bold tracking-wider border-b border-brand-sand-dark/30">
@@ -458,7 +458,7 @@ export default function AdminProductsPage() {
                   >
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3.5">
-                        <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/30">
+                        <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/30">
                           <Image
                             src={p.image_url}
                             alt={p.name}
@@ -583,14 +583,14 @@ export default function AdminProductsPage() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => openEditModal(p)}
-                          className="p-2 rounded-xl hover:bg-brand-sand/50 text-brand-navy transition-colors"
+                          className="p-2 rounded-lg hover:bg-brand-sand/50 text-brand-navy transition-colors"
                           title="Edit Produk"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(p.id)}
-                          className="p-2 rounded-xl hover:bg-red-50 text-red-600 transition-colors"
+                          className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
                           title="Hapus Produk"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -608,14 +608,14 @@ export default function AdminProductsPage() {
       {/* Add / Edit Product Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-brand-sand-dark/40">
+          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-brand-sand-dark/40">
             <div className="flex items-center justify-between pb-4 border-b border-brand-sand-dark/30 mb-6">
               <h2 className="text-xl font-bold text-brand-earth">
                 {editingProduct ? 'Edit Tanaman Hias' : 'Tambah Tanaman Hias Baru'}
               </h2>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-xl hover:bg-brand-sand/40 text-brand-earth"
+                className="p-1.5 rounded-lg hover:bg-brand-sand/40 text-brand-earth"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -632,7 +632,7 @@ export default function AdminProductsPage() {
                   placeholder="Contoh: Lidah Mertua (Sansevieria)"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth font-medium"
+                  className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth font-medium"
                 />
               </div>
 
@@ -644,7 +644,7 @@ export default function AdminProductsPage() {
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth bg-white"
+                    className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth bg-white"
                   >
                     <option value="Indoor">Indoor (Dalam Ruangan)</option>
                     <option value="Outdoor">Outdoor & Teras</option>
@@ -667,7 +667,7 @@ export default function AdminProductsPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, price_display: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                    className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                   />
                 </div>
               </div>
@@ -678,7 +678,7 @@ export default function AdminProductsPage() {
                   Foto Utama Tanaman
                 </label>
                 <div className="flex items-center gap-4">
-                  <div className="relative w-20 h-20 rounded-2xl overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/40">
+                  <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/40">
                     <Image
                       src={formData.image_url}
                       alt="Preview"
@@ -687,7 +687,7 @@ export default function AdminProductsPage() {
                     />
                   </div>
                   <div className="flex-1 space-y-2">
-                    <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-xl text-xs font-bold text-brand-earth cursor-pointer transition-colors">
+                    <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-lg text-xs font-bold text-brand-earth cursor-pointer transition-colors">
                       <Upload className="w-4 h-4 text-brand-crimson" />
                       <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
                       <input
@@ -705,20 +705,20 @@ export default function AdminProductsPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, image_url: e.target.value })
                       }
-                      className="w-full px-3 py-2 rounded-xl border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none"
+                      className="w-full px-3 py-2 rounded-lg border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Galeri Foto Tambahan Tanaman (Shopee / Tokopedia Carousel) */}
-              <div className="space-y-3 p-4 rounded-2xl bg-brand-sand-light/60 border border-brand-sand-dark/40">
+              <div className="space-y-3 p-4 rounded-xl bg-brand-sand-light/60 border border-brand-sand-dark/40">
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-brand-earth uppercase tracking-wider flex items-center gap-1.5">
                     <Images className="w-4 h-4 text-brand-navy" />
                     <span>Galeri Foto Tambahan ({formData.gallery_images.length})</span>
                   </label>
-                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-navy text-white hover:bg-brand-navy-dark rounded-xl text-xs font-bold cursor-pointer transition-colors">
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-navy text-white hover:bg-brand-navy-dark rounded-lg text-xs font-bold cursor-pointer transition-colors">
                     <Upload className="w-3.5 h-3.5" />
                     <span>{uploadingGallery ? 'Mengunggah...' : '+ Upload Foto Galeri'}</span>
                     <input
@@ -743,12 +743,12 @@ export default function AdminProductsPage() {
                     placeholder="Atau tempel URL foto tambahan..."
                     value={galleryUrlInput}
                     onChange={(e) => setGalleryUrlInput(e.target.value)}
-                    className="flex-1 px-3 py-2 rounded-xl border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white"
+                    className="flex-1 px-3 py-2 rounded-lg border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white"
                   />
                   <button
                     type="button"
                     onClick={handleAddGalleryUrl}
-                    className="px-3 py-2 bg-brand-earth text-white rounded-xl text-xs font-bold hover:bg-brand-earth-dark transition-colors cursor-pointer"
+                    className="px-3 py-2 bg-brand-earth text-white rounded-lg text-xs font-bold hover:bg-brand-earth-dark transition-colors cursor-pointer"
                   >
                     Tambah
                   </button>
@@ -760,7 +760,7 @@ export default function AdminProductsPage() {
                     {formData.gallery_images.map((imgUrl, idx) => (
                       <div
                         key={idx}
-                        className="relative group w-full aspect-square rounded-xl overflow-hidden border border-brand-sand-dark/60 bg-white"
+                        className="relative group w-full aspect-square rounded-lg overflow-hidden border border-brand-sand-dark/60 bg-white"
                       >
                         <Image
                           src={imgUrl}
@@ -794,7 +794,7 @@ export default function AdminProductsPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
-                  className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                  className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
               </div>
 
@@ -809,7 +809,7 @@ export default function AdminProductsPage() {
                   onChange={(e) =>
                     setFormData({ ...formData, care_instructions: e.target.value })
                   }
-                  className="w-full px-4 py-3 rounded-xl border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                  className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
               </div>
 
@@ -837,7 +837,7 @@ export default function AdminProductsPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, tokopedia_url: e.target.value })
                       }
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-brand-sand-dark/60 text-xs sm:text-sm text-brand-earth focus:outline-none focus:ring-2 focus:ring-[#03AC0E]/50"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-xs sm:text-sm text-brand-earth focus:outline-none focus:ring-2 focus:ring-[#03AC0E]/50"
                     />
                   </div>
 
@@ -853,14 +853,14 @@ export default function AdminProductsPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, shopee_url: e.target.value })
                       }
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-brand-sand-dark/60 text-xs sm:text-sm text-brand-earth focus:outline-none focus:ring-2 focus:ring-[#EE4D2D]/50"
+                      className="w-full px-3.5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-xs sm:text-sm text-brand-earth focus:outline-none focus:ring-2 focus:ring-[#EE4D2D]/50"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Status Publikasi & Ketersediaan Stok */}
-              <div className="p-3.5 rounded-2xl bg-brand-sand-light/60 border border-brand-sand-dark/40 space-y-2.5">
+              <div className="p-3.5 rounded-xl bg-brand-sand-light/60 border border-brand-sand-dark/40 space-y-2.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <button
@@ -911,14 +911,14 @@ export default function AdminProductsPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl border border-brand-sand-dark/60 text-sm font-semibold text-brand-earth hover:bg-brand-sand/30"
+                  className="px-5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-sm font-semibold text-brand-earth hover:bg-brand-sand/30"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={submitting || uploading}
-                  className="px-6 py-2.5 rounded-xl bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white text-sm font-bold shadow-md transition-colors"
+                  className="px-6 py-2.5 rounded-lg bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white text-sm font-bold shadow-md transition-colors"
                 >
                   {submitting ? 'Menyimpan...' : 'Simpan Produk'}
                 </button>
