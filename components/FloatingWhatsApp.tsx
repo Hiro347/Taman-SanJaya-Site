@@ -14,22 +14,22 @@ export default function FloatingWhatsApp({ settings }: FloatingWhatsAppProps) {
   )}`;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3">
-      {/* Tooltip Badge */}
-      <span className="hidden sm:inline-block bg-white text-brand-earth text-xs font-bold px-3.5 py-2 rounded-full shadow-lg border border-brand-sand-dark/40 animate-bounce">
-        Konsultasi Taman via WA 👋
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center gap-2 sm:gap-3">
+      {/* Tooltip Badge - Muncul di mobile & desktop */}
+      <span className="inline-block bg-white text-brand-earth text-[10px] sm:text-xs font-bold px-2.5 py-1 sm:px-3.5 sm:py-2 rounded-full shadow-lg border border-brand-sand-dark/40 animate-bounce whitespace-nowrap">
+        Konsultasi via WA 👋
       </span>
 
-      {/* Floating Button */}
+      {/* Floating Button - Disesuaikan ukurannya di mobile */}
       <a
         href={waUrl}
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Hubungi WhatsApp Taman San Jaya"
-        className="relative group flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95"
+        className="relative group flex items-center justify-center w-11 h-11 sm:w-14 sm:h-14 bg-[#25D366] hover:bg-[#20ba5a] text-white rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95 flex-shrink-0"
       >
         <span className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-25" />
-        <WhatsAppIcon className="w-8 h-8 relative z-10" />
+        <WhatsAppIcon className="w-6 h-6 sm:w-8 sm:h-8 relative z-10" />
       </a>
     </div>
   );

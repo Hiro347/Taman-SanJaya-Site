@@ -141,7 +141,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             </AnimatePresence>
 
             {/* Cinematic Gradient Scrim for crisp text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/55 z-[1]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/55 z-[1]" />
           </div>
 
           {/* ================================================================= */}
@@ -166,7 +166,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-serif italic text-white tracking-wider leading-[1.1] drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)] uppercase"
+                className="text-[26px] xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-serif italic text-white tracking-wider leading-[1.1] drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)] uppercase"
               >
                 TAMAN SAN JAYA
               </motion.h1>
@@ -174,7 +174,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="text-xs sm:text-base md:text-lg lg:text-xl tracking-[0.24em] sm:tracking-[0.28em] text-white font-medium font-sans drop-shadow-md mt-1 sm:mt-1.5"
+                className="text-[13px] sm:text-base md:text-lg lg:text-xl tracking-[0.24em] sm:tracking-[0.28em] text-white font-medium font-sans drop-shadow-md mt-1 sm:mt-1.5"
               >
                 成功之园
               </motion.span>
@@ -185,7 +185,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-1.5 sm:mt-3 text-sm sm:text-2xl lg:text-3xl font-serif italic font-bold text-brand-sand drop-shadow-md tracking-wide"
+              className="mt-1.5 sm:mt-3 text-[15px] sm:text-2xl lg:text-3xl font-serif italic font-bold text-brand-sand drop-shadow-md tracking-wide"
             >
               Spesialis Penyedia Lanskap
             </motion.p>

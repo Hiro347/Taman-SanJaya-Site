@@ -96,16 +96,16 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
                     </Link>
 
                     {/* Product Details */}
-                    <div className="p-3 sm:p-5">
-                      <h3 className="font-bold text-xs sm:text-lg text-brand-earth group-hover:text-brand-crimson transition-colors line-clamp-1">
+                    <div className="p-2.5 sm:p-5">
+                      <h3 className="font-bold text-[11px] sm:text-lg text-brand-earth group-hover:text-brand-crimson transition-colors line-clamp-1 leading-snug">
                         <Link href={`/katalog/${product.slug || product.id}`} className="hover:text-brand-crimson transition-colors">
                           {product.name}
                         </Link>
                       </h3>
 
                       {/* Price */}
-                      <div className="mt-1 sm:mt-1.5 flex items-baseline gap-2">
-                        <span className="text-brand-crimson font-extrabold text-sm sm:text-xl">
+                      <div className="mt-0.5 sm:mt-1.5 flex items-baseline gap-2">
+                        <span className="text-brand-crimson font-extrabold text-xs sm:text-xl">
                           {product.price_display || `Rp ${product.price.toLocaleString('id-ID')}`}
                         </span>
                       </div>
