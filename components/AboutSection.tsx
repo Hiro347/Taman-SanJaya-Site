@@ -21,9 +21,26 @@ export default function AboutSection({ settings }: AboutSectionProps) {
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="bg-brand-earth text-white rounded-2xl sm:rounded-3xl p-5 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl border border-white/10"
       >
+        {/* Mobile Header: Tampil di paling atas khusus mobile sebelum foto founder */}
+        <div className="lg:hidden flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3.5 mb-4 sm:mb-6">
+          <span className="text-brand-sand font-bold text-[11px] sm:text-sm tracking-widest uppercase">
+            Tentang
+          </span>
+          <span className="hidden sm:inline text-brand-sand/40">•</span>
+          <div className="flex flex-col">
+            <span className="font-serif italic font-bold tracking-wider text-white text-base sm:text-xl leading-tight">
+              TAMAN SAN JAYA
+            </span>
+            <span className="text-[11px] sm:text-[13px] tracking-widest text-brand-sand font-medium font-sans">
+              成功之园
+            </span>
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-center">
           <div className="lg:col-span-7 order-2 lg:order-1">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3.5 mb-3 sm:mb-4">
+            {/* Desktop Header: Hanya tampil di layar lg ke atas */}
+            <div className="hidden lg:flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-3.5 mb-3 sm:mb-4">
               <span className="text-brand-sand font-bold text-[11px] sm:text-sm tracking-widest uppercase">
                 Tentang
               </span>
