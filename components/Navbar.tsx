@@ -94,9 +94,9 @@ export default function Navbar({ settings }: NavbarProps) {
         <Link
           href={pathname === '/' ? '#home' : '/'}
           onClick={(e) => handleNavClick(e, '#home')}
-          className="flex items-center gap-3.5 group"
+          className="flex items-center gap-2.5 sm:gap-3.5 group flex-shrink-0"
         >
-          <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex-shrink-0 transition-transform group-hover:scale-105">
+          <div className="relative w-11 h-11 sm:w-12 sm:h-12 flex-shrink-0 transition-transform group-hover:scale-105 drop-shadow-xs">
             <Image
               src="/images/logo.png"
               alt="Logo Taman San Jaya"
@@ -106,7 +106,7 @@ export default function Navbar({ settings }: NavbarProps) {
             />
           </div>
           <div className="flex flex-col">
-            <span className="font-serif italic font-bold tracking-wider text-brand-earth text-lg sm:text-xl leading-tight group-hover:text-brand-crimson transition-colors">
+            <span className="font-serif italic font-bold tracking-wider text-brand-earth text-base sm:text-xl leading-tight group-hover:text-brand-crimson transition-colors">
               TAMAN SAN JAYA
             </span>
             <span className="text-xs sm:text-[13px] tracking-widest text-brand-earth/80 font-medium font-sans">
@@ -132,8 +132,8 @@ export default function Navbar({ settings }: NavbarProps) {
           })}
         </nav>
 
-        {/* Desktop CTA & Mobile Toggle (Shifted to the right for optimal balance) */}
-        <div className="flex items-center gap-3 mr-2 sm:mr-6 md:mr-8 lg:mr-10">
+        {/* Desktop CTA & Mobile Toggle (Safely shifted on mobile to avoid ivy overlap) */}
+        <div className="flex items-center gap-3 mr-7 sm:mr-6 md:mr-8 lg:mr-10 relative z-50">
           <a
             href={waUrl}
             target="_blank"
@@ -146,10 +146,10 @@ export default function Navbar({ settings }: NavbarProps) {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-xl text-brand-earth hover:bg-black/5 transition-colors focus:outline-none"
+            className="md:hidden p-2.5 rounded-2xl bg-white/80 hover:bg-white text-brand-earth border border-brand-sand-dark/60 shadow-xs backdrop-blur-md transition-all focus:outline-none active:scale-95"
             aria-label="Buka Menu"
           >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isOpen ? <X className="w-5 h-5 text-brand-crimson" /> : <Menu className="w-5 h-5 text-brand-earth" />}
           </button>
         </div>
       </motion.div>
