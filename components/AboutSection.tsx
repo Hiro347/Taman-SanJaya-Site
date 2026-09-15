@@ -43,11 +43,11 @@ export default function AboutSection({ settings }: AboutSectionProps) {
             </h2>
 
             <p className="mt-3 sm:mt-5 text-white/85 text-xs sm:text-lg leading-relaxed font-normal">
-              <strong>Taman San Jaya</strong> didirikan dengan filosofi bahwa taman bukan sekadar deretan tanaman hijau, melainkan ruang bernapas, tempat memulihkan energi, dan simbol kemakmuran serta keharmonisan bagi setiap pemiliknya.
+              <strong>Taman San Jaya</strong> berdiri bersama para pembudidaya lokal, tenaga ahli, dan desainer lanskap untuk menciptakan taman yang harmonis, berkelanjutan, dan bermakna. Setiap rancangan memadukan keindahan alam, ketepatan penataan ruang, serta prinsip feng shui agar menghadirkan keseimbangan visual dan energi yang selaras.
             </p>
 
             <p className="mt-2 sm:mt-3 text-white/80 text-xs sm:text-lg leading-relaxed font-normal">
-              Diinisiasi oleh <strong>Ergoputra Kusuma Sanjaya</strong> dengan latar belakang keilmuan <strong>Proteksi Tanaman IPB University</strong>, kami memadukan estetika arsitektur lanskap dengan riset kesehatan biologis tanaman agar setiap karya hijau tumbuh subur, tahan hama, dan bergaransi hidup.
+              <strong>Ergoputra Kusuma Sanjaya</strong>, founder Taman San Jaya, memiliki latar belakang Fitopatologi dan Pengendalian Terpadu. Berlandaskan pendekatan ilmiah terhadap kesehatan tanaman dan filosofi lanskap oriental, ia memiliki visi menghadirkan taman yang tidak hanya indah dipandang, tetapi juga memberi ketenangan, keharmonisan, dan nilai yang bertahan sepanjang waktu.
             </p>
 
             {/* Pillar Grid - 2 Kolom Kompak di Mobile */}

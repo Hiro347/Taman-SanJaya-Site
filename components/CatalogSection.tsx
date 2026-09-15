@@ -34,9 +34,14 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
         
         {/* Section Heading */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-earth tracking-tight">
-            Produk Kami
-          </h2>
+          <div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-earth tracking-tight">
+              Produk Kami
+            </h2>
+            <span className="block text-sm sm:text-base font-medium text-brand-earth/70 tracking-[0.2em] uppercase mt-1">
+              我们的產品
+            </span>
+          </div>
 
           {/* Search Box */}
           <div className="relative w-full md:w-72">

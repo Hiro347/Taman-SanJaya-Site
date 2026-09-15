@@ -210,6 +210,9 @@ export default function ProjectDetailView({
               <h2 className="text-2xl sm:text-3xl font-black text-brand-earth tracking-tight">
                 Kolase
               </h2>
+              <span className="block text-xs sm:text-sm font-medium text-brand-earth/70 tracking-[0.2em] uppercase mt-0.5">
+                我们的照片
+              </span>
               <p className="text-xs sm:text-sm text-brand-earth/75 mt-1 font-medium">
                 Eksplorasi sudut lanskap, detail vegetasi, dan dokumentasi pengerjaan nyata di lokasi.
               </p>

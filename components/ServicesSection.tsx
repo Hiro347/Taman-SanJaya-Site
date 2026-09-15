@@ -130,6 +130,9 @@ export default function ServicesSection({ settings }: ServicesSectionProps) {
           <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-bold text-brand-earth tracking-tight select-none">
             Layanan Kami
           </h2>
+          <span className="block text-sm sm:text-base font-medium text-brand-earth/70 tracking-[0.2em] uppercase mt-1">
+            我们的服务
+          </span>
         </div>
 
         {/* ================================================================= */}

@@ -20,6 +20,9 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-earth tracking-tight">
           Proyek Kami
         </h2>
+        <span className="block text-sm sm:text-base font-medium text-brand-earth/70 tracking-[0.2em] uppercase mt-1">
+          我们项目
+        </span>
       </div>
 
       {/* Projects Grid - Desain Kartu Editorial Bersih & Elegan */}
