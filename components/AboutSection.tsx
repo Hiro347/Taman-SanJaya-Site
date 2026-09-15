@@ -72,20 +72,50 @@ export default function AboutSection({ settings }: AboutSectionProps) {
           </div>
 
           <div className="lg:col-span-5 flex justify-center">
+            {/* Mobile View (< lg): Compact Horizontal Executive Card */}
+            <div className="lg:hidden w-full bg-white/10 backdrop-blur-md rounded-2xl p-3.5 sm:p-4 border border-white/15 flex items-center gap-3.5 sm:gap-4 shadow-xl">
+              <div className="relative w-20 h-24 sm:w-24 sm:h-28 rounded-xl overflow-hidden flex-shrink-0 border-2 border-brand-sand/50 shadow-md">
+                <Image
+                  src="/images/founder.jpg"
+                  alt="Ergoputra Kusuma Sanjaya - Founder Taman San Jaya"
+                  fill
+                  sizes="100px"
+                  className="object-cover object-[center_35%]"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="text-brand-sand text-[10px] sm:text-xs font-bold tracking-wider uppercase block">
+                  Founder & Horticulturalist
+                </span>
+                <h3 className="text-white text-base sm:text-lg font-black tracking-tight mt-0.5 truncate">
+                  Ergoputra Kusuma Sanjaya
+                </h3>
+                <p className="text-white/80 text-[11px] sm:text-xs mt-0.5 leading-snug">
+                  Departemen Proteksi Tanaman • IPB University
+                </p>
+                <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand-navy/60 border border-brand-navy-light/30 text-[10px] sm:text-[11px] text-brand-sand font-medium">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  Garansi Tumbuh 100%
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop View (>= lg): Prestigious Vertical Showcase Card */}
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="relative w-full max-w-[280px] sm:max-w-sm aspect-[4/3] sm:aspect-[4/5] rounded-xl sm:rounded-2xl overflow-hidden border-2 sm:border-4 border-brand-sand/40 shadow-2xl group"
+              className="hidden lg:block relative w-full max-w-sm aspect-[4/5] rounded-2xl overflow-hidden border-4 border-brand-sand/40 shadow-2xl group"
             >
               <Image
                 src="/images/founder.jpg"
                 alt="Ergoputra Kusuma Sanjaya - Founder Taman San Jaya"
                 fill
-                className="object-cover object-top hover:scale-105 transition-transform duration-700"
+                sizes="(max-width: 1280px) 384px, 400px"
+                className="object-cover object-[center_35%] group-hover:scale-105 transition-transform duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-earth/95 via-black/30 to-transparent flex flex-col justify-end p-3.5 sm:p-6">
-                <span className="text-brand-sand text-[10px] sm:text-xs font-bold tracking-wider uppercase">Founder & Horticulturalist</span>
-                <p className="text-white text-sm sm:text-lg font-black mt-0.5">Ergoputra Kusuma Sanjaya</p>
-                <p className="text-white/80 text-[10px] sm:text-xs mt-0.5">Departemen Proteksi Tanaman • IPB University</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-earth/95 via-black/30 to-transparent flex flex-col justify-end p-6">
+                <span className="text-brand-sand text-xs font-bold tracking-wider uppercase">Founder & Horticulturalist</span>
+                <p className="text-white text-lg font-black mt-0.5">Ergoputra Kusuma Sanjaya</p>
+                <p className="text-white/80 text-xs mt-0.5">Departemen Proteksi Tanaman • IPB University</p>
               </div>
             </motion.div>
           </div>
