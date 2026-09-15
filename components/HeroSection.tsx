@@ -166,7 +166,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-                className="text-xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-serif italic text-white tracking-wider leading-[1.1] drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)] uppercase"
+                className="text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-serif italic text-white tracking-wider leading-[1.1] drop-shadow-[0_4px_20px_rgba(0,0,0,0.7)] uppercase"
               >
                 TAMAN SAN JAYA
               </motion.h1>
@@ -174,7 +174,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-                className="text-[10px] sm:text-base md:text-lg lg:text-xl tracking-[0.22em] sm:tracking-[0.28em] text-white font-medium font-sans drop-shadow-md mt-0.5 sm:mt-1.5"
+                className="text-xs sm:text-base md:text-lg lg:text-xl tracking-[0.24em] sm:tracking-[0.28em] text-white font-medium font-sans drop-shadow-md mt-1 sm:mt-1.5"
               >
                 成功之园
               </motion.span>
@@ -185,17 +185,17 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.16, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-1 sm:mt-3 text-xs sm:text-2xl lg:text-3xl font-serif italic font-bold text-brand-sand drop-shadow-md tracking-wide"
+              className="mt-1.5 sm:mt-3 text-sm sm:text-2xl lg:text-3xl font-serif italic font-bold text-brand-sand drop-shadow-md tracking-wide"
             >
               Spesialis Penyedia Lanskap
             </motion.p>
 
-            {/* Ringkasan Produk Pendukung */}
+            {/* Ringkasan Produk Pendukung - Dihilangkan di mobile sesuai permintaan */}
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-1 sm:mt-2.5 text-white/90 text-[10px] sm:text-sm lg:text-base max-w-xs sm:max-w-2xl mx-auto font-normal drop-shadow leading-snug sm:leading-relaxed"
+              className="hidden sm:block mt-2 sm:mt-2.5 text-white/90 text-xs sm:text-sm lg:text-base max-w-2xl mx-auto font-normal drop-shadow leading-relaxed"
             >
               Solusi lengkap mulai dari desain, pembuatan, perawatan, hingga ketersediaan tanaman segar dan dekorasi taman berkualitas.
             </motion.p>
@@ -205,7 +205,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.28, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-2 sm:mt-6 flex items-center justify-center w-full"
+              className="mt-3 sm:mt-6 flex items-center justify-center w-full"
             >
               <motion.a
                 whileHover={{ scale: 1.04, y: -2 }}
@@ -213,11 +213,11 @@ export default function HeroSection({ settings }: HeroSectionProps) {
                 href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-1.5 sm:gap-2.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold text-[11px] sm:text-sm lg:text-base px-4 sm:px-9 py-1.5 sm:py-3.5 rounded-full shadow-lg sm:shadow-2xl shadow-brand-crimson/50 border border-white/20 transition-all group"
+                className="inline-flex items-center justify-center gap-2 sm:gap-2.5 bg-brand-crimson hover:bg-brand-crimson-hover text-white font-bold text-xs sm:text-sm lg:text-base px-5 sm:px-9 py-2 sm:py-3.5 rounded-full shadow-lg sm:shadow-2xl shadow-brand-crimson/50 border border-white/20 transition-all group"
               >
-                <WhatsAppIcon className="w-3.5 h-3.5 sm:w-6 sm:h-6 transition-transform group-hover:rotate-12 flex-shrink-0" />
+                <WhatsAppIcon className="w-4 h-4 sm:w-6 sm:h-6 transition-transform group-hover:rotate-12 flex-shrink-0" />
                 <span>Konsultasi Sekarang</span>
-                <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
               </motion.a>
             </motion.div>
           </div>
