@@ -12,6 +12,8 @@ import {
   isValidShopeeUrl,
   normalizeMarketplaceUrl,
   validateImageFile,
+  generateSafeFileName,
+  isValidSafeImageUrl,
   MAX_GALLERY_IMAGES,
 } from '@/lib/validators';
 import ConfirmModal from '@/components/admin/ConfirmModal';
@@ -149,10 +151,10 @@ export default function AdminProductsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validasi ukuran maksimal 5 MB & tipe file
-    const validation = validateImageFile(file);
+    // Validasi ketat ukuran (maks 5 MB), ekstensi, MIME, dan Magic Bytes biner
+    const validation = await validateImageFile(file);
     if (!validation.valid) {
-      setToast({ type: 'error', text: validation.error || 'Ukuran foto melebihi 5 MB.' });
+      setToast({ type: 'error', text: validation.error || 'File tidak didukung. Harap gunakan foto JPG, PNG, atau WebP.' });
       e.target.value = '';
       return;
     }
@@ -160,13 +162,15 @@ export default function AdminProductsPage() {
     setUploading(true);
     try {
       const supabase = createClient();
-      const fileExt = file.name.split('.').pop();
-      const fileName = `product_${Date.now()}.${fileExt}`;
+      const fileName = generateSafeFileName('product_main', file.name);
       const filePath = `products/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('taman-media')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          contentType: file.type || 'image/jpeg',
+          upsert: false,
+        });
 
       if (uploadError) throw uploadError;
 
@@ -183,6 +187,7 @@ export default function AdminProductsPage() {
       setToast({ type: 'error', text: err.message || 'Gagal mengunggah foto.' });
     } finally {
       setUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -211,11 +216,11 @@ export default function AdminProductsPage() {
       return;
     }
 
-    // Validasi setiap file dalam galeri (maks 5 MB)
+    // Validasi setiap file dalam galeri (maks 5 MB, no PDF/scripts, magic bytes)
     for (let i = 0; i < files.length; i++) {
-      const validation = validateImageFile(files[i]);
+      const validation = await validateImageFile(files[i]);
       if (!validation.valid) {
-        setToast({ type: 'error', text: validation.error || 'Ada foto yang melebihi batas 5 MB.' });
+        setToast({ type: 'error', text: validation.error || 'Ada file yang tidak didukung.' });
         e.target.value = '';
         return;
       }
@@ -228,13 +233,15 @@ export default function AdminProductsPage() {
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const fileExt = file.name.split('.').pop();
-        const fileName = `product_gallery_${Date.now()}_${i}.${fileExt}`;
+        const fileName = generateSafeFileName('product_gallery', file.name);
         const filePath = `products/gallery/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from('taman-media')
-          .upload(filePath, file);
+          .upload(filePath, file, {
+            contentType: file.type || 'image/jpeg',
+            upsert: false,
+          });
 
         if (uploadError) throw uploadError;
 
@@ -261,7 +268,18 @@ export default function AdminProductsPage() {
   };
 
   const handleAddGalleryUrl = () => {
-    if (!galleryUrlInput.trim()) return;
+    const trimmedUrl = galleryUrlInput.trim();
+    if (!trimmedUrl) return;
+
+    // Validasi URL aman (cegah javascript: / XSS injection)
+    const urlCheck = isValidSafeImageUrl(trimmedUrl);
+    if (!urlCheck.valid) {
+      setToast({
+        type: 'error',
+        text: urlCheck.error || 'URL foto galeri tidak valid atau tidak aman.',
+      });
+      return;
+    }
 
     if (formData.gallery_images.length >= MAX_GALLERY_IMAGES) {
       setToast({
@@ -273,7 +291,7 @@ export default function AdminProductsPage() {
 
     setFormData((prev) => ({
       ...prev,
-      gallery_images: [...prev.gallery_images, galleryUrlInput.trim()],
+      gallery_images: [...prev.gallery_images, trimmedUrl],
     }));
     setGalleryUrlInput('');
   };
@@ -294,6 +312,30 @@ export default function AdminProductsPage() {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)+/g, '') + '-' + Date.now();
+
+    // Validasi Keamanan URL Foto Utama
+    const imageUrlCheck = isValidSafeImageUrl(formData.image_url);
+    if (!imageUrlCheck.valid) {
+      setToast({
+        type: 'error',
+        text: imageUrlCheck.error || 'URL foto utama tidak valid atau tidak aman.',
+      });
+      setSubmitting(false);
+      return;
+    }
+
+    // Validasi Keamanan URL Galeri Foto
+    for (const gUrl of formData.gallery_images) {
+      const gCheck = isValidSafeImageUrl(gUrl);
+      if (!gCheck.valid) {
+        setToast({
+          type: 'error',
+          text: gCheck.error || 'Ada URL foto galeri yang tidak valid atau mengandung script terlarang.',
+        });
+        setSubmitting(false);
+        return;
+      }
+    }
 
     // Validasi URL Marketplace Tokopedia & Shopee Resmi
     if (!isValidTokopediaUrl(formData.tokopedia_url)) {
@@ -978,13 +1020,13 @@ export default function AdminProductsPage() {
                         <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
                         <input
                           type="file"
-                          accept="image/*"
+                          accept="image/jpeg,image/png,image/webp,image/avif"
                           onChange={handleImageUpload}
                           disabled={uploading}
                           className="hidden"
                         />
                       </label>
-                      <span className="text-[11px] text-brand-earth/60">Maks. 5 MB (JPG, PNG, WebP)</span>
+                      <span className="text-[11px] text-brand-earth/60">Maks. 5 MB (JPG, PNG, WebP — Bukan Dokumen/PDF)</span>
                     </div>
                     <input
                       type="url"
@@ -1012,7 +1054,7 @@ export default function AdminProductsPage() {
                       <span>{uploadingGallery ? 'Mengunggah...' : '+ Upload Foto Galeri'}</span>
                       <input
                         type="file"
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/webp,image/avif"
                         multiple
                         onChange={handleGalleryUpload}
                         disabled={uploadingGallery}

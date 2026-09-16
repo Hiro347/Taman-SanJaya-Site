@@ -6,7 +6,12 @@ import { createClient } from '@/utils/supabase/client';
 import { defaultProjects } from '@/lib/placeholder-data';
 import { Project } from '@/lib/types';
 import { revalidateSite } from '@/app/actions';
-import { validateImageFile, MAX_GALLERY_IMAGES } from '@/lib/validators';
+import {
+  validateImageFile,
+  generateSafeFileName,
+  isValidSafeImageUrl,
+  MAX_GALLERY_IMAGES,
+} from '@/lib/validators';
 import ConfirmModal from '@/components/admin/ConfirmModal';
 import ToastNotification from '@/components/admin/ToastNotification';
 import {
@@ -110,10 +115,10 @@ export default function AdminProjectsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validasi ukuran maksimal 5 MB & tipe file
-    const validation = validateImageFile(file);
+    // Validasi ketat ukuran (maks 5 MB), ekstensi, MIME, dan Magic Bytes biner
+    const validation = await validateImageFile(file);
     if (!validation.valid) {
-      setToast({ type: 'error', text: validation.error || 'Ukuran foto melebihi 5 MB.' });
+      setToast({ type: 'error', text: validation.error || 'File tidak didukung. Harap gunakan foto JPG, PNG, atau WebP.' });
       e.target.value = '';
       return;
     }
@@ -121,13 +126,15 @@ export default function AdminProjectsPage() {
     setUploading(true);
     try {
       const supabase = createClient();
-      const fileExt = file.name.split('.').pop();
-      const fileName = `project_${Date.now()}.${fileExt}`;
+      const fileName = generateSafeFileName('project_main', file.name);
       const filePath = `projects/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from('taman-media')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          contentType: file.type || 'image/jpeg',
+          upsert: false,
+        });
 
       if (uploadError) throw uploadError;
 
@@ -144,6 +151,7 @@ export default function AdminProjectsPage() {
       setToast({ type: 'error', text: err.message || 'Gagal mengunggah foto.' });
     } finally {
       setUploading(false);
+      e.target.value = '';
     }
   };
 
@@ -172,11 +180,11 @@ export default function AdminProjectsPage() {
       return;
     }
 
-    // Validasi setiap file dalam galeri (maks 5 MB)
+    // Validasi setiap file dalam galeri (maks 5 MB, no PDF/scripts, magic bytes)
     for (let i = 0; i < files.length; i++) {
-      const validation = validateImageFile(files[i]);
+      const validation = await validateImageFile(files[i]);
       if (!validation.valid) {
-        setToast({ type: 'error', text: validation.error || 'Ada foto yang melebihi batas 5 MB.' });
+        setToast({ type: 'error', text: validation.error || 'Ada file yang tidak didukung.' });
         e.target.value = '';
         return;
       }
@@ -189,13 +197,15 @@ export default function AdminProjectsPage() {
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const fileExt = file.name.split('.').pop();
-        const fileName = `gallery_${Date.now()}_${i}.${fileExt}`;
+        const fileName = generateSafeFileName('project_gallery', file.name);
         const filePath = `projects/gallery/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from('taman-media')
-          .upload(filePath, file);
+          .upload(filePath, file, {
+            contentType: file.type || 'image/jpeg',
+            upsert: false,
+          });
 
         if (uploadError) throw uploadError;
 
@@ -223,7 +233,18 @@ export default function AdminProjectsPage() {
   };
 
   const handleAddGalleryUrl = () => {
-    if (!galleryUrlInput.trim()) return;
+    const trimmedUrl = galleryUrlInput.trim();
+    if (!trimmedUrl) return;
+
+    // Validasi URL aman (cegah javascript: / XSS injection)
+    const urlCheck = isValidSafeImageUrl(trimmedUrl);
+    if (!urlCheck.valid) {
+      setToast({
+        type: 'error',
+        text: urlCheck.error || 'URL foto galeri tidak valid atau tidak aman.',
+      });
+      return;
+    }
 
     if (formData.gallery_images.length >= MAX_GALLERY_IMAGES) {
       setToast({
@@ -235,7 +256,7 @@ export default function AdminProjectsPage() {
 
     setFormData((prev) => ({
       ...prev,
-      gallery_images: [...prev.gallery_images, galleryUrlInput.trim()],
+      gallery_images: [...prev.gallery_images, trimmedUrl],
     }));
     setGalleryUrlInput('');
   };
@@ -308,6 +329,30 @@ export default function AdminProjectsPage() {
     e.preventDefault();
     setSubmitting(true);
     setToast(null);
+
+    // Validasi Keamanan URL Foto Utama
+    const imageUrlCheck = isValidSafeImageUrl(formData.image_url);
+    if (!imageUrlCheck.valid) {
+      setToast({
+        type: 'error',
+        text: imageUrlCheck.error || 'URL foto utama tidak valid atau tidak aman.',
+      });
+      setSubmitting(false);
+      return;
+    }
+
+    // Validasi Keamanan URL Galeri Foto
+    for (const gUrl of formData.gallery_images) {
+      const gCheck = isValidSafeImageUrl(gUrl);
+      if (!gCheck.valid) {
+        setToast({
+          type: 'error',
+          text: gCheck.error || 'Ada URL foto galeri yang tidak valid atau berisiko.',
+        });
+        setSubmitting(false);
+        return;
+      }
+    }
 
     try {
       const supabase = createClient();
@@ -814,13 +859,13 @@ export default function AdminProjectsPage() {
                         <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
                         <input
                           type="file"
-                          accept="image/*"
+                          accept="image/jpeg,image/png,image/webp,image/avif"
                           onChange={handleImageUpload}
                           disabled={uploading}
                           className="hidden"
                         />
                       </label>
-                      <span className="text-[11px] text-brand-earth/60">Maks. 5 MB (JPG, PNG, WebP)</span>
+                      <span className="text-[11px] text-brand-earth/60">Maks. 5 MB (JPG, PNG, WebP — Bukan Dokumen/PDF)</span>
                     </div>
                     <input
                       type="url"
@@ -848,7 +893,7 @@ export default function AdminProjectsPage() {
                       <span>{uploadingGallery ? 'Mengunggah...' : '+ Upload Foto Galeri'}</span>
                       <input
                         type="file"
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/webp,image/avif"
                         multiple
                         onChange={handleGalleryUpload}
                         disabled={uploadingGallery}
@@ -863,7 +908,7 @@ export default function AdminProjectsPage() {
                 </div>
 
                 <p className="text-xs text-brand-earth/70">
-                  Foto dokumentasi pengerjaan taman (Maksimal 5 foto pendukung, @ maks 5 MB).
+                  Foto dokumentasi pengerjaan taman (Maksimal 5 foto pendukung, @ maks 5 MB — Bukan Dokumen/PDF).
                 </p>
 
                 {/* Input URL foto tambahan */}
