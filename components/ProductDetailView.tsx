@@ -324,11 +324,11 @@ export default function ProductDetailView({
             </h1>
 
             {/* Price Box */}
-            <div className="mt-4 p-4 rounded-xl bg-white/70 border border-brand-earth/15 flex items-baseline gap-3">
-              <span className="text-3xl sm:text-4xl font-black text-brand-crimson">
+            <div className="mt-4 p-3.5 sm:p-4 rounded-xl bg-white/70 border border-brand-earth/15 flex flex-wrap items-baseline gap-x-2.5 sm:gap-x-3 gap-y-1">
+              <span className="text-2xl sm:text-3xl lg:text-4xl font-black text-brand-crimson whitespace-nowrap">
                 {product.price_display || `Rp ${product.price.toLocaleString('id-ID')}`}
               </span>
-              <span className="text-xs text-brand-earth/60 font-semibold">
+              <span className="text-xs text-brand-earth/70 font-semibold">
                 (Harga per pot / polybag siap pajang)
               </span>
             </div>
@@ -463,7 +463,7 @@ export default function ProductDetailView({
                           {other.name}
                         </Link>
                       </h3>
-                      <div className="mt-1 text-brand-crimson font-extrabold text-base">
+                      <div className="mt-1 text-brand-crimson font-extrabold text-base whitespace-nowrap">
                         {other.price_display || `Rp ${other.price.toLocaleString('id-ID')}`}
                       </div>
                       <p className="mt-1.5 text-xs text-brand-earth/90 font-medium line-clamp-2 leading-relaxed">

@@ -12,7 +12,7 @@ interface AboutSectionProps {
 
 export default function AboutSection({ settings }: AboutSectionProps) {
   return (
-    <section id="about" className="pt-6 sm:pt-14 pb-2 sm:pb-4 px-2 sm:px-6 max-w-7xl mx-auto">
+    <section id="about" className="pt-6 sm:pt-14 pb-2 sm:pb-4 px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto">
       {/* Brand Story Box with Scroll Reveal */}
       <motion.div
         initial={{ opacity: 0, y: 35 }}

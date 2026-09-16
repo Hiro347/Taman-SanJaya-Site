@@ -28,7 +28,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
   }, [products, searchQuery]);
 
   return (
-    <section id="catalog" className="-mt-16 sm:-mt-24 lg:-mt-32 pb-14 sm:pb-18 px-3 sm:px-6 max-w-7xl mx-auto relative z-20">
+    <section id="catalog" className="-mt-16 sm:-mt-24 lg:-mt-32 pb-14 sm:pb-18 px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto relative z-20">
       {/* Outer Sand Background Canvas */}
       <div className="bg-brand-sand/40 border border-brand-sand-dark/40 rounded-2xl sm:rounded-3xl p-5 sm:p-9 lg:p-11">
         
@@ -110,7 +110,7 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
 
                       {/* Price */}
                       <div className="mt-0.5 sm:mt-1.5 flex items-baseline gap-2">
-                        <span className="text-brand-crimson font-extrabold text-xs sm:text-xl">
+                        <span className="text-brand-crimson font-extrabold text-xs sm:text-xl whitespace-nowrap">
                           {product.price_display || `Rp ${product.price.toLocaleString('id-ID')}`}
                         </span>
                       </div>

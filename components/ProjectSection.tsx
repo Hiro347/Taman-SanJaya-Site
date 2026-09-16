@@ -14,7 +14,7 @@ interface ProjectSectionProps {
 
 export default function ProjectSection({ projects }: ProjectSectionProps) {
   return (
-    <section id="project" className="pt-0 sm:pt-2 pb-2 sm:pb-4 px-3 sm:px-6 max-w-7xl mx-auto">
+    <section id="project" className="pt-0 sm:pt-2 pb-2 sm:pb-4 px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto">
       {/* Section Header */}
       <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-earth tracking-tight">
