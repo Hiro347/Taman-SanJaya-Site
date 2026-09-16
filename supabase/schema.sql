@@ -38,7 +38,15 @@ CREATE TABLE IF NOT EXISTS public.products (
   order_index INTEGER NOT NULL DEFAULT 0,
   tokopedia_url TEXT,
   shopee_url TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  CONSTRAINT check_tokopedia_url CHECK (
+    tokopedia_url IS NULL OR
+    tokopedia_url ~* '^https?://([a-zA-Z0-9-]+\.)*(tokopedia\.com|tokopedia\.link|tkp\.me)(/.*)?$'
+  ),
+  CONSTRAINT check_shopee_url CHECK (
+    shopee_url IS NULL OR
+    shopee_url ~* '^https?://([a-zA-Z0-9-]+\.)*(shopee\.co\.id|shp\.ee|shopee\.com)(/.*)?$'
+  )
 );
 
 -- 4. TABEL LAYANAN JASA LANDSCAPING

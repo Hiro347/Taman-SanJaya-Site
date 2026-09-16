@@ -6,6 +6,8 @@ import { createClient } from '@/utils/supabase/client';
 import { defaultProjects } from '@/lib/placeholder-data';
 import { Project } from '@/lib/types';
 import { revalidateSite } from '@/app/actions';
+import { validateImageFile, MAX_GALLERY_IMAGES } from '@/lib/validators';
+import ConfirmModal from '@/components/admin/ConfirmModal';
 import {
   Plus,
   Trash2,
@@ -16,6 +18,10 @@ import {
   X,
   MapPin,
   Images,
+  ExternalLink,
+  ChevronUp,
+  ChevronDown,
+  Sparkles,
 } from 'lucide-react';
 
 export default function AdminProjectsPage() {
@@ -29,6 +35,13 @@ export default function AdminProjectsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>('Semua');
+
+  // State untuk Reordering ▲ / ▼
+  const [isReordering, setIsReordering] = useState(false);
+
+  // State untuk Modern ConfirmModal Hapus Proyek
+  const [deleteTarget, setDeleteTarget] = useState<Project | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -96,6 +109,14 @@ export default function AdminProjectsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validasi ukuran maksimal 5 MB & tipe file
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      setToast({ type: 'error', text: validation.error || 'Ukuran foto melebihi 5 MB.' });
+      e.target.value = '';
+      return;
+    }
+
     setUploading(true);
     try {
       const supabase = createClient();
@@ -128,6 +149,37 @@ export default function AdminProjectsPage() {
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+
+    // Batasan maksimal 5 foto galeri
+    const currentCount = formData.gallery_images.length;
+    if (currentCount >= MAX_GALLERY_IMAGES) {
+      setToast({
+        type: 'error',
+        text: `Galeri foto proyek sudah mencapai batas maksimal (${MAX_GALLERY_IMAGES} foto).`,
+      });
+      e.target.value = '';
+      return;
+    }
+
+    if (currentCount + files.length > MAX_GALLERY_IMAGES) {
+      const remainingSlots = MAX_GALLERY_IMAGES - currentCount;
+      setToast({
+        type: 'error',
+        text: `Maksimal ${MAX_GALLERY_IMAGES} foto galeri. Anda hanya dapat menambahkan ${remainingSlots} foto lagi.`,
+      });
+      e.target.value = '';
+      return;
+    }
+
+    // Validasi setiap file dalam galeri (maks 5 MB)
+    for (let i = 0; i < files.length; i++) {
+      const validation = validateImageFile(files[i]);
+      if (!validation.valid) {
+        setToast({ type: 'error', text: validation.error || 'Ada foto yang melebihi batas 5 MB.' });
+        e.target.value = '';
+        return;
+      }
+    }
 
     setUploadingGallery(true);
     try {
@@ -171,6 +223,15 @@ export default function AdminProjectsPage() {
 
   const handleAddGalleryUrl = () => {
     if (!galleryUrlInput.trim()) return;
+
+    if (formData.gallery_images.length >= MAX_GALLERY_IMAGES) {
+      setToast({
+        type: 'error',
+        text: `Galeri foto proyek sudah mencapai batas maksimal (${MAX_GALLERY_IMAGES} foto).`,
+      });
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       gallery_images: [...prev.gallery_images, galleryUrlInput.trim()],
@@ -183,6 +244,65 @@ export default function AdminProjectsPage() {
       ...prev,
       gallery_images: prev.gallery_images.filter((_, idx) => idx !== indexToRemove),
     }));
+  };
+
+  // Reorder Handler (▲ Geser Naik / ▼ Geser Turun)
+  const handleReorder = async (currentIndex: number, direction: 'up' | 'down') => {
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= projects.length || isReordering) return;
+
+    setIsReordering(true);
+
+    const item1 = projects[currentIndex];
+    const item2 = projects[targetIndex];
+
+    // Swap order_index kedua item
+    let newIndex1 = item2.order_index ?? (targetIndex + 1);
+    let newIndex2 = item1.order_index ?? (currentIndex + 1);
+
+    if (newIndex1 === newIndex2) {
+      newIndex1 = targetIndex + 1;
+      newIndex2 = currentIndex + 1;
+    }
+
+    // Optimistic UI state update
+    const updatedProjects = [...projects];
+    const updatedItem1 = { ...item1, order_index: newIndex1 };
+    const updatedItem2 = { ...item2, order_index: newIndex2 };
+    updatedProjects[currentIndex] = updatedItem2;
+    updatedProjects[targetIndex] = updatedItem1;
+    setProjects(updatedProjects);
+
+    try {
+      const supabase = createClient();
+      if (!item1.id.startsWith('local_') && !item2.id.startsWith('local_')) {
+        const [res1, res2] = await Promise.all([
+          supabase.from('projects').update({ order_index: newIndex1 }).eq('id', item1.id),
+          supabase.from('projects').update({ order_index: newIndex2 }).eq('id', item2.id),
+        ]);
+
+        if (res1.error) throw res1.error;
+        if (res2.error) throw res2.error;
+      }
+
+      await revalidateSite('/');
+      setToast({
+        type: 'success',
+        text: `Urutan berhasil diubah! "${item1.title}" kini di posisi #${targetIndex + 1}${
+          targetIndex === 0 ? ' (Banner Utama Beranda)' : ''
+        }.`,
+      });
+    } catch (err: any) {
+      console.error('Gagal memperbarui urutan proyek:', err);
+      // Rollback state bila terjadi error
+      setProjects(projects);
+      setToast({
+        type: 'error',
+        text: 'Gagal memperbarui urutan proyek ke database. Silakan coba lagi.',
+      });
+    } finally {
+      setIsReordering(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -215,6 +335,13 @@ export default function AdminProjectsPage() {
         if (error) throw error;
         setToast({ type: 'success', text: 'Proyek dan galeri foto berhasil diperbarui!' });
       } else {
+        // Hitung order_index berikutnya agar otomatis berada di urutan akhir
+        const maxOrder =
+          projects.length > 0
+            ? Math.max(...projects.map((p) => p.order_index || 0))
+            : 0;
+        const nextOrder = maxOrder + 1;
+
         // Insert new project
         const { error } = await supabase.from('projects').insert([
           {
@@ -225,6 +352,7 @@ export default function AdminProjectsPage() {
             image_url: formData.image_url,
             gallery_images: formData.gallery_images,
             description: formData.description,
+            order_index: nextOrder,
           },
         ]);
 
@@ -255,6 +383,12 @@ export default function AdminProjectsPage() {
         );
         setToast({ type: 'success', text: 'Proyek berhasil diperbarui di website!' });
       } else {
+        const maxOrder =
+          projects.length > 0
+            ? Math.max(...projects.map((p) => p.order_index || 0))
+            : 0;
+        const nextOrder = maxOrder + 1;
+
         const newProj: Project = {
           id: `local_${Date.now()}`,
           title: formData.title,
@@ -263,8 +397,9 @@ export default function AdminProjectsPage() {
           image_url: formData.image_url,
           gallery_images: formData.gallery_images,
           description: formData.description,
+          order_index: nextOrder,
         };
-        setProjects((prev) => [newProj, ...prev]);
+        setProjects((prev) => [...prev, newProj]);
         setToast({ type: 'success', text: 'Proyek ditambahkan ke website!' });
       }
       await revalidateSite('/');
@@ -274,21 +409,33 @@ export default function AdminProjectsPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Hapus proyek ini dari portofolio?')) return;
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
 
     try {
       const supabase = createClient();
-      if (!id.startsWith('proj') && !id.startsWith('local_')) {
-        await supabase.from('projects').delete().eq('id', id);
+      if (!deleteTarget.id.startsWith('proj') && !deleteTarget.id.startsWith('local_')) {
+        const { error } = await supabase.from('projects').delete().eq('id', deleteTarget.id);
+        if (error) throw error;
       }
-      setProjects((prev) => prev.filter((p) => p.id !== id));
+      setProjects((prev) => prev.filter((p) => p.id !== deleteTarget.id));
       await revalidateSite('/');
-      setToast({ type: 'success', text: 'Proyek berhasil dihapus.' });
-    } catch (err) {
-      setProjects((prev) => prev.filter((p) => p.id !== id));
+      setToast({
+        type: 'success',
+        text: `Proyek "${deleteTarget.title}" berhasil dihapus dari portofolio.`,
+      });
+    } catch (err: any) {
+      console.error('Error deleting project:', err);
+      setProjects((prev) => prev.filter((p) => p.id !== deleteTarget.id));
       await revalidateSite('/');
-      setToast({ type: 'success', text: 'Proyek berhasil dihapus.' });
+      setToast({
+        type: 'success',
+        text: `Proyek "${deleteTarget.title}" berhasil dihapus.`,
+      });
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -362,6 +509,25 @@ export default function AdminProjectsPage() {
         })}
       </div>
 
+      {/* Reorder Info Banner when Filtered */}
+      {selectedCategory !== 'Semua' && (
+        <div className="bg-brand-sand-light/80 border border-brand-sand-dark/40 rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-brand-earth">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-brand-navy">Petunjuk Urutan:</span>
+            <span>
+              Nomor urutan (#1, #2, ...) mengacu pada posisi tampilan di beranda website. Proyek #1 adalah <strong>Banner Utama 2-Kolom</strong>.
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSelectedCategory('Semua')}
+            className="text-brand-crimson font-bold hover:underline whitespace-nowrap self-start sm:self-auto cursor-pointer"
+          >
+            Lihat Semua Urutan ({projects.length})
+          </button>
+        </div>
+      )}
+
       {/* Projects Grid */}
       {projects.filter((p) => selectedCategory === 'Semua' || p.category === selectedCategory).length === 0 ? (
         <div className="text-center py-12 bg-white rounded-xl border border-brand-sand-dark/40 p-8">
@@ -387,14 +553,22 @@ export default function AdminProjectsPage() {
           {projects
             .filter((p) => selectedCategory === 'Semua' || p.category === selectedCategory)
             .map((proj) => {
+              const globalIndex = projects.findIndex((p) => p.id === proj.id);
+              const isFirst = globalIndex === 0;
+              const isLast = globalIndex === projects.length - 1;
               const galleryCount = (proj.gallery_images?.length || 0) + (proj.image_url ? 1 : 0);
 
               return (
                 <div
                   key={proj.id}
-                  className="bg-white rounded-xl overflow-hidden border border-brand-sand-dark/40 shadow-xs flex flex-col justify-between"
+                  className={`bg-white rounded-xl overflow-hidden border transition-all flex flex-col justify-between ${
+                    isFirst
+                      ? 'border-brand-crimson/50 shadow-md ring-2 ring-brand-crimson/15'
+                      : 'border-brand-sand-dark/40 shadow-xs'
+                  }`}
                 >
                   <div>
+                    {/* Photo Container */}
                     <div className="relative w-full h-56 sm:h-64 overflow-hidden bg-brand-sand/30">
                       <Image
                         src={proj.image_url}
@@ -402,6 +576,8 @@ export default function AdminProjectsPage() {
                         fill
                         className="object-cover"
                       />
+
+                      {/* Top Left: Category & Photos Count */}
                       <div className="absolute top-3 left-3 flex items-center gap-2">
                         <span className="bg-brand-earth/80 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full">
                           {proj.category}
@@ -411,15 +587,92 @@ export default function AdminProjectsPage() {
                           <span>{galleryCount} Foto</span>
                         </span>
                       </div>
+
+                      {/* Top Right: Order Badge (#1 Banner Utama / #2, #3, ...) */}
+                      <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                        {isFirst ? (
+                          <span className="bg-brand-crimson text-white text-xs font-extrabold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5 border border-white/20">
+                            <Sparkles className="w-3.5 h-3.5" />
+                            <span>#1 (Banner Utama)</span>
+                          </span>
+                        ) : (
+                          <span className="bg-brand-earth/85 backdrop-blur-md text-white text-xs font-mono font-bold px-3 py-1 rounded-full border border-white/20">
+                            #{globalIndex + 1}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
+                    {/* Order & Reordering Control Bar */}
+                    <div
+                      className={`px-5 py-2.5 flex items-center justify-between border-b gap-3 ${
+                        isFirst
+                          ? 'bg-brand-crimson/10 border-brand-crimson/20'
+                          : 'bg-brand-sand-light/60 border-brand-sand-dark/20'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        {isFirst ? (
+                          <div className="flex items-center gap-1.5 text-brand-crimson text-xs font-bold truncate">
+                            <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
+                            <span className="truncate">
+                              ⭐ Banner Utama 2-Kolom di Beranda Website
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="text-xs text-brand-earth font-medium truncate">
+                            Urutan Posisi:{' '}
+                            <span className="font-bold text-brand-navy">
+                              #{globalIndex + 1}
+                            </span>{' '}
+                            <span className="text-brand-earth/60 text-[11px] hidden sm:inline">
+                              (Grid 1-Kolom)
+                            </span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Reorder Buttons (▲ Geser Naik / ▼ Geser Turun) */}
+                      <div className="flex items-center gap-1 flex-shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => handleReorder(globalIndex, 'up')}
+                          disabled={isFirst || isReordering}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-brand-earth bg-white hover:bg-brand-sand/50 border border-brand-sand-dark/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs active:scale-95"
+                          title={
+                            isFirst
+                              ? 'Sudah berada di posisi teratas (Banner Utama)'
+                              : 'Geser Naik (Tukar urutan ke atas)'
+                          }
+                        >
+                          <ChevronUp className="w-4 h-4 text-brand-navy" />
+                          <span className="hidden sm:inline">Geser Naik</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleReorder(globalIndex, 'down')}
+                          disabled={isLast || isReordering}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-brand-earth bg-white hover:bg-brand-sand/50 border border-brand-sand-dark/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs active:scale-95"
+                          title={
+                            isLast
+                              ? 'Sudah berada di posisi terbawah'
+                              : 'Geser Turun (Tukar urutan ke bawah)'
+                          }
+                        >
+                          <ChevronDown className="w-4 h-4 text-brand-navy" />
+                          <span className="hidden sm:inline">Geser Turun</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Card Content */}
                     <div className="p-6">
                       <div className="flex items-center gap-1.5 text-xs text-brand-navy font-semibold mb-1.5">
-                        <MapPin className="w-3.5 h-3.5" />
+                        <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                         <span>{proj.location}</span>
                       </div>
                       <h3 className="font-bold text-lg text-brand-earth">{proj.title}</h3>
-                      <p className="mt-2 text-xs sm:text-sm text-brand-earth/75 leading-relaxed">
+                      <p className="mt-2 text-xs sm:text-sm text-brand-earth/75 leading-relaxed line-clamp-3">
                         {proj.description}
                       </p>
 
@@ -444,20 +697,39 @@ export default function AdminProjectsPage() {
                     </div>
                   </div>
 
-                  <div className="p-6 pt-0 flex items-center justify-between border-t border-brand-sand/30 mt-4">
-                    <button
-                      onClick={() => openEditModal(proj)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-navy hover:bg-brand-navy/10 px-3 py-2 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <Pencil className="w-4 h-4" />
-                      <span>Edit Proyek & Galeri</span>
-                    </button>
+                  {/* Footer Action Buttons */}
+                  <div className="p-5 pt-3 flex items-center justify-between border-t border-brand-sand/30 mt-2 gap-2 flex-wrap">
+                    <div className="flex items-center gap-2">
+                      {/* Quick Preview "Lihat di Web" */}
+                      <a
+                        href={`/proyek/${proj.slug || proj.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-earth hover:text-brand-crimson hover:bg-brand-sand/40 px-3 py-2 rounded-lg border border-brand-sand-dark/40 transition-colors cursor-pointer"
+                        title="Lihat halaman proyek ini di tab baru"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5 text-brand-navy" />
+                        <span>Lihat di Web</span>
+                      </a>
 
+                      {/* Edit Button */}
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(proj)}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-navy hover:bg-brand-navy/10 px-3 py-2 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                        <span>Edit</span>
+                      </button>
+                    </div>
+
+                    {/* Hapus Button */}
                     <button
-                      onClick={() => handleDelete(proj.id)}
+                      type="button"
+                      onClick={() => setDeleteTarget(proj)}
                       className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors cursor-pointer"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3.5 h-3.5" />
                       <span>Hapus</span>
                     </button>
                   </div>
@@ -466,6 +738,21 @@ export default function AdminProjectsPage() {
             })}
         </div>
       )}
+
+      {/* Modern ConfirmModal Hapus Proyek */}
+      <ConfirmModal
+        isOpen={deleteTarget !== null}
+        title="Hapus Dokumentasi Proyek"
+        message={`Apakah Anda yakin ingin menghapus proyek "${deleteTarget?.title}" dari portofolio? Tindakan ini akan menghapus data proyek dan galeri fotonya dari portofolio.`}
+        confirmText="Ya, Hapus Proyek"
+        cancelText="Batal"
+        isDestructive={true}
+        isLoading={deleting}
+        onConfirm={handleConfirmDelete}
+        onClose={() => {
+          if (!deleting) setDeleteTarget(null);
+        }}
+      />
 
       {/* Add / Edit Project Modal */}
       {isModalOpen && (
@@ -544,17 +831,20 @@ export default function AdminProjectsPage() {
                     />
                   </div>
                   <div className="flex-1 space-y-2">
-                    <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-lg text-xs font-bold text-brand-earth cursor-pointer transition-colors">
-                      <Upload className="w-4 h-4 text-brand-crimson" />
-                      <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        disabled={uploading}
-                        className="hidden"
-                      />
-                    </label>
+                    <div className="flex items-center gap-3">
+                      <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-lg text-xs font-bold text-brand-earth cursor-pointer transition-colors">
+                        <Upload className="w-4 h-4 text-brand-crimson" />
+                        <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          disabled={uploading}
+                          className="hidden"
+                        />
+                      </label>
+                      <span className="text-[11px] text-brand-earth/60">Maks. 5 MB (JPG, PNG, WebP)</span>
+                    </div>
                     <input
                       type="url"
                       placeholder="Atau tempel link URL foto utama..."
@@ -573,39 +863,51 @@ export default function AdminProjectsPage() {
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-brand-earth uppercase tracking-wider flex items-center gap-1.5">
                     <Images className="w-4 h-4 text-brand-navy" />
-                    <span>Galeri Foto Tambahan ({formData.gallery_images.length})</span>
+                    <span>Galeri Foto Tambahan ({formData.gallery_images.length} / {MAX_GALLERY_IMAGES})</span>
                   </label>
-                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-navy text-white hover:bg-brand-navy-dark rounded-lg text-xs font-bold cursor-pointer transition-colors">
-                    <Upload className="w-3.5 h-3.5" />
-                    <span>{uploadingGallery ? 'Mengunggah...' : '+ Upload Foto Galeri'}</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleGalleryUpload}
-                      disabled={uploadingGallery}
-                      className="hidden"
-                    />
-                  </label>
+                  {formData.gallery_images.length < MAX_GALLERY_IMAGES ? (
+                    <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-navy text-white hover:bg-brand-navy-dark rounded-lg text-xs font-bold cursor-pointer transition-colors">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{uploadingGallery ? 'Mengunggah...' : '+ Upload Foto Galeri'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleGalleryUpload}
+                        disabled={uploadingGallery}
+                        className="hidden"
+                      />
+                    </label>
+                  ) : (
+                    <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100/90 px-2.5 py-1 rounded-full border border-emerald-300">
+                      Maks. 5 Foto Tercapai
+                    </span>
+                  )}
                 </div>
 
                 <p className="text-xs text-brand-earth/70">
-                  Foto-foto dokumentasi ini akan muncul di pop-up detail dan slider galeri pengunjung.
+                  Foto dokumentasi pengerjaan taman (Maksimal 5 foto pendukung, @ maks 5 MB).
                 </p>
 
                 {/* Input URL foto tambahan */}
                 <div className="flex gap-2">
                   <input
                     type="url"
-                    placeholder="Atau tempel URL foto lalu klik Tambah..."
+                    disabled={formData.gallery_images.length >= MAX_GALLERY_IMAGES}
+                    placeholder={
+                      formData.gallery_images.length >= MAX_GALLERY_IMAGES
+                        ? 'Batas maksimal 5 foto galeri telah tercapai'
+                        : 'Atau tempel URL foto lalu klik Tambah...'
+                    }
                     value={galleryUrlInput}
                     onChange={(e) => setGalleryUrlInput(e.target.value)}
-                    className="flex-1 px-3 py-2 rounded-lg border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white"
+                    className="flex-1 px-3 py-2 rounded-lg border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white disabled:bg-gray-100 disabled:text-gray-400"
                   />
                   <button
                     type="button"
+                    disabled={formData.gallery_images.length >= MAX_GALLERY_IMAGES || !galleryUrlInput.trim()}
                     onClick={handleAddGalleryUrl}
-                    className="px-3 py-2 bg-brand-earth text-white rounded-lg text-xs font-bold hover:bg-brand-earth-dark transition-colors"
+                    className="px-3 py-2 bg-brand-earth text-white rounded-lg text-xs font-bold hover:bg-brand-earth-dark disabled:bg-gray-300 transition-colors cursor-pointer"
                   >
                     Tambah
                   </button>

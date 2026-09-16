@@ -8,6 +8,14 @@ import { Product } from '@/lib/types';
 import { revalidateSite } from '@/app/actions';
 import { TokopediaIcon, ShopeeIcon } from '@/components/MarketplaceIcons';
 import {
+  isValidTokopediaUrl,
+  isValidShopeeUrl,
+  normalizeMarketplaceUrl,
+  validateImageFile,
+  MAX_GALLERY_IMAGES,
+} from '@/lib/validators';
+import ConfirmModal from '@/components/admin/ConfirmModal';
+import {
   Plus,
   Edit2,
   Trash2,
@@ -22,6 +30,8 @@ import {
   Images,
   Eye,
   EyeOff,
+  ChevronUp,
+  ChevronDown,
 } from 'lucide-react';
 
 export default function AdminProductsPage() {
@@ -35,6 +45,9 @@ export default function AdminProductsPage() {
   const [galleryUrlInput, setGalleryUrlInput] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [reordering, setReordering] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -52,6 +65,10 @@ export default function AdminProductsPage() {
     shopee_url: '',
   });
 
+  // Validasi real-time URL marketplace Tokopedia & Shopee
+  const isTokopediaValid = isValidTokopediaUrl(formData.tokopedia_url);
+  const isShopeeValid = isValidShopeeUrl(formData.shopee_url);
+
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -65,9 +82,19 @@ export default function AdminProductsPage() {
         .order('order_index', { ascending: true });
 
       if (data && !error && data.length > 0) {
-        setProducts(data);
+        const sorted = [...data].sort((a, b) => {
+          const orderA = typeof a.order_index === 'number' ? a.order_index : 9999;
+          const orderB = typeof b.order_index === 'number' ? b.order_index : 9999;
+          return orderA - orderB;
+        });
+        setProducts(sorted);
       } else {
-        setProducts(defaultProducts);
+        const sorted = [...defaultProducts].sort((a, b) => {
+          const orderA = typeof a.order_index === 'number' ? a.order_index : 9999;
+          const orderB = typeof b.order_index === 'number' ? b.order_index : 9999;
+          return orderA - orderB;
+        });
+        setProducts(sorted);
       }
     } catch (err) {
       console.error(err);
@@ -121,6 +148,14 @@ export default function AdminProductsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    // Validasi ukuran maksimal 5 MB & tipe file
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+      setToast({ type: 'error', text: validation.error || 'Ukuran foto melebihi 5 MB.' });
+      e.target.value = '';
+      return;
+    }
+
     setUploading(true);
     try {
       const supabase = createClient();
@@ -153,6 +188,37 @@ export default function AdminProductsPage() {
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+
+    // Batasan maksimal 5 foto galeri
+    const currentCount = formData.gallery_images.length;
+    if (currentCount >= MAX_GALLERY_IMAGES) {
+      setToast({
+        type: 'error',
+        text: `Galeri foto produk sudah mencapai batas maksimal (${MAX_GALLERY_IMAGES} foto).`,
+      });
+      e.target.value = '';
+      return;
+    }
+
+    if (currentCount + files.length > MAX_GALLERY_IMAGES) {
+      const remainingSlots = MAX_GALLERY_IMAGES - currentCount;
+      setToast({
+        type: 'error',
+        text: `Maksimal ${MAX_GALLERY_IMAGES} foto galeri. Anda hanya dapat menambahkan ${remainingSlots} foto lagi.`,
+      });
+      e.target.value = '';
+      return;
+    }
+
+    // Validasi setiap file dalam galeri (maks 5 MB)
+    for (let i = 0; i < files.length; i++) {
+      const validation = validateImageFile(files[i]);
+      if (!validation.valid) {
+        setToast({ type: 'error', text: validation.error || 'Ada foto yang melebihi batas 5 MB.' });
+        e.target.value = '';
+        return;
+      }
+    }
 
     setUploadingGallery(true);
     try {
@@ -195,6 +261,15 @@ export default function AdminProductsPage() {
 
   const handleAddGalleryUrl = () => {
     if (!galleryUrlInput.trim()) return;
+
+    if (formData.gallery_images.length >= MAX_GALLERY_IMAGES) {
+      setToast({
+        type: 'error',
+        text: `Galeri foto produk sudah mencapai batas maksimal (${MAX_GALLERY_IMAGES} foto).`,
+      });
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       gallery_images: [...prev.gallery_images, galleryUrlInput.trim()],
@@ -219,6 +294,28 @@ export default function AdminProductsPage() {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)+/g, '') + '-' + Date.now();
 
+    // Validasi URL Marketplace Tokopedia & Shopee Resmi
+    if (!isValidTokopediaUrl(formData.tokopedia_url)) {
+      setToast({
+        type: 'error',
+        text: 'Link Tokopedia tidak valid! Pastikan link berasal dari domain resmi Tokopedia (tokopedia.com, tokopedia.link, atau tkp.me).',
+      });
+      setSubmitting(false);
+      return;
+    }
+
+    if (!isValidShopeeUrl(formData.shopee_url)) {
+      setToast({
+        type: 'error',
+        text: 'Link Shopee tidak valid! Pastikan link berasal dari domain resmi Shopee (shopee.co.id, shp.ee, atau shopee.com).',
+      });
+      setSubmitting(false);
+      return;
+    }
+
+    const cleanTokopediaUrl = normalizeMarketplaceUrl(formData.tokopedia_url);
+    const cleanShopeeUrl = normalizeMarketplaceUrl(formData.shopee_url);
+
     try {
       const supabase = createClient();
 
@@ -237,14 +334,17 @@ export default function AdminProductsPage() {
             gallery_images: formData.gallery_images,
             in_stock: formData.in_stock,
             is_active: formData.is_active,
-            tokopedia_url: formData.tokopedia_url ? formData.tokopedia_url.trim() : null,
-            shopee_url: formData.shopee_url ? formData.shopee_url.trim() : null,
+            tokopedia_url: cleanTokopediaUrl,
+            shopee_url: cleanShopeeUrl,
           })
           .eq('id', editingProduct.id);
 
         if (error) throw error;
       } else {
         // Insert new in Supabase
+        const maxOrder = products.reduce((max, p) => Math.max(max, p.order_index ?? 0), 0);
+        const nextOrderIndex = maxOrder + 1;
+
         const { error } = await supabase.from('products').insert([
           {
             name: formData.name,
@@ -258,8 +358,9 @@ export default function AdminProductsPage() {
             gallery_images: formData.gallery_images,
             in_stock: formData.in_stock,
             is_active: formData.is_active,
-            tokopedia_url: formData.tokopedia_url ? formData.tokopedia_url.trim() : null,
-            shopee_url: formData.shopee_url ? formData.shopee_url.trim() : null,
+            order_index: nextOrderIndex,
+            tokopedia_url: cleanTokopediaUrl,
+            shopee_url: cleanShopeeUrl,
           },
         ]);
         if (error) throw error;
@@ -276,6 +377,9 @@ export default function AdminProductsPage() {
       fetchProducts();
     } catch (err: any) {
       // Local fallback for display if table hasn't been seeded yet
+      const maxOrder = products.reduce((max, p) => Math.max(max, p.order_index ?? 0), 0);
+      const nextOrderIndex = maxOrder + 1;
+
       const newProduct: Product = {
         id: editingProduct ? editingProduct.id : `local_${Date.now()}`,
         name: formData.name,
@@ -289,8 +393,9 @@ export default function AdminProductsPage() {
         gallery_images: formData.gallery_images,
         in_stock: formData.in_stock,
         is_active: formData.is_active,
-        tokopedia_url: formData.tokopedia_url,
-        shopee_url: formData.shopee_url,
+        order_index: editingProduct ? (editingProduct.order_index ?? 1) : nextOrderIndex,
+        tokopedia_url: cleanTokopediaUrl || '',
+        shopee_url: cleanShopeeUrl || '',
       };
 
       if (editingProduct) {
@@ -350,21 +455,150 @@ export default function AdminProductsPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Apakah Anda yakin ingin menghapus produk tanaman ini?')) return;
+  const handleToggleStock = async (product: Product) => {
+    const newStock = !product.in_stock;
+
+    // Optimistic UI update
+    setProducts((prev) =>
+      prev.map((p) => (p.id === product.id ? { ...p, in_stock: newStock } : p))
+    );
 
     try {
       const supabase = createClient();
-      if (!id.startsWith('p') && !id.startsWith('local_')) {
-        await supabase.from('products').delete().eq('id', id);
+      if (!product.id.startsWith('p') && !product.id.startsWith('local_')) {
+        const { error } = await supabase
+          .from('products')
+          .update({ in_stock: newStock })
+          .eq('id', product.id);
+
+        if (error) throw error;
       }
-      setProducts((prev) => prev.filter((p) => p.id !== id));
       await revalidateSite('/');
-      setToast({ type: 'success', text: 'Produk berhasil dihapus.' });
-    } catch (err) {
-      setProducts((prev) => prev.filter((p) => p.id !== id));
+      setToast({
+        type: 'success',
+        text: 'Status stok produk diperbarui',
+      });
+    } catch (err: any) {
+      console.error(err);
+      // Revert optimistic state
+      setProducts((prev) =>
+        prev.map((p) => (p.id === product.id ? { ...p, in_stock: product.in_stock } : p))
+      );
+      setToast({
+        type: 'error',
+        text: 'Gagal memperbarui status stok produk.',
+      });
+    }
+  };
+
+  const handleReorder = async (productId: string, direction: 'up' | 'down') => {
+    const currentIndex = products.findIndex((p) => p.id === productId);
+    if (currentIndex === -1) return;
+
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (targetIndex < 0 || targetIndex >= products.length) return;
+
+    const currentItem = products[currentIndex];
+    const targetItem = products[targetIndex];
+
+    // Determine new indices: swap order_index if distinct, or assign based on target/current positions
+    let newIndex1: number;
+    let newIndex2: number;
+
+    if (
+      typeof currentItem.order_index === 'number' &&
+      typeof targetItem.order_index === 'number' &&
+      currentItem.order_index !== targetItem.order_index
+    ) {
+      newIndex1 = targetItem.order_index;
+      newIndex2 = currentItem.order_index;
+    } else {
+      newIndex1 = targetIndex + 1;
+      newIndex2 = currentIndex + 1;
+    }
+
+    // Optimistic UI update
+    const updatedProducts = [...products];
+    const updatedCurrent = { ...currentItem, order_index: newIndex1 };
+    const updatedTarget = { ...targetItem, order_index: newIndex2 };
+
+    updatedProducts[currentIndex] = updatedTarget;
+    updatedProducts[targetIndex] = updatedCurrent;
+
+    // Ensure list stays sorted by order_index
+    updatedProducts.sort((a, b) => {
+      const orderA = typeof a.order_index === 'number' ? a.order_index : 9999;
+      const orderB = typeof b.order_index === 'number' ? b.order_index : 9999;
+      return orderA - orderB;
+    });
+
+    setProducts(updatedProducts);
+    setReordering(true);
+
+    try {
+      const supabase = createClient();
+      const isMockCurrent = currentItem.id.startsWith('p') || currentItem.id.startsWith('local_');
+      const isMockTarget = targetItem.id.startsWith('p') || targetItem.id.startsWith('local_');
+
+      if (!isMockCurrent && !isMockTarget) {
+        await Promise.all([
+          supabase.from('products').update({ order_index: newIndex1 }).eq('id', currentItem.id),
+          supabase.from('products').update({ order_index: newIndex2 }).eq('id', targetItem.id),
+        ]);
+      } else {
+        const updates = [];
+        if (!isMockCurrent) {
+          updates.push(supabase.from('products').update({ order_index: newIndex1 }).eq('id', currentItem.id));
+        }
+        if (!isMockTarget) {
+          updates.push(supabase.from('products').update({ order_index: newIndex2 }).eq('id', targetItem.id));
+        }
+        if (updates.length > 0) {
+          await Promise.all(updates);
+        }
+      }
+
       await revalidateSite('/');
-      setToast({ type: 'success', text: 'Produk berhasil dihapus.' });
+      setToast({
+        type: 'success',
+        text: `Urutan produk "${currentItem.name}" berhasil diperbarui.`,
+      });
+    } catch (err: any) {
+      console.error(err);
+      // Revert if error
+      setProducts(products);
+      setToast({
+        type: 'error',
+        text: 'Gagal memperbarui urutan produk.',
+      });
+    } finally {
+      setReordering(false);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    const targetId = deleteTarget.id;
+    const targetName = deleteTarget.name;
+
+    try {
+      const supabase = createClient();
+      if (!targetId.startsWith('p') && !targetId.startsWith('local_')) {
+        const { error } = await supabase.from('products').delete().eq('id', targetId);
+        if (error) throw error;
+      }
+      setProducts((prev) => prev.filter((p) => p.id !== targetId));
+      await revalidateSite('/');
+      setToast({ type: 'success', text: `Produk "${targetName}" berhasil dihapus.` });
+    } catch (err: any) {
+      console.error(err);
+      setProducts((prev) => prev.filter((p) => p.id !== targetId));
+      await revalidateSite('/');
+      setToast({ type: 'success', text: `Produk "${targetName}" berhasil dihapus.` });
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -432,13 +666,14 @@ export default function AdminProductsPage() {
           <table className="w-full text-left text-sm text-brand-earth">
             <thead className="bg-brand-sand/40 text-brand-earth uppercase text-[11px] font-bold tracking-wider border-b border-brand-sand-dark/30">
               <tr>
+                <th className="px-4 py-4 whitespace-nowrap text-center min-w-[90px]">Urutan</th>
                 <th className="px-5 py-4 min-w-[260px]">Foto & Nama Tanaman</th>
                 <th className="px-5 py-4 whitespace-nowrap min-w-[140px]">Kategori</th>
                 <th className="px-5 py-4 whitespace-nowrap min-w-[120px]">Harga</th>
-                <th className="px-5 py-4 whitespace-nowrap min-w-[120px]">Status Stok</th>
+                <th className="px-5 py-4 whitespace-nowrap min-w-[130px]">Status Stok</th>
                 <th className="px-5 py-4 whitespace-nowrap min-w-[130px]">Tampil di Web</th>
                 <th className="px-5 py-4 whitespace-nowrap min-w-[160px]">Marketplace</th>
-                <th className="px-5 py-4 whitespace-nowrap text-right min-w-[90px]">Aksi</th>
+                <th className="px-5 py-4 whitespace-nowrap text-right min-w-[110px]">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-brand-sand-dark/20">
@@ -446,6 +681,10 @@ export default function AdminProductsPage() {
                 const isActive = p.is_active !== false;
                 const hasTokopedia = Boolean(p.tokopedia_url && p.tokopedia_url.trim() !== '');
                 const hasShopee = Boolean(p.shopee_url && p.shopee_url.trim() !== '');
+                const productIndex = products.findIndex((prod) => prod.id === p.id);
+                const isFirst = productIndex === 0;
+                const isLast = productIndex === products.length - 1;
+                const isFiltered = search.trim() !== '';
 
                 return (
                   <tr
@@ -456,6 +695,47 @@ export default function AdminProductsPage() {
                         : 'bg-gray-50/80 opacity-75 hover:bg-gray-100/80'
                     }`}
                   >
+                    <td className="px-4 py-4 whitespace-nowrap text-center">
+                      <div className="inline-flex items-center gap-1.5 bg-brand-sand/30 border border-brand-sand-dark/40 px-2.5 py-1 rounded-xl shadow-2xs">
+                        <span className="font-mono font-bold text-xs text-brand-earth tracking-tight">
+                          #{p.order_index ?? (productIndex + 1)}
+                        </span>
+                        <div className="flex flex-col -space-y-0.5">
+                          <button
+                            type="button"
+                            disabled={isFirst || isFiltered || reordering}
+                            onClick={() => handleReorder(p.id, 'up')}
+                            className="p-0.5 rounded text-brand-earth/60 hover:text-brand-crimson hover:bg-white/70 disabled:opacity-20 disabled:hover:text-brand-earth/60 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed"
+                            title={
+                              isFiltered
+                                ? 'Hapus pencarian untuk mengubah urutan'
+                                : isFirst
+                                ? 'Sudah di posisi teratas'
+                                : 'Pindah ke atas (Naik)'
+                            }
+                            aria-label="Pindah ke atas"
+                          >
+                            <ChevronUp className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={isLast || isFiltered || reordering}
+                            onClick={() => handleReorder(p.id, 'down')}
+                            className="p-0.5 rounded text-brand-earth/60 hover:text-brand-crimson hover:bg-white/70 disabled:opacity-20 disabled:hover:text-brand-earth/60 disabled:hover:bg-transparent transition-colors cursor-pointer disabled:cursor-not-allowed"
+                            title={
+                              isFiltered
+                                ? 'Hapus pencarian untuk mengubah urutan'
+                                : isLast
+                                ? 'Sudah di posisi terbawah'
+                                : 'Pindah ke bawah (Turun)'
+                            }
+                            aria-label="Pindah ke bawah"
+                          >
+                            <ChevronDown className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3.5">
                         <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-brand-sand/30 flex-shrink-0 border border-brand-sand-dark/30">
@@ -502,15 +782,23 @@ export default function AdminProductsPage() {
                       </span>
                     </td>
                     <td className="px-5 py-4 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center text-xs font-bold px-2.5 py-1 rounded-lg border ${
+                      <button
+                        type="button"
+                        onClick={() => handleToggleStock(p)}
+                        className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-lg border transition-all cursor-pointer shadow-2xs hover:shadow-xs active:scale-95 ${
                           p.in_stock
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                            : 'bg-amber-50 text-amber-700 border-amber-200'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300'
+                            : 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100 hover:border-amber-300'
                         }`}
+                        title={`Klik untuk ubah status ke: ${p.in_stock ? 'Pre-Order / Habis' : 'Tersedia'}`}
                       >
-                        {p.in_stock ? 'Tersedia' : 'Pre-Order / Habis'}
-                      </span>
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            p.in_stock ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'
+                          }`}
+                        />
+                        <span>{p.in_stock ? 'Tersedia' : 'Pre-Order / Habis'}</span>
+                      </button>
                     </td>
                     <td className="px-5 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2.5">
@@ -580,18 +868,32 @@ export default function AdminProductsPage() {
                       </div>
                     </td>
                     <td className="px-5 py-4 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-2">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <a
+                          href={`/katalog/${p.slug || p.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-lg hover:bg-brand-sand/50 text-brand-earth/70 hover:text-brand-crimson transition-colors inline-flex items-center justify-center"
+                          title="Lihat di Website Publik"
+                          aria-label="Lihat di Website Publik"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
                         <button
+                          type="button"
                           onClick={() => openEditModal(p)}
                           className="p-2 rounded-lg hover:bg-brand-sand/50 text-brand-navy transition-colors"
                           title="Edit Produk"
+                          aria-label="Edit Produk"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => handleDelete(p.id)}
+                          type="button"
+                          onClick={() => setDeleteTarget(p)}
                           className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
                           title="Hapus Produk"
+                          aria-label="Hapus Produk"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -687,17 +989,20 @@ export default function AdminProductsPage() {
                     />
                   </div>
                   <div className="flex-1 space-y-2">
-                    <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-lg text-xs font-bold text-brand-earth cursor-pointer transition-colors">
-                      <Upload className="w-4 h-4 text-brand-crimson" />
-                      <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        disabled={uploading}
-                        className="hidden"
-                      />
-                    </label>
+                    <div className="flex items-center gap-3">
+                      <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-lg text-xs font-bold text-brand-earth cursor-pointer transition-colors">
+                        <Upload className="w-4 h-4 text-brand-crimson" />
+                        <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          disabled={uploading}
+                          className="hidden"
+                        />
+                      </label>
+                      <span className="text-[11px] text-brand-earth/60">Maks. 5 MB (JPG, PNG, WebP)</span>
+                    </div>
                     <input
                       type="url"
                       placeholder="Atau tempel link URL foto utama..."
@@ -716,39 +1021,51 @@ export default function AdminProductsPage() {
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-brand-earth uppercase tracking-wider flex items-center gap-1.5">
                     <Images className="w-4 h-4 text-brand-navy" />
-                    <span>Galeri Foto Tambahan ({formData.gallery_images.length})</span>
+                    <span>Galeri Foto Tambahan ({formData.gallery_images.length} / {MAX_GALLERY_IMAGES})</span>
                   </label>
-                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-navy text-white hover:bg-brand-navy-dark rounded-lg text-xs font-bold cursor-pointer transition-colors">
-                    <Upload className="w-3.5 h-3.5" />
-                    <span>{uploadingGallery ? 'Mengunggah...' : '+ Upload Foto Galeri'}</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleGalleryUpload}
-                      disabled={uploadingGallery}
-                      className="hidden"
-                    />
-                  </label>
+                  {formData.gallery_images.length < MAX_GALLERY_IMAGES ? (
+                    <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-navy text-white hover:bg-brand-navy-dark rounded-lg text-xs font-bold cursor-pointer transition-colors">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>{uploadingGallery ? 'Mengunggah...' : '+ Upload Foto Galeri'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleGalleryUpload}
+                        disabled={uploadingGallery}
+                        className="hidden"
+                      />
+                    </label>
+                  ) : (
+                    <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100/90 px-2.5 py-1 rounded-full border border-emerald-300">
+                      Maks. 5 Foto Tercapai
+                    </span>
+                  )}
                 </div>
 
                 <p className="text-xs text-brand-earth/70">
-                  Foto carousel produk gaya Tokopedia/Shopee: sudut daun, media tanam, pot nursery, dsb.
+                  Foto carousel produk gaya Tokopedia/Shopee (Maksimal 5 foto pendukung, @ maks 5 MB).
                 </p>
 
                 {/* Input URL Foto Tambahan */}
                 <div className="flex gap-2">
                   <input
                     type="url"
-                    placeholder="Atau tempel URL foto tambahan..."
+                    disabled={formData.gallery_images.length >= MAX_GALLERY_IMAGES}
+                    placeholder={
+                      formData.gallery_images.length >= MAX_GALLERY_IMAGES
+                        ? 'Batas maksimal 5 foto galeri telah tercapai'
+                        : 'Atau tempel URL foto tambahan...'
+                    }
                     value={galleryUrlInput}
                     onChange={(e) => setGalleryUrlInput(e.target.value)}
-                    className="flex-1 px-3 py-2 rounded-lg border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white"
+                    className="flex-1 px-3 py-2 rounded-lg border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white disabled:bg-gray-100 disabled:text-gray-400"
                   />
                   <button
                     type="button"
+                    disabled={formData.gallery_images.length >= MAX_GALLERY_IMAGES || !galleryUrlInput.trim()}
                     onClick={handleAddGalleryUrl}
-                    className="px-3 py-2 bg-brand-earth text-white rounded-lg text-xs font-bold hover:bg-brand-earth-dark transition-colors cursor-pointer"
+                    className="px-3 py-2 bg-brand-earth text-white rounded-lg text-xs font-bold hover:bg-brand-earth-dark disabled:bg-gray-300 transition-colors cursor-pointer"
                   >
                     Tambah
                   </button>
@@ -828,33 +1145,69 @@ export default function AdminProductsPage() {
                   <div>
                     <label className="flex items-center gap-1.5 text-xs font-bold text-[#03AC0E] mb-1.5">
                       <TokopediaIcon className="w-4 h-4 text-[#03AC0E]" />
-                      <span>URL Produk Tokopedia (Kosongkan jika tidak ada)</span>
+                      <span>URL Produk Tokopedia (Opsional)</span>
                     </label>
                     <input
                       type="url"
-                      placeholder="https://www.tokopedia.com/..."
+                      placeholder="https://www.tokopedia.com/... atau https://tokopedia.link/..."
                       value={formData.tokopedia_url}
                       onChange={(e) =>
                         setFormData({ ...formData, tokopedia_url: e.target.value })
                       }
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-xs sm:text-sm text-brand-earth focus:outline-none focus:ring-2 focus:ring-[#03AC0E]/50"
+                      className={`w-full px-3.5 py-2.5 rounded-lg border text-xs sm:text-sm text-brand-earth focus:outline-none transition-colors ${
+                        formData.tokopedia_url && !isTokopediaValid
+                          ? 'border-red-500 bg-red-50/50 focus:ring-2 focus:ring-red-500/50'
+                          : formData.tokopedia_url && isTokopediaValid
+                          ? 'border-[#03AC0E] bg-emerald-50/30 focus:ring-2 focus:ring-[#03AC0E]/50'
+                          : 'border-brand-sand-dark/60 focus:ring-2 focus:ring-[#03AC0E]/50'
+                      }`}
                     />
+                    {formData.tokopedia_url && !isTokopediaValid && (
+                      <p className="text-[11px] text-red-600 flex items-center gap-1 mt-1 font-medium">
+                        <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span>Link tidak valid. Wajib link resmi Tokopedia (tokopedia.com, tokopedia.link, atau tkp.me).</span>
+                      </p>
+                    )}
+                    {formData.tokopedia_url && isTokopediaValid && (
+                      <p className="text-[11px] text-[#03AC0E] flex items-center gap-1 mt-1 font-medium">
+                        <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span>Link Tokopedia resmi terverifikasi</span>
+                      </p>
+                    )}
                   </div>
 
                   <div>
                     <label className="flex items-center gap-1.5 text-xs font-bold text-[#EE4D2D] mb-1.5">
                       <ShopeeIcon className="w-4 h-4 text-[#EE4D2D]" />
-                      <span>URL Produk Shopee (Kosongkan jika tidak ada)</span>
+                      <span>URL Produk Shopee (Opsional)</span>
                     </label>
                     <input
                       type="url"
-                      placeholder="https://shopee.co.id/..."
+                      placeholder="https://shopee.co.id/... atau https://shp.ee/..."
                       value={formData.shopee_url}
                       onChange={(e) =>
                         setFormData({ ...formData, shopee_url: e.target.value })
                       }
-                      className="w-full px-3.5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-xs sm:text-sm text-brand-earth focus:outline-none focus:ring-2 focus:ring-[#EE4D2D]/50"
+                      className={`w-full px-3.5 py-2.5 rounded-lg border text-xs sm:text-sm text-brand-earth focus:outline-none transition-colors ${
+                        formData.shopee_url && !isShopeeValid
+                          ? 'border-red-500 bg-red-50/50 focus:ring-2 focus:ring-red-500/50'
+                          : formData.shopee_url && isShopeeValid
+                          ? 'border-[#EE4D2D] bg-orange-50/30 focus:ring-2 focus:ring-[#EE4D2D]/50'
+                          : 'border-brand-sand-dark/60 focus:ring-2 focus:ring-[#EE4D2D]/50'
+                      }`}
                     />
+                    {formData.shopee_url && !isShopeeValid && (
+                      <p className="text-[11px] text-red-600 flex items-center gap-1 mt-1 font-medium">
+                        <AlertCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span>Link tidak valid. Wajib link resmi Shopee (shopee.co.id, shp.ee, atau shopee.com).</span>
+                      </p>
+                    )}
+                    {formData.shopee_url && isShopeeValid && (
+                      <p className="text-[11px] text-[#EE4D2D] flex items-center gap-1 mt-1 font-medium">
+                        <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span>Link Shopee resmi terverifikasi</span>
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
@@ -917,7 +1270,7 @@ export default function AdminProductsPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={submitting || uploading}
+                  disabled={submitting || uploading || !isTokopediaValid || !isShopeeValid}
                   className="px-6 py-2.5 rounded-lg bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white text-sm font-bold shadow-md transition-colors"
                 >
                   {submitting ? 'Menyimpan...' : 'Simpan Produk'}
@@ -927,6 +1280,21 @@ export default function AdminProductsPage() {
           </div>
         </div>
       )}
+
+      {/* Modern Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!deleteTarget}
+        title="Hapus Produk Tanaman"
+        message={`Apakah Anda yakin ingin menghapus "${deleteTarget?.name}" dari katalog tanaman? Tindakan ini tidak dapat dibatalkan.`}
+        confirmText="Ya, Hapus"
+        cancelText="Batal"
+        isDestructive={true}
+        isLoading={deleting}
+        onConfirm={handleConfirmDelete}
+        onClose={() => {
+          if (!deleting) setDeleteTarget(null);
+        }}
+      />
     </div>
   );
 }

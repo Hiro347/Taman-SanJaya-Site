@@ -7,7 +7,6 @@ import {
   Briefcase,
   ExternalLink,
   Sparkles,
-  Database,
   ArrowRight,
 } from 'lucide-react';
 
@@ -160,23 +159,6 @@ export default async function AdminDashboardPage() {
             </div>
           </Link>
 
-        </div>
-      </div>
-
-      {/* Supabase Integration Card */}
-      <div className="bg-brand-sand/30 rounded-xl p-6 border border-brand-sand-dark/50">
-        <div className="flex items-start gap-3.5">
-          <div className="p-2.5 bg-brand-crimson/10 rounded-lg text-brand-crimson">
-            <Database className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-brand-earth">
-              Koneksi Database & Storage Supabase
-            </h3>
-            <p className="text-xs text-brand-earth/70 mt-1 leading-relaxed">
-              Website ini terhubung langsung ke proyek Supabase <code>https://geuoxjhwqztivwbplgbz.supabase.co</code>. Skema tabel dan bucket penyimpanan foto telah disiapkan dalam file <code>supabase/schema.sql</code>.
-            </p>
-          </div>
         </div>
       </div>
 
