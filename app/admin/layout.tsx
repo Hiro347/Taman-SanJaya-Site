@@ -7,7 +7,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import {
   LayoutDashboard,
-  Image as ImageIcon,
+  Phone,
   Sprout,
   Briefcase,
   ExternalLink,
@@ -60,9 +60,9 @@ export default function AdminLayout({
       exact: true,
     },
     {
-      label: 'Hero Banner & Kontak',
+      label: 'Kontak & WhatsApp',
       href: '/admin/hero',
-      icon: <ImageIcon className="w-5 h-5" />,
+      icon: <Phone className="w-5 h-5" />,
     },
     {
       label: 'Katalog Tanaman Hias',

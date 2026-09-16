@@ -1,29 +1,25 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
 import { defaultSiteSettings } from '@/lib/placeholder-data';
 import { SiteSettings } from '@/lib/types';
 import { revalidateSite } from '@/app/actions';
 import {
   Save,
-  Upload,
-  Link as LinkIcon,
   CheckCircle2,
   AlertCircle,
-  Sparkles,
   Phone,
   MapPin,
   Clock,
   Instagram,
+  MessageSquare,
 } from 'lucide-react';
 
-export default function AdminHeroPage() {
+export default function AdminContactPage() {
   const [settings, setSettings] = useState<SiteSettings>(defaultSiteSettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   useEffect(() => {
@@ -49,50 +45,6 @@ export default function AdminHeroPage() {
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setUploading(true);
-    setStatusMsg(null);
-
-    try {
-      const supabase = createClient();
-      const fileExt = file.name.split('.').pop();
-      const fileName = `hero_${Date.now()}.${fileExt}`;
-      const filePath = `hero/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('taman-media')
-        .upload(filePath, file);
-
-      if (uploadError) {
-        throw uploadError;
-      }
-
-      const { data: publicUrlData } = supabase.storage
-        .from('taman-media')
-        .getPublicUrl(filePath);
-
-      setSettings((prev) => ({
-        ...prev,
-        hero_image_url: publicUrlData.publicUrl,
-      }));
-
-      setStatusMsg({
-        type: 'success',
-        text: 'Foto baru berhasil diunggah! Jangan lupa klik "Simpan Perubahan" di bawah.',
-      });
-    } catch (err: any) {
-      setStatusMsg({
-        type: 'error',
-        text: err.message || 'Gagal mengunggah foto ke storage Supabase.',
-      });
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -101,9 +53,6 @@ export default function AdminHeroPage() {
     try {
       const supabase = createClient();
       const payload = {
-        hero_title: settings.hero_title,
-        hero_subtitle: settings.hero_subtitle,
-        hero_image_url: settings.hero_image_url,
         whatsapp_number: settings.whatsapp_number,
         whatsapp_message: settings.whatsapp_message,
         address: settings.address,
@@ -136,7 +85,7 @@ export default function AdminHeroPage() {
 
       setStatusMsg({
         type: 'success',
-        text: 'Semua perubahan berhasil disimpan ke website!',
+        text: 'Informasi kontak dan WhatsApp berhasil disimpan ke website!',
       });
     } catch (err: any) {
       setStatusMsg({
@@ -151,7 +100,7 @@ export default function AdminHeroPage() {
   if (loading) {
     return (
       <div className="max-w-4xl mx-auto py-12 text-center text-brand-earth/60">
-        Memuat data pengaturan...
+        Memuat data pengaturan kontak...
       </div>
     );
   }
@@ -161,10 +110,10 @@ export default function AdminHeroPage() {
       {/* Title */}
       <div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-earth">
-          Pengaturan Banner Hero & Kontak
+          Pengaturan Kontak & WhatsApp Resmi
         </h1>
         <p className="text-sm text-brand-earth/75 mt-1">
-          Ubah foto beranda taman, judul tulisan promosi, dan nomor WhatsApp resmi Taman San Jaya tanpa coding.
+          Kelola nomor WhatsApp pemesanan, pesan otomatis konsultasi, alamat workshop, dan jam operasional Taman San Jaya.
         </p>
       </div>
 
@@ -187,115 +136,11 @@ export default function AdminHeroPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Section 1: Hero Banner Image */}
+        {/* WhatsApp & Contacts Section */}
         <div className="bg-white rounded-xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-xs space-y-6">
-          <h2 className="text-lg font-bold text-brand-earth">
-            1. Foto Banner Hero (Pemandangan Taman)
-          </h2>
-
-          {/* Current Image Preview */}
-          <div className="space-y-2">
-            <label className="block text-xs font-bold text-brand-earth/70 uppercase">
-              Pratinjau Foto Saat Ini
-            </label>
-            <div className="relative w-full h-56 sm:h-72 rounded-xl overflow-hidden bg-brand-sand/30 border border-brand-sand-dark/40">
-              <Image
-                src={settings.hero_image_url}
-                alt="Pratinjau Hero"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </div>
-
-          {/* Upload Button */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            <div>
-              <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-2">
-                Unggah File Foto dari HP / Laptop
-              </label>
-              <label className="flex flex-col items-center justify-center border-2 border-dashed border-brand-sand-dark hover:border-brand-crimson rounded-xl p-6 cursor-pointer bg-brand-sand/20 hover:bg-brand-sand/40 transition-colors">
-                <Upload className="w-8 h-8 text-brand-crimson mb-2" />
-                <span className="text-xs font-bold text-brand-earth">
-                  {uploading ? 'Sedang Mengunggah...' : 'Pilih Foto Baru'}
-                </span>
-                <span className="text-[11px] text-brand-earth/60 mt-1">
-                  JPG, PNG, atau WebP
-                </span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileUpload}
-                  disabled={uploading}
-                  className="hidden"
-                />
-              </label>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-2">
-                Atau Tempel URL Gambar Langsung
-              </label>
-              <div className="relative">
-                <LinkIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-earth/50" />
-                <input
-                  type="url"
-                  placeholder="https://images.unsplash.com/..."
-                  value={settings.hero_image_url}
-                  onChange={(e) =>
-                    setSettings({ ...settings, hero_image_url: e.target.value })
-                  }
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border border-brand-sand-dark/60 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
-                />
-              </div>
-              <p className="text-[11px] text-brand-earth/60 mt-2">
-                Jika Anda memiliki foto di internet (Unsplash, Google Drive, dll), tempel linknya di sini.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Section 2: Headline & Tagline */}
-        <div className="bg-white rounded-xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-xs space-y-5">
-          <h2 className="text-lg font-bold text-brand-earth">
-            2. Teks Promosi & Headline Beranda
-          </h2>
-
-          <div>
-            <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-1.5">
-              Judul Utama (Headline Besar)
-            </label>
-            <input
-              type="text"
-              required
-              value={settings.hero_title}
-              onChange={(e) =>
-                setSettings({ ...settings, hero_title: e.target.value })
-              }
-              className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth font-bold"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-1.5">
-              Subheadline / Penjelasan Singkat
-            </label>
-            <textarea
-              rows={3}
-              required
-              value={settings.hero_subtitle}
-              onChange={(e) =>
-                setSettings({ ...settings, hero_subtitle: e.target.value })
-              }
-              className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth leading-relaxed"
-            />
-          </div>
-        </div>
-
-        {/* Section 3: WhatsApp & Contacts */}
-        <div className="bg-white rounded-xl p-6 sm:p-8 border border-brand-sand-dark/40 shadow-xs space-y-5">
-          <h2 className="text-lg font-bold text-brand-earth">
-            3. Nomor WhatsApp & Informasi Kontak
+          <h2 className="text-lg font-bold text-brand-earth flex items-center gap-2">
+            <Phone className="w-5 h-5 text-brand-crimson" />
+            <span>Nomor WhatsApp & Informasi Kontak Resmi</span>
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -316,6 +161,9 @@ export default function AdminHeroPage() {
                   className="w-full pl-10 pr-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
               </div>
+              <p className="text-[11px] text-brand-earth/60 mt-1">
+                Digunakan untuk tombol &quot;Konsultasi Sekarang&quot; di beranda &amp; floating widget.
+              </p>
             </div>
 
             <div>
@@ -339,7 +187,28 @@ export default function AdminHeroPage() {
 
           <div>
             <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-1.5">
-              Alamat Workshop & Nursery
+              Pesan Pembuka Otomatis WhatsApp
+            </label>
+            <div className="relative">
+              <MessageSquare className="absolute left-3.5 top-3.5 w-4 h-4 text-brand-earth/50" />
+              <textarea
+                rows={2}
+                value={settings.whatsapp_message || ''}
+                onChange={(e) =>
+                  setSettings({ ...settings, whatsapp_message: e.target.value })
+                }
+                placeholder="Halo Taman San Jaya, saya ingin konsultasi mengenai perencanaan &amp; pembuatan taman."
+                className="w-full pl-10 pr-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+              />
+            </div>
+            <p className="text-[11px] text-brand-earth/60 mt-1">
+              Pesan awal yang otomatis terisi ketika pengunjung mengklik tombol WhatsApp di website.
+            </p>
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-1.5">
+              Alamat Workshop &amp; Nursery
             </label>
             <div className="relative">
               <MapPin className="absolute left-3.5 top-3.5 w-4 h-4 text-brand-earth/50" />
@@ -377,11 +246,11 @@ export default function AdminHeroPage() {
         <div className="sticky bottom-6 z-30">
           <button
             type="submit"
-            disabled={saving || uploading}
+            disabled={saving}
             className="flex items-center justify-center gap-2 w-full sm:w-auto bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white font-bold py-4 px-8 rounded-xl shadow-xl transition-all"
           >
             <Save className="w-5 h-5" />
-            <span>{saving ? 'Menyimpan Perubahan...' : 'Simpan Semua Perubahan'}</span>
+            <span>{saving ? 'Menyimpan Perubahan...' : 'Simpan Perubahan Kontak'}</span>
           </button>
         </div>
       </form>

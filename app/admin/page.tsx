@@ -2,12 +2,11 @@ import React from 'react';
 import Link from 'next/link';
 import { getDashboardCounts } from '@/lib/data';
 import {
-  Image as ImageIcon,
+  Phone,
   Sprout,
   Briefcase,
-  PlusCircle,
   ExternalLink,
-  CheckCircle2,
+  Sparkles,
   Database,
   ArrowRight,
 } from 'lucide-react';
@@ -29,7 +28,7 @@ export default async function AdminDashboardPage() {
             Panel Pengelola Taman San Jaya
           </h1>
           <p className="text-sm text-brand-earth/75 mt-2 max-w-xl">
-            Di sini Anda dapat memperbarui foto banner beranda, menambah koleksi tanaman hias di katalog, dan mengunggah portofolio pengerjaan taman tanpa perlu menyentuh kodingan.
+            Di sini Anda dapat memperbarui informasi kontak &amp; WhatsApp resmi, menambah koleksi tanaman hias di katalog, dan mengunggah portofolio pengerjaan taman tanpa perlu menyentuh kodingan.
           </p>
         </div>
 
@@ -75,7 +74,7 @@ export default async function AdminDashboardPage() {
 
         <div className="bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
           <div className="p-3.5 bg-brand-sand/50 text-brand-crimson rounded-lg">
-            <ImageIcon className="w-7 h-7" />
+            <Sparkles className="w-7 h-7" />
           </div>
           <div>
             <span className="text-xs font-semibold text-brand-earth/70 block">
@@ -95,20 +94,20 @@ export default async function AdminDashboardPage() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          {/* Card 1: Hero Settings */}
+          {/* Card 1: Contact Settings */}
           <Link
             href="/admin/hero"
             className="group bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
               <div className="p-3 bg-brand-sand/50 w-fit rounded-lg text-brand-earth group-hover:bg-brand-crimson group-hover:text-white transition-colors mb-4">
-                <ImageIcon className="w-6 h-6" />
+                <Phone className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-base text-brand-earth group-hover:text-brand-crimson transition-colors">
-                Ganti Banner Hero & Kontak
+                Kontak &amp; WhatsApp Resmi
               </h3>
               <p className="text-xs sm:text-sm text-brand-earth/75 mt-1.5 leading-relaxed">
-                Ubah gambar pemandangan taman di halaman depan, judul headline, dan nomor WhatsApp pemesanan.
+                Atur nomor WhatsApp resmi, pesan otomatis konsultasi, alamat workshop, dan jam operasional.
               </p>
             </div>
             <div className="mt-5 flex items-center gap-1.5 text-xs font-bold text-brand-navy">
