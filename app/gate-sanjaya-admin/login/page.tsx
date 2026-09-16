@@ -104,6 +104,15 @@ export default function AdminLoginPage() {
       }
 
       if (data.session) {
+        // Verify admin role from app_metadata before granting access
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user || user.app_metadata?.role !== 'admin') {
+          await supabase.auth.signOut();
+          setErrorMsg('Akun ini tidak memiliki hak akses admin. Hubungi administrator sistem.');
+          setLoading(false);
+          return;
+        }
+
         // Login berhasil: Bersihkan riwayat percobaan gagal
         localStorage.removeItem('tsj_admin_attempts');
         localStorage.removeItem('tsj_admin_lockout_until');

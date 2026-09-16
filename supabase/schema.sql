@@ -87,8 +87,12 @@ CREATE INDEX IF NOT EXISTS idx_products_category ON public.products (category);
 
 -- ==============================================================================
 -- ROW LEVEL SECURITY (RLS)
--- Publik bisa membaca (SELECT), hanya user terautentikasi (Admin) yang bisa mutasi
--- Kebijakan dipisah per aksi (INSERT, UPDATE, DELETE) agar evaluasi SELECT optimal
+-- Publik bisa membaca (SELECT). Hanya user terautentikasi dengan
+-- app_metadata.role = 'admin' yang bisa melakukan mutasi (INSERT/UPDATE/DELETE).
+-- PENTING: Setelah membuat user admin baru di Supabase Auth, jalankan:
+--   UPDATE auth.users SET raw_app_meta_data =
+--     raw_app_meta_data || '{"role": "admin"}'::jsonb
+--     WHERE email = 'email_admin_baru@contoh.com';
 -- ==============================================================================
 
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
@@ -96,29 +100,51 @@ ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.services ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 
+-- Hapus hak tulis dari role anon (defense-in-depth di atas RLS)
+REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.products FROM anon;
+REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.projects FROM anon;
+REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.services FROM anon;
+REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.site_settings FROM anon;
+
 -- Policy Site Settings
 CREATE POLICY "Public read site_settings" ON public.site_settings FOR SELECT USING (true);
-CREATE POLICY "Admin insert site_settings" ON public.site_settings FOR INSERT TO authenticated WITH CHECK (true);
-CREATE POLICY "Admin update site_settings" ON public.site_settings FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Admin delete site_settings" ON public.site_settings FOR DELETE TO authenticated USING (true);
+CREATE POLICY "Admin insert site_settings" ON public.site_settings FOR INSERT TO authenticated
+  WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+CREATE POLICY "Admin update site_settings" ON public.site_settings FOR UPDATE TO authenticated
+  USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
+  WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+CREATE POLICY "Admin delete site_settings" ON public.site_settings FOR DELETE TO authenticated
+  USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 -- Policy Products
 CREATE POLICY "Public read products" ON public.products FOR SELECT USING (true);
-CREATE POLICY "Admin insert products" ON public.products FOR INSERT TO authenticated WITH CHECK (true);
-CREATE POLICY "Admin update products" ON public.products FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Admin delete products" ON public.products FOR DELETE TO authenticated USING (true);
+CREATE POLICY "Admin insert products" ON public.products FOR INSERT TO authenticated
+  WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+CREATE POLICY "Admin update products" ON public.products FOR UPDATE TO authenticated
+  USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
+  WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+CREATE POLICY "Admin delete products" ON public.products FOR DELETE TO authenticated
+  USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 -- Policy Services
 CREATE POLICY "Public read services" ON public.services FOR SELECT USING (true);
-CREATE POLICY "Admin insert services" ON public.services FOR INSERT TO authenticated WITH CHECK (true);
-CREATE POLICY "Admin update services" ON public.services FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Admin delete services" ON public.services FOR DELETE TO authenticated USING (true);
+CREATE POLICY "Admin insert services" ON public.services FOR INSERT TO authenticated
+  WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+CREATE POLICY "Admin update services" ON public.services FOR UPDATE TO authenticated
+  USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
+  WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+CREATE POLICY "Admin delete services" ON public.services FOR DELETE TO authenticated
+  USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 -- Policy Projects
 CREATE POLICY "Public read projects" ON public.projects FOR SELECT USING (true);
-CREATE POLICY "Admin insert projects" ON public.projects FOR INSERT TO authenticated WITH CHECK (true);
-CREATE POLICY "Admin update projects" ON public.projects FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
-CREATE POLICY "Admin delete projects" ON public.projects FOR DELETE TO authenticated USING (true);
+CREATE POLICY "Admin insert projects" ON public.projects FOR INSERT TO authenticated
+  WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+CREATE POLICY "Admin update projects" ON public.projects FOR UPDATE TO authenticated
+  USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
+  WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+CREATE POLICY "Admin delete projects" ON public.projects FOR DELETE TO authenticated
+  USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 -- ==============================================================================
 -- STORAGE BUCKET UNTUK UPLOAD MEDIA FOTO
@@ -131,20 +157,20 @@ CREATE POLICY "Public view taman-media images"
 ON storage.objects FOR SELECT
 USING (bucket_id = 'taman-media');
 
-CREATE POLICY "Authenticated users can upload taman-media"
+CREATE POLICY "Admin upload taman-media"
 ON storage.objects FOR INSERT
 TO authenticated
-WITH CHECK (bucket_id = 'taman-media');
+WITH CHECK (bucket_id = 'taman-media' AND (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
-CREATE POLICY "Authenticated users can update taman-media"
+CREATE POLICY "Admin update taman-media"
 ON storage.objects FOR UPDATE
 TO authenticated
-USING (bucket_id = 'taman-media');
+USING (bucket_id = 'taman-media' AND (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
-CREATE POLICY "Authenticated users can delete taman-media"
+CREATE POLICY "Admin delete taman-media"
 ON storage.objects FOR DELETE
 TO authenticated
-USING (bucket_id = 'taman-media');
+USING (bucket_id = 'taman-media' AND (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 -- ==============================================================================
 -- DATA AWAL DEFAULT (SEED DATA)

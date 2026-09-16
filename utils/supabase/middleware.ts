@@ -41,14 +41,18 @@ export const updateSession = async (request: NextRequest) => {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!isLoginPage && !user) {
+    // Check both authentication AND admin role via app_metadata
+    const isAdmin = user?.app_metadata?.role === 'admin';
+
+    // If accessing protected admin page without admin role, redirect to login
+    if (!isLoginPage && !isAdmin) {
       const url = request.nextUrl.clone();
       url.pathname = '/gate-sanjaya-admin/login';
       return NextResponse.redirect(url);
     }
 
-    // If already logged in and visiting /gate-sanjaya-admin/login, redirect to /gate-sanjaya-admin
-    if (isLoginPage && user) {
+    // If authenticated admin visiting login page, redirect to dashboard
+    if (isLoginPage && isAdmin) {
       const url = request.nextUrl.clone();
       url.pathname = '/gate-sanjaya-admin';
       return NextResponse.redirect(url);
