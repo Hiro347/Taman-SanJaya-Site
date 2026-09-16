@@ -56,6 +56,11 @@ export default function ScrollRotatingLogo3D() {
     renderer.toneMappingExposure = 1.3;
     renderer.setClearColor(0x000000, 0); // Pure transparent background
 
+    renderer.domElement.style.display = 'block';
+    renderer.domElement.style.width = '100%';
+    renderer.domElement.style.height = '100%';
+    renderer.domElement.style.pointerEvents = 'none';
+
     container.appendChild(renderer.domElement);
 
     // 3. Studio Lighting Rig for Rich Metallic & Crimson Highlights
@@ -242,18 +247,50 @@ export default function ScrollRotatingLogo3D() {
 
     updateScrollPhysics(); // initial check
 
-    // 7. Resize Handler
-    const onResize = () => {
+    // 7. High-Performance Native ResizeObserver with requestAnimationFrame (0% idle CPU overhead)
+    let resizeRafId: number | null = null;
+
+    const handleResize = (entryWidth?: number, entryHeight?: number) => {
       if (!container) return;
-      const newW = container.clientWidth || 500;
-      const newH = container.clientHeight || 500;
+      const newW = entryWidth || container.clientWidth || 500;
+      const newH = entryHeight || container.clientHeight || 500;
+      if (newW <= 0 || newH <= 0) return;
+
       const mobileCheck = window.innerWidth < 768;
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobileCheck ? 0.9 : 1.0));
       camera.aspect = newW / newH;
       camera.updateProjectionMatrix();
       renderer.setSize(newW, newH);
+      renderer.domElement.style.width = '100%';
+      renderer.domElement.style.height = '100%';
     };
-    window.addEventListener('resize', onResize);
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (resizeRafId !== null) cancelAnimationFrame(resizeRafId);
+      resizeRafId = requestAnimationFrame(() => {
+        resizeRafId = null;
+        for (const entry of entries) {
+          const { width: w, height: h } = entry.contentRect;
+          if (w > 0 && h > 0) {
+            handleResize(w, h);
+            return;
+          }
+        }
+        handleResize();
+      });
+    });
+
+    resizeObserver.observe(container);
+
+    const onWindowResize = () => {
+      if (resizeRafId !== null) cancelAnimationFrame(resizeRafId);
+      resizeRafId = requestAnimationFrame(() => {
+        resizeRafId = null;
+        handleResize();
+      });
+    };
+    window.addEventListener('resize', onWindowResize, { passive: true });
+    window.addEventListener('orientationchange', onWindowResize, { passive: true });
 
     // 8. 60 FPS Render Loop with Inertial Spring Physics & Page Visibility API
     const clock = new THREE.Clock();
@@ -313,10 +350,13 @@ export default function ScrollRotatingLogo3D() {
     // 9. Cleanup on Unmount
     return () => {
       cancelAnimationFrame(animId);
+      if (resizeRafId !== null) cancelAnimationFrame(resizeRafId);
+      resizeObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibilityChange);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', onWindowResize);
+      window.removeEventListener('orientationchange', onWindowResize);
 
       if (lenisInstance) {
         lenisInstance.off('scroll', onScroll);
@@ -338,7 +378,7 @@ export default function ScrollRotatingLogo3D() {
       {/* 3D WebGL Canvas Container: aktif saat scroll mencapai seksi konten (Home maupun Detail) */}
       <div
         ref={containerRef}
-        className={`w-[360px] h-[360px] sm:w-[500px] sm:h-[500px] lg:w-[650px] lg:h-[650px] transition-all duration-700 ease-out ${
+        className={`w-[360px] h-[360px] sm:w-[500px] sm:h-[500px] lg:w-[650px] lg:h-[650px] flex items-center justify-center transition-opacity transition-transform duration-700 ease-out ${
           isLoaded && isVisible
             ? 'opacity-[0.25] sm:opacity-[0.30] scale-100'
             : 'opacity-0 scale-95 pointer-events-none'
