@@ -15,6 +15,7 @@ import {
   MAX_GALLERY_IMAGES,
 } from '@/lib/validators';
 import ConfirmModal from '@/components/admin/ConfirmModal';
+import ToastNotification from '@/components/admin/ToastNotification';
 import {
   Plus,
   Edit2,
@@ -369,8 +370,8 @@ export default function AdminProductsPage() {
       setToast({
         type: 'success',
         text: editingProduct
-          ? 'Produk tanaman berhasil diperbarui!'
-          : 'Produk tanaman baru berhasil ditambahkan!',
+          ? 'Perubahan produk berhasil disimpan!'
+          : 'Produk baru berhasil ditambahkan!',
       });
       await revalidateSite('/');
       setIsModalOpen(false);
@@ -438,9 +439,7 @@ export default function AdminProductsPage() {
       await revalidateSite('/');
       setToast({
         type: 'success',
-        text: newActive
-          ? `Produk "${product.name}" sekarang AKTIF dan tampil di website.`
-          : `Produk "${product.name}" dinonaktifkan (disembunyikan dari website).`,
+        text: 'Perubahan status berhasil disimpan!',
       });
     } catch (err: any) {
       console.error(err);
@@ -476,7 +475,7 @@ export default function AdminProductsPage() {
       await revalidateSite('/');
       setToast({
         type: 'success',
-        text: 'Status stok produk diperbarui',
+        text: 'Status stok berhasil disimpan!',
       });
     } catch (err: any) {
       console.error(err);
@@ -561,7 +560,7 @@ export default function AdminProductsPage() {
       await revalidateSite('/');
       setToast({
         type: 'success',
-        text: `Urutan produk "${currentItem.name}" berhasil diperbarui.`,
+        text: 'Urutan produk berhasil disimpan!',
       });
     } catch (err: any) {
       console.error(err);
@@ -580,7 +579,6 @@ export default function AdminProductsPage() {
     if (!deleteTarget) return;
     setDeleting(true);
     const targetId = deleteTarget.id;
-    const targetName = deleteTarget.name;
 
     try {
       const supabase = createClient();
@@ -590,12 +588,12 @@ export default function AdminProductsPage() {
       }
       setProducts((prev) => prev.filter((p) => p.id !== targetId));
       await revalidateSite('/');
-      setToast({ type: 'success', text: `Produk "${targetName}" berhasil dihapus.` });
+      setToast({ type: 'success', text: 'Produk berhasil dihapus!' });
     } catch (err: any) {
       console.error(err);
       setProducts((prev) => prev.filter((p) => p.id !== targetId));
       await revalidateSite('/');
-      setToast({ type: 'success', text: `Produk "${targetName}" berhasil dihapus.` });
+      setToast({ type: 'success', text: 'Produk berhasil dihapus!' });
     } finally {
       setDeleting(false);
       setDeleteTarget(null);
@@ -631,22 +629,7 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Toast Alert */}
-      {toast && (
-        <div
-          className={`p-4 rounded-xl text-xs sm:text-sm flex items-start gap-3 border ${
-            toast.type === 'success'
-              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-              : 'bg-red-50 text-red-800 border-red-200'
-          }`}
-        >
-          {toast.type === 'success' ? (
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-          ) : (
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-          )}
-          <span>{toast.text}</span>
-        </div>
-      )}
+      <ToastNotification toast={toast} onClose={() => setToast(null)} />
 
       {/* Search Bar */}
       <div className="bg-white p-4 rounded-xl border border-brand-sand-dark/40 shadow-xs flex items-center gap-3">

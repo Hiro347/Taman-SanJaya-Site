@@ -8,6 +8,7 @@ import { Project } from '@/lib/types';
 import { revalidateSite } from '@/app/actions';
 import { validateImageFile, MAX_GALLERY_IMAGES } from '@/lib/validators';
 import ConfirmModal from '@/components/admin/ConfirmModal';
+import ToastNotification from '@/components/admin/ToastNotification';
 import {
   Plus,
   Trash2,
@@ -288,9 +289,7 @@ export default function AdminProjectsPage() {
       await revalidateSite('/');
       setToast({
         type: 'success',
-        text: `Urutan berhasil diubah! "${item1.title}" kini di posisi #${targetIndex + 1}${
-          targetIndex === 0 ? ' (Banner Utama Beranda)' : ''
-        }.`,
+        text: 'Urutan proyek berhasil disimpan!',
       });
     } catch (err: any) {
       console.error('Gagal memperbarui urutan proyek:', err);
@@ -333,7 +332,7 @@ export default function AdminProjectsPage() {
           .eq('id', editingId);
 
         if (error) throw error;
-        setToast({ type: 'success', text: 'Proyek dan galeri foto berhasil diperbarui!' });
+        setToast({ type: 'success', text: 'Perubahan proyek berhasil disimpan!' });
       } else {
         // Hitung order_index berikutnya agar otomatis berada di urutan akhir
         const maxOrder =
@@ -423,7 +422,7 @@ export default function AdminProjectsPage() {
       await revalidateSite('/');
       setToast({
         type: 'success',
-        text: `Proyek "${deleteTarget.title}" berhasil dihapus dari portofolio.`,
+        text: 'Proyek berhasil dihapus!',
       });
     } catch (err: any) {
       console.error('Error deleting project:', err);
@@ -431,7 +430,7 @@ export default function AdminProjectsPage() {
       await revalidateSite('/');
       setToast({
         type: 'success',
-        text: `Proyek "${deleteTarget.title}" berhasil dihapus.`,
+        text: 'Proyek berhasil dihapus!',
       });
     } finally {
       setDeleting(false);
@@ -460,22 +459,8 @@ export default function AdminProjectsPage() {
         </button>
       </div>
 
-      {toast && (
-        <div
-          className={`p-4 rounded-xl text-xs sm:text-sm flex items-start gap-3 border ${
-            toast.type === 'success'
-              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-              : 'bg-red-50 text-red-800 border-red-200'
-          }`}
-        >
-          {toast.type === 'success' ? (
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 flex-shrink-0" />
-          ) : (
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-          )}
-          <span>{toast.text}</span>
-        </div>
-      )}
+      {/* Toast Alert */}
+      <ToastNotification toast={toast} onClose={() => setToast(null)} />
 
       {/* Category Filter Tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1">
@@ -588,12 +573,12 @@ export default function AdminProjectsPage() {
                         </span>
                       </div>
 
-                      {/* Top Right: Order Badge (#1 Banner Utama / #2, #3, ...) */}
+                      {/* Top Right: Order Badge (#1 Utama / #2, #3, ...) */}
                       <div className="absolute top-3 right-3 flex items-center gap-1.5">
                         {isFirst ? (
                           <span className="bg-brand-crimson text-white text-xs font-extrabold px-3 py-1 rounded-full shadow-md flex items-center gap-1.5 border border-white/20">
                             <Sparkles className="w-3.5 h-3.5" />
-                            <span>#1 (Banner Utama)</span>
+                            <span>#1 Utama</span>
                           </span>
                         ) : (
                           <span className="bg-brand-earth/85 backdrop-blur-md text-white text-xs font-mono font-bold px-3 py-1 rounded-full border border-white/20">
@@ -605,62 +590,54 @@ export default function AdminProjectsPage() {
 
                     {/* Order & Reordering Control Bar */}
                     <div
-                      className={`px-5 py-2.5 flex items-center justify-between border-b gap-3 ${
+                      className={`px-4 py-2 flex items-center justify-between border-b gap-2 ${
                         isFirst
                           ? 'bg-brand-crimson/10 border-brand-crimson/20'
                           : 'bg-brand-sand-light/60 border-brand-sand-dark/20'
                       }`}
                     >
-                      <div className="flex items-center gap-2 min-w-0">
+                      <div className="flex items-center gap-1.5 min-w-0">
                         {isFirst ? (
-                          <div className="flex items-center gap-1.5 text-brand-crimson text-xs font-bold truncate">
+                          <div className="flex items-center gap-1.5 text-brand-crimson text-xs font-bold whitespace-nowrap">
                             <Sparkles className="w-3.5 h-3.5 flex-shrink-0" />
-                            <span className="truncate">
-                              ⭐ Banner Utama 2-Kolom di Beranda Website
-                            </span>
+                            <span>Banner Utama</span>
                           </div>
                         ) : (
-                          <div className="text-xs text-brand-earth font-medium truncate">
-                            Urutan Posisi:{' '}
-                            <span className="font-bold text-brand-navy">
-                              #{globalIndex + 1}
-                            </span>{' '}
-                            <span className="text-brand-earth/60 text-[11px] hidden sm:inline">
-                              (Grid 1-Kolom)
-                            </span>
+                          <div className="text-xs text-brand-earth font-medium whitespace-nowrap">
+                            Urutan <span className="font-bold text-brand-navy">#{globalIndex + 1}</span>
                           </div>
                         )}
                       </div>
 
-                      {/* Reorder Buttons (▲ Geser Naik / ▼ Geser Turun) */}
+                      {/* Reorder Buttons (▲ Naik / ▼ Turun) */}
                       <div className="flex items-center gap-1 flex-shrink-0">
                         <button
                           type="button"
                           onClick={() => handleReorder(globalIndex, 'up')}
                           disabled={isFirst || isReordering}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-brand-earth bg-white hover:bg-brand-sand/50 border border-brand-sand-dark/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs active:scale-95"
+                          className="inline-flex items-center gap-0.5 px-2 py-1 rounded-lg text-xs font-bold text-brand-earth bg-white hover:bg-brand-sand/50 border border-brand-sand-dark/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs active:scale-95"
                           title={
                             isFirst
-                              ? 'Sudah berada di posisi teratas (Banner Utama)'
-                              : 'Geser Naik (Tukar urutan ke atas)'
+                              ? 'Sudah di posisi teratas'
+                              : 'Naikkan urutan'
                           }
                         >
-                          <ChevronUp className="w-4 h-4 text-brand-navy" />
-                          <span className="hidden sm:inline">Geser Naik</span>
+                          <ChevronUp className="w-3.5 h-3.5 text-brand-navy" />
+                          <span className="hidden sm:inline text-[11px]">Naik</span>
                         </button>
                         <button
                           type="button"
                           onClick={() => handleReorder(globalIndex, 'down')}
                           disabled={isLast || isReordering}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-brand-earth bg-white hover:bg-brand-sand/50 border border-brand-sand-dark/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs active:scale-95"
+                          className="inline-flex items-center gap-0.5 px-2 py-1 rounded-lg text-xs font-bold text-brand-earth bg-white hover:bg-brand-sand/50 border border-brand-sand-dark/40 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-2xs active:scale-95"
                           title={
                             isLast
-                              ? 'Sudah berada di posisi terbawah'
-                              : 'Geser Turun (Tukar urutan ke bawah)'
+                              ? 'Sudah di posisi terbawah'
+                              : 'Turunkan urutan'
                           }
                         >
-                          <ChevronDown className="w-4 h-4 text-brand-navy" />
-                          <span className="hidden sm:inline">Geser Turun</span>
+                          <ChevronDown className="w-3.5 h-3.5 text-brand-navy" />
+                          <span className="hidden sm:inline text-[11px]">Turun</span>
                         </button>
                       </div>
                     </div>

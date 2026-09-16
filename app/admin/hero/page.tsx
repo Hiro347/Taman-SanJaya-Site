@@ -15,6 +15,7 @@ import {
   Instagram,
   MessageSquare,
 } from 'lucide-react';
+import ToastNotification from '@/components/admin/ToastNotification';
 
 export default function AdminContactPage() {
   const [settings, setSettings] = useState<SiteSettings>(defaultSiteSettings);
@@ -85,7 +86,7 @@ export default function AdminContactPage() {
 
       setStatusMsg({
         type: 'success',
-        text: 'Informasi kontak dan WhatsApp berhasil disimpan ke website!',
+        text: 'Perubahan kontak berhasil disimpan!',
       });
     } catch (err: any) {
       setStatusMsg({
@@ -118,22 +119,7 @@ export default function AdminContactPage() {
       </div>
 
       {/* Status Notification */}
-      {statusMsg && (
-        <div
-          className={`p-4 rounded-xl text-xs sm:text-sm flex items-start gap-3 border ${
-            statusMsg.type === 'success'
-              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-              : 'bg-red-50 text-red-800 border-red-200'
-          }`}
-        >
-          {statusMsg.type === 'success' ? (
-            <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5 text-emerald-600" />
-          ) : (
-            <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-red-600" />
-          )}
-          <span>{statusMsg.text}</span>
-        </div>
-      )}
+      <ToastNotification toast={statusMsg} onClose={() => setStatusMsg(null)} />
 
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* WhatsApp & Contacts Section */}
