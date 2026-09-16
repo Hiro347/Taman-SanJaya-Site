@@ -95,7 +95,7 @@ export default async function AdminDashboardPage() {
           
           {/* Card 1: Contact Settings */}
           <Link
-            href="/admin/hero"
+            href="/gate-sanjaya-admin/hero"
             className="group bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
@@ -117,7 +117,7 @@ export default async function AdminDashboardPage() {
 
           {/* Card 2: Products */}
           <Link
-            href="/admin/products"
+            href="/gate-sanjaya-admin/products"
             className="group bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>
@@ -139,7 +139,7 @@ export default async function AdminDashboardPage() {
 
           {/* Card 3: Projects */}
           <Link
-            href="/admin/projects"
+            href="/gate-sanjaya-admin/projects"
             className="group bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
           >
             <div>

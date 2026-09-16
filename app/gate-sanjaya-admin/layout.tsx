@@ -28,7 +28,7 @@ export default function AdminLayout({
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   // If on login page, don't show admin sidebar
-  const isLoginPage = pathname === '/admin/login';
+  const isLoginPage = pathname === '/gate-sanjaya-admin/login';
 
   useEffect(() => {
     if (!isLoginPage) {
@@ -44,7 +44,7 @@ export default function AdminLayout({
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push('/admin/login');
+    router.push('/gate-sanjaya-admin/login');
     router.refresh();
   };
 
@@ -55,23 +55,23 @@ export default function AdminLayout({
   const navItems = [
     {
       label: 'Dashboard Ringkasan',
-      href: '/admin',
+      href: '/gate-sanjaya-admin',
       icon: <LayoutDashboard className="w-5 h-5" />,
       exact: true,
     },
     {
       label: 'Kontak & WhatsApp',
-      href: '/admin/hero',
+      href: '/gate-sanjaya-admin/hero',
       icon: <Phone className="w-5 h-5" />,
     },
     {
       label: 'Katalog Tanaman Hias',
-      href: '/admin/products',
+      href: '/gate-sanjaya-admin/products',
       icon: <Sprout className="w-5 h-5" />,
     },
     {
       label: 'Portofolio Proyek',
-      href: '/admin/projects',
+      href: '/gate-sanjaya-admin/projects',
       icon: <Briefcase className="w-5 h-5" />,
     },
   ];

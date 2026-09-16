@@ -107,7 +107,7 @@ export default function AdminLoginPage() {
         // Login berhasil: Bersihkan riwayat percobaan gagal
         localStorage.removeItem('tsj_admin_attempts');
         localStorage.removeItem('tsj_admin_lockout_until');
-        router.push('/admin');
+        router.push('/gate-sanjaya-admin');
         router.refresh();
       }
     } catch (err: any) {

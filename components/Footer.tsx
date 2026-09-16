@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SiteSettings } from '@/lib/types';
-import { Lock, Phone, MapPin, Clock, ArrowUp } from 'lucide-react';
+import { Phone, MapPin, Clock, ArrowUp } from 'lucide-react';
 
 interface FooterProps {
   settings: SiteSettings;
@@ -138,20 +138,11 @@ export default function Footer({ settings }: FooterProps) {
           </div>
         </div>
 
-        {/* Bottom Bar with Admin Login Link */}
+        {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/60">
           <p>© {new Date().getFullYear()} Taman San Jaya (成功之园). Seluruh hak cipta dilindungi undang-undang.</p>
           
           <div className="flex items-center gap-6">
-            <Link
-              href="/admin/login"
-              className="inline-flex items-center gap-1.5 text-white/40 hover:text-brand-sand transition-colors"
-              title="Akses Pengelola Situs"
-            >
-              <Lock className="w-3.5 h-3.5" />
-              <span>Admin Panel</span>
-            </Link>
-
             <Link
               href="#home"
               className="inline-flex items-center gap-1 text-white/60 hover:text-white transition-colors"

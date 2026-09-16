@@ -32,9 +32,9 @@ export const updateSession = async (request: NextRequest) => {
     }
   );
 
-  // Route protection for /admin routes (except /admin/login)
-  const isAccessingAdmin = request.nextUrl.pathname.startsWith('/admin');
-  const isLoginPage = request.nextUrl.pathname === '/admin/login';
+  // Route protection for /gate-sanjaya-admin routes (except /gate-sanjaya-admin/login)
+  const isAccessingAdmin = request.nextUrl.pathname.startsWith('/gate-sanjaya-admin');
+  const isLoginPage = request.nextUrl.pathname === '/gate-sanjaya-admin/login';
 
   if (isAccessingAdmin) {
     const {
@@ -43,14 +43,14 @@ export const updateSession = async (request: NextRequest) => {
 
     if (!isLoginPage && !user) {
       const url = request.nextUrl.clone();
-      url.pathname = '/admin/login';
+      url.pathname = '/gate-sanjaya-admin/login';
       return NextResponse.redirect(url);
     }
 
-    // If already logged in and visiting /admin/login, redirect to /admin
+    // If already logged in and visiting /gate-sanjaya-admin/login, redirect to /gate-sanjaya-admin
     if (isLoginPage && user) {
       const url = request.nextUrl.clone();
-      url.pathname = '/admin';
+      url.pathname = '/gate-sanjaya-admin';
       return NextResponse.redirect(url);
     }
   }
