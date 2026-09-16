@@ -6,7 +6,6 @@ import {
   Sprout,
   Briefcase,
   ExternalLink,
-  Sparkles,
   ArrowRight,
 } from 'lucide-react';
 
@@ -42,7 +41,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
           <div className="p-3.5 bg-emerald-50 text-emerald-600 rounded-lg">
             <Sprout className="w-7 h-7" />
@@ -67,20 +66,6 @@ export default async function AdminDashboardPage() {
             </span>
             <span className="text-2xl font-black text-brand-earth">
               {counts.projects} Proyek
-            </span>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
-          <div className="p-3.5 bg-brand-sand/50 text-brand-crimson rounded-lg">
-            <Sparkles className="w-7 h-7" />
-          </div>
-          <div>
-            <span className="text-xs font-semibold text-brand-earth/70 block">
-              Layanan Aktif
-            </span>
-            <span className="text-2xl font-black text-brand-earth">
-              {counts.services} Layanan
             </span>
           </div>
         </div>
