@@ -52,12 +52,14 @@ export const getProducts = cache(async (): Promise<Product[]> => {
       .neq('is_active', false)
       .order('order_index', { ascending: true });
 
-    if (error || !data || data.length === 0) {
-      return defaultProducts.filter((p) => p.is_active !== false);
+    if (error) {
+      console.error('Error fetching products:', error);
+      return [];
     }
-    return data as Product[];
+    return (data || []) as Product[];
   } catch (err) {
-    return defaultProducts.filter((p) => p.is_active !== false);
+    console.error('Exception fetching products:', err);
+    return [];
   }
 });
 
@@ -69,12 +71,14 @@ export const getProjects = cache(async (): Promise<Project[]> => {
       .select('*')
       .order('order_index', { ascending: true });
 
-    if (error || !data || data.length === 0) {
-      return defaultProjects;
+    if (error) {
+      console.error('Error fetching projects:', error);
+      return [];
     }
-    return data as Project[];
+    return (data || []) as Project[];
   } catch (err) {
-    return defaultProjects;
+    console.error('Exception fetching projects:', err);
+    return [];
   }
 });
 
@@ -94,13 +98,11 @@ export const getProjectById = cache(async (id: string): Promise<Project | null> 
     const { data, error } = await query.maybeSingle();
 
     if (error || !data) {
-      const fallback = defaultProjects.find((p) => p.id === id || p.slug === id);
-      return fallback || null;
+      return null;
     }
     return data as Project;
   } catch (err) {
-    const fallback = defaultProjects.find((p) => p.id === id || p.slug === id);
-    return fallback || null;
+    return null;
   }
 });
 
@@ -124,15 +126,11 @@ export const getOtherProjects = cache(async (currentId: string, limit: number = 
     const { data, error } = await query;
 
     if (error || !data || data.length === 0) {
-      return defaultProjects
-        .filter((p) => p.id !== currentId && p.slug !== currentId)
-        .slice(0, limit);
+      return [];
     }
     return data as Project[];
   } catch (err) {
-    return defaultProjects
-      .filter((p) => p.id !== currentId && p.slug !== currentId)
-      .slice(0, limit);
+    return [];
   }
 });
 
@@ -152,8 +150,7 @@ export const getProductById = cache(async (id: string): Promise<Product | null> 
     const { data, error } = await query.maybeSingle();
 
     if (error || !data) {
-      const fallback = defaultProducts.find((p) => (p.id === id || p.slug === id) && p.is_active !== false);
-      return fallback || null;
+      return null;
     }
 
     if (data.is_active === false) {
@@ -162,8 +159,7 @@ export const getProductById = cache(async (id: string): Promise<Product | null> 
 
     return data as Product;
   } catch (err) {
-    const fallback = defaultProducts.find((p) => (p.id === id || p.slug === id) && p.is_active !== false);
-    return fallback || null;
+    return null;
   }
 });
 
@@ -188,15 +184,11 @@ export const getOtherProducts = cache(async (currentId: string, limit: number = 
     const { data, error } = await query;
 
     if (error || !data || data.length === 0) {
-      return defaultProducts
-        .filter((p) => p.id !== currentId && p.slug !== currentId && p.is_active !== false)
-        .slice(0, limit);
+      return [];
     }
     return data as Product[];
   } catch (err) {
-    return defaultProducts
-      .filter((p) => p.id !== currentId && p.slug !== currentId && p.is_active !== false)
-      .slice(0, limit);
+    return [];
   }
 });
 
@@ -210,14 +202,14 @@ export const getDashboardCounts = async (): Promise<{ products: number; projects
     ]);
 
     return {
-      products: productsRes.count ?? defaultProducts.length,
-      projects: projectsRes.count ?? defaultProjects.length,
+      products: productsRes.count ?? 0,
+      projects: projectsRes.count ?? 0,
       services: servicesRes.count ?? defaultServices.length,
     };
   } catch (err) {
     return {
-      products: defaultProducts.length,
-      projects: defaultProjects.length,
+      products: 0,
+      projects: 0,
       services: defaultServices.length,
     };
   }

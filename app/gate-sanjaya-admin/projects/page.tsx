@@ -72,12 +72,14 @@ export default function AdminProjectsPage() {
 
       if (data && !error && data.length > 0) {
         setProjects(data);
+      } else if (data && !error) {
+        setProjects([]);
       } else {
         setProjects(defaultProjects);
       }
     } catch (err) {
       console.error(err);
-      setProjects(defaultProjects);
+      setProjects([]);
     } finally {
       setLoading(false);
     }

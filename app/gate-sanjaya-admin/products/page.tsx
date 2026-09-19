@@ -91,6 +91,8 @@ export default function AdminProductsPage() {
           return orderA - orderB;
         });
         setProducts(sorted);
+      } else if (data && !error) {
+        setProducts([]);
       } else {
         const sorted = [...defaultProducts].sort((a, b) => {
           const orderA = typeof a.order_index === 'number' ? a.order_index : 9999;
@@ -101,7 +103,7 @@ export default function AdminProductsPage() {
       }
     } catch (err) {
       console.error(err);
-      setProducts(defaultProducts);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
