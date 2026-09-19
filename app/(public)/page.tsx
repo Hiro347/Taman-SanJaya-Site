@@ -22,7 +22,7 @@ export default async function HomePage() {
   return (
     <div className="w-full">
       {/* 1. Hero Section */}
-      <HeroSection settings={settings} />
+      <HeroSection settings={settings} projects={projects} />
 
       {/* 2. Services Section (Perencanaan, Pembuatan, Perawatan) */}
       <ServicesSection services={services} settings={settings} />

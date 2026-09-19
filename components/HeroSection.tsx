@@ -9,49 +9,12 @@ import {
   MapPin,
 } from 'lucide-react';
 import { WhatsAppIcon } from '@/components/MarketplaceIcons';
-import { SiteSettings } from '@/lib/types';
+import { SiteSettings, Project } from '@/lib/types';
 
 interface HeroSectionProps {
   settings: SiteSettings;
+  projects?: Project[];
 }
-
-const heroSlides = [
-  {
-    id: 1,
-    title: 'Perencanaan Desain Lanskap 3D Kawasan & Masterplan',
-    category: 'Perencanaan',
-    location: 'Masterplan Kawasan Terbuka',
-    image: '/images/proyek-1.jpeg',
-  },
-  {
-    id: 2,
-    title: 'Taman Minimalis Modern & Rumput Hijau Rapat',
-    category: 'Pembuatan',
-    location: 'Hunian Residensial Mewah',
-    image: '/images/proyek-4.avif',
-  },
-  {
-    id: 3,
-    title: 'Taman Tropis Alami & Jalan Setapak Villa',
-    category: 'Pembuatan',
-    location: 'Kawasan Villa & Resort',
-    image: '/images/proyek-2.jpg',
-  },
-  {
-    id: 4,
-    title: 'Taman Air Mancur Relief Batu Alam & Gazebo',
-    category: 'Pembuatan',
-    location: 'Courtyard Hunian Asri',
-    image: '/images/proyek-3.jpg',
-  },
-  {
-    id: 5,
-    title: 'Perawatan Berkala & Pemulihan Nutrisi Tanaman',
-    category: 'Perawatan',
-    location: 'Kawasan Residensial & Komersial',
-    image: '/images/Perawatan.jpg',
-  },
-];
 
 const slideVariants = {
   enter: (dir: number) => ({
@@ -70,32 +33,62 @@ const slideVariants = {
   }),
 };
 
-export default function HeroSection({ settings }: HeroSectionProps) {
+export default function HeroSection({ settings, projects = [] }: HeroSectionProps) {
   const { scrollY } = useScroll();
   const heroParallax = useTransform(scrollY, [0, 500], [0, 25]);
+
+  // Use only active projects for hero slides; fallback to default scenic brand hero if none active
+  const slides =
+    projects.length > 0
+      ? projects.map((project, idx) => ({
+          id: project.id || `proj-${idx}`,
+          title: project.title,
+          category: project.category || 'Lanskap',
+          location: project.location || 'Kawasan Residensial',
+          image: project.image_url || '/images/hero-garden.jpg',
+        }))
+      : [
+          {
+            id: 'default-hero',
+            title: 'Taman San Jaya - Spesialis Lanskap Tropis',
+            category: 'Lanskap',
+            location: 'Bogor & Jabodetabek',
+            image: settings?.hero_image_url || '/images/hero-garden.jpg',
+          },
+        ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Auto-advance sideways every 4.5 seconds unless hovered
+  // Ensure index is always valid within current slides bounds
+  const safeIndex = currentIndex < slides.length ? currentIndex : 0;
+
   useEffect(() => {
-    if (isHovered) return;
+    if (currentIndex >= slides.length) {
+      setCurrentIndex(0);
+    }
+  }, [slides.length, currentIndex]);
+
+  // Auto-advance sideways every 4.5 seconds unless hovered or single slide
+  useEffect(() => {
+    if (isHovered || slides.length <= 1) return;
     const timer = setInterval(() => {
       setDirection(1);
-      setCurrentIndex((prev) => (prev + 1) % heroSlides.length);
+      setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, 4500);
     return () => clearInterval(timer);
-  }, [currentIndex, isHovered]);
+  }, [currentIndex, isHovered, slides.length]);
 
   const paginate = (newDirection: number) => {
+    if (slides.length <= 1) return;
     setDirection(newDirection);
-    setCurrentIndex((prev) => (prev + newDirection + heroSlides.length) % heroSlides.length);
+    setCurrentIndex((prev) => (prev + newDirection + slides.length) % slides.length);
   };
 
   const goToSlide = (idx: number) => {
-    if (idx === currentIndex) return;
-    setDirection(idx > currentIndex ? 1 : -1);
+    if (idx === safeIndex || idx >= slides.length) return;
+    setDirection(idx > safeIndex ? 1 : -1);
     setCurrentIndex(idx);
   };
 
@@ -120,7 +113,7 @@ export default function HeroSection({ settings }: HeroSectionProps) {
           <div className="absolute inset-0 z-0">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
-                key={currentIndex}
+                key={slides[safeIndex]?.id || safeIndex}
                 custom={direction}
                 variants={slideVariants}
                 initial="enter"
@@ -133,8 +126,8 @@ export default function HeroSection({ settings }: HeroSectionProps) {
                 className="absolute inset-0 w-full h-full"
               >
                 <img
-                  src={heroSlides[currentIndex].image}
-                  alt={heroSlides[currentIndex].title}
+                  src={slides[safeIndex]?.image}
+                  alt={slides[safeIndex]?.title || 'Taman San Jaya'}
                   className="w-full h-full object-cover object-center scale-[1.02] transition-transform duration-1000"
                 />
               </motion.div>
@@ -150,9 +143,11 @@ export default function HeroSection({ settings }: HeroSectionProps) {
           <div className="relative z-10 flex items-center justify-end w-full">
             {/* Slide Counter Badge */}
             <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-bold px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-black/40 backdrop-blur-md text-white border border-white/15">
-              <span className="text-brand-crimson font-black">0{currentIndex + 1}</span>
+              <span className="text-brand-crimson font-black">
+                {String(safeIndex + 1).padStart(2, '0')}
+              </span>
               <span className="text-white/40">/</span>
-              <span>0{heroSlides.length}</span>
+              <span>{String(slides.length).padStart(2, '0')}</span>
             </div>
           </div>
 
@@ -229,49 +224,55 @@ export default function HeroSection({ settings }: HeroSectionProps) {
             {/* Info Produk/Lanskap Aktif */}
             <div className="flex items-center gap-2 text-left">
               <span className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[9px] sm:text-xs font-bold uppercase tracking-wider bg-brand-crimson/95 backdrop-blur-md text-white shadow-sm">
-                {heroSlides[currentIndex].category}
+                {slides[safeIndex]?.category}
               </span>
               <span className="hidden sm:inline-flex items-center gap-1 text-[11px] sm:text-xs text-white/85 backdrop-blur-md bg-black/40 px-2.5 py-0.5 rounded-full border border-white/10">
                 <MapPin className="w-3 h-3 text-brand-sand" />
-                {heroSlides[currentIndex].location}
+                {slides[safeIndex]?.location}
               </span>
             </div>
 
             {/* Pagination Dots */}
-            <div className="flex items-center gap-1 sm:gap-1.5">
-              {heroSlides.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => goToSlide(idx)}
-                  aria-label={`Lihat Foto ${idx + 1}`}
-                  className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
-                    idx === currentIndex
-                      ? 'w-4 sm:w-7 bg-brand-crimson'
-                      : 'w-1.5 sm:w-2 bg-white/50 hover:bg-white'
-                  }`}
-                />
-              ))}
-            </div>
+            {slides.length > 1 && (
+              <div className="flex items-center gap-1 sm:gap-1.5">
+                {slides.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => goToSlide(idx)}
+                    aria-label={`Lihat Foto ${idx + 1}`}
+                    className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
+                      idx === safeIndex
+                        ? 'w-4 sm:w-7 bg-brand-crimson'
+                        : 'w-1.5 sm:w-2 bg-white/50 hover:bg-white'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* ================================================================= */}
           {/* 5. SIDE NAVIGATION ARROWS (MANUAL SLIDE)                          */}
           {/* ================================================================= */}
-          <button
-            onClick={() => paginate(-1)}
-            aria-label="Foto Sebelumnya"
-            className="absolute left-1.5 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95"
-          >
-            <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
+          {slides.length > 1 && (
+            <>
+              <button
+                onClick={() => paginate(-1)}
+                aria-label="Foto Sebelumnya"
+                className="absolute left-1.5 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95"
+              >
+                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
 
-          <button
-            onClick={() => paginate(1)}
-            aria-label="Foto Berikutnya"
-            className="absolute right-1.5 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95"
-          >
-            <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
+              <button
+                onClick={() => paginate(1)}
+                aria-label="Foto Berikutnya"
+                className="absolute right-1.5 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-black/40 hover:bg-black/75 backdrop-blur-md border border-white/20 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 hover:scale-105 active:scale-95"
+              >
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              </button>
+            </>
+          )}
         </motion.div>
       </div>
 
