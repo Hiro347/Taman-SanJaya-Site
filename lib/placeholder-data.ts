@@ -1,4 +1,4 @@
-import { SiteSettings, Product, Service, Project } from './types';
+import { SiteSettings, Product, Service, Project, Documentation } from './types';
 
 export const defaultSiteSettings: SiteSettings = {
   hero_title: 'TAMAN SAN JAYA - Taman Tropis Asri & Ruang Hijau Impian',
@@ -212,6 +212,41 @@ export const defaultProjects: Project[] = [
     gallery_images: ['/images/Perawatan.jpg', '/images/proyek-2.jpg', '/images/proyek-4.avif', '/images/Pembuatan.jpg'],
     description: 'Program pemeliharaan komprehensif bergaransi IPB: pemangkasan estetika, sanitasi hama terpadu, aerasi tanah, serta pemupukan nutrisi makro/mikro berkala.',
     order_index: 5,
+    is_active: true,
+  },
+];
+
+export const defaultDocumentations: Documentation[] = [
+  {
+    id: 'doc1',
+    title: 'Aklimatisasi & Seleksi Bibit Unggul di Kebun Bogor',
+    description: 'Proses karantina dan adaptasi bibit tanaman hias unggul dalam naungan greenhouse sebelum dialokasikan ke proyek lanskap untuk memastikan daya adaptasi dan kesehatan optimal.',
+    image_url: '/images/Perawatan.jpg',
+    order_index: 1,
+    is_active: true,
+  },
+  {
+    id: 'doc2',
+    title: 'Survei Kontur Lahan & Analisis Drainase Presisi',
+    description: 'Pengukuran elevasi, uji permeabilitas tanah, dan perencanaan pemetaan vegetasi langsung di tapak lahan bersama klien sebelum gambar kerja 3D difinalisasi.',
+    image_url: '/images/Perencanaan.jpg',
+    order_index: 2,
+    is_active: true,
+  },
+  {
+    id: 'doc3',
+    title: 'Konstruksi Relief Tebing Alami & Penataan Vegetasi Tropis',
+    description: 'Pengerjaan fisik struktur relief batu alam alami, instalasi sirkulasi air mancur batu alam, serta penanaman pohon peneduh bergaransi tumbuh 100% oleh tim lapangan berpengalaman.',
+    image_url: '/images/Pembuatan.jpg',
+    order_index: 3,
+    is_active: true,
+  },
+  {
+    id: 'doc4',
+    title: 'Pemeliharaan Rutin & Sanitasi Proteksi Tanaman IPB',
+    description: 'Pemeriksaan komprehensif kesehatan vegetasi, pemupukan organik terukur, aerasi tanah berkala, serta penanganan preventif hama berbasis ilmu proteksi tanaman IPB University.',
+    image_url: '/images/proyek-2.jpg',
+    order_index: 4,
     is_active: true,
   },
 ];

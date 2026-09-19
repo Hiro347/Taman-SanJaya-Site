@@ -61,3 +61,13 @@ export interface Project {
   is_active?: boolean;
   created_at?: string;
 }
+
+export interface Documentation {
+  id: string;
+  title: string;
+  description: string;
+  image_url: string;
+  order_index?: number;
+  is_active?: boolean;
+  created_at?: string;
+}

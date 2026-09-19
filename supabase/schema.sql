@@ -76,6 +76,15 @@ CREATE TABLE IF NOT EXISTS public.projects (
   order_index INTEGER NOT NULL DEFAULT 0,
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+-- 6. TABEL DOKUMENTASI AKTIVITAS & DI BALIK LAYAR
+CREATE TABLE IF NOT EXISTS public.documentations (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  image_url TEXT NOT NULL,
+  order_index INTEGER NOT NULL DEFAULT 0,
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
 -- ==============================================================================
@@ -83,6 +92,8 @@ CREATE TABLE IF NOT EXISTS public.projects (
 -- ==============================================================================
 CREATE INDEX IF NOT EXISTS idx_projects_order_index ON public.projects (order_index ASC);
 CREATE INDEX IF NOT EXISTS idx_projects_is_active ON public.projects (is_active);
+CREATE INDEX IF NOT EXISTS idx_documentations_order_index ON public.documentations (order_index ASC);
+CREATE INDEX IF NOT EXISTS idx_documentations_is_active ON public.documentations (is_active);
 CREATE INDEX IF NOT EXISTS idx_products_order_index ON public.products (order_index ASC);
 CREATE INDEX IF NOT EXISTS idx_services_order_index ON public.services (order_index ASC);
 CREATE INDEX IF NOT EXISTS idx_products_category ON public.products (category);
@@ -101,12 +112,14 @@ ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.services ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.documentations ENABLE ROW LEVEL SECURITY;
 
 -- Hapus hak tulis dari role anon (defense-in-depth di atas RLS)
 REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.products FROM anon;
 REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.projects FROM anon;
 REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.services FROM anon;
 REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.site_settings FROM anon;
+REVOKE INSERT, UPDATE, DELETE, TRUNCATE ON public.documentations FROM anon;
 
 -- Policy Site Settings
 CREATE POLICY "Public read site_settings" ON public.site_settings FOR SELECT USING (true);
@@ -146,6 +159,16 @@ CREATE POLICY "Admin update projects" ON public.projects FOR UPDATE TO authentic
   USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
   WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 CREATE POLICY "Admin delete projects" ON public.projects FOR DELETE TO authenticated
+  USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+
+-- Policy Documentations
+CREATE POLICY "Public read documentations" ON public.documentations FOR SELECT USING (true);
+CREATE POLICY "Admin insert documentations" ON public.documentations FOR INSERT TO authenticated
+  WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+CREATE POLICY "Admin update documentations" ON public.documentations FOR UPDATE TO authenticated
+  USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
+  WITH CHECK ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+CREATE POLICY "Admin delete documentations" ON public.documentations FOR DELETE TO authenticated
   USING ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 -- ==============================================================================

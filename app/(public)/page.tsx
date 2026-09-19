@@ -6,17 +6,18 @@ import FloralDivider from '@/components/FloralDivider';
 import CatalogSection from '@/components/CatalogSection';
 import AboutSection from '@/components/AboutSection';
 import ContactSection from '@/components/ContactSection';
-import { getSiteSettings, getServices, getProducts, getProjects } from '@/lib/data';
+import { getSiteSettings, getServices, getProducts, getProjects, getDocumentations } from '@/lib/data';
 
 // High-performance static Edge CDN caching (ISR 1 hour), invalidated on-demand when admin updates data
 export const revalidate = 3600;
 
 export default async function HomePage() {
-  const [settings, services, products, projects] = await Promise.all([
+  const [settings, services, products, projects, documentations] = await Promise.all([
     getSiteSettings(),
     getServices(),
     getProducts(),
     getProjects(),
+    getDocumentations(),
   ]);
 
   return (
@@ -36,8 +37,8 @@ export default async function HomePage() {
       {/* 4. Ornamental Plants Catalog */}
       <CatalogSection products={products} settings={settings} />
 
-      {/* 5. About Us Section (With Founder Ergoputra Kusuma Sanjaya IPB photo) */}
-      <AboutSection settings={settings} />
+      {/* 5. About Us Section (With Founder & Activity Documentation Carousel) */}
+      <AboutSection settings={settings} documentations={documentations} />
 
       {/* 6. Direct WhatsApp Project Form & Contacts */}
       <ContactSection settings={settings} />

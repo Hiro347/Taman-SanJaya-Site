@@ -10,6 +10,7 @@ import {
   Phone,
   Sprout,
   Briefcase,
+  Camera,
   ExternalLink,
   LogOut,
   Menu,
@@ -73,6 +74,11 @@ export default function AdminLayout({
       label: 'Portofolio Proyek',
       href: '/gate-sanjaya-admin/projects',
       icon: <Briefcase className="w-5 h-5" />,
+    },
+    {
+      label: 'Dokumentasi Aktivitas',
+      href: '/gate-sanjaya-admin/documentations',
+      icon: <Camera className="w-5 h-5" />,
     },
   ];
 

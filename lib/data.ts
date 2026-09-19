@@ -1,11 +1,12 @@
 import { cache } from 'react';
 import { createClient } from '@/utils/supabase/server';
-import { SiteSettings, Product, Service, Project } from './types';
+import { SiteSettings, Product, Service, Project, Documentation } from './types';
 import {
   defaultSiteSettings,
   defaultServices,
   defaultProducts,
   defaultProjects,
+  defaultDocumentations,
 } from './placeholder-data';
 
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
@@ -80,6 +81,26 @@ export const getProjects = cache(async (): Promise<Project[]> => {
   } catch (err) {
     console.error('Exception fetching projects:', err);
     return [];
+  }
+});
+
+export const getDocumentations = cache(async (): Promise<Documentation[]> => {
+  try {
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from('documentations')
+      .select('*')
+      .neq('is_active', false)
+      .order('order_index', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching documentations:', error);
+      return defaultDocumentations;
+    }
+    return (data || []) as Documentation[];
+  } catch (err) {
+    console.error('Exception fetching documentations:', err);
+    return defaultDocumentations;
   }
 });
 
@@ -199,25 +220,28 @@ export const getOtherProducts = cache(async (currentId: string, limit: number = 
   }
 });
 
-export const getDashboardCounts = async (): Promise<{ products: number; projects: number; services: number }> => {
+export const getDashboardCounts = async (): Promise<{ products: number; projects: number; services: number; documentations: number }> => {
   try {
     const supabase = createClient();
-    const [productsRes, projectsRes, servicesRes] = await Promise.all([
+    const [productsRes, projectsRes, servicesRes, documentationsRes] = await Promise.all([
       supabase.from('products').select('*', { count: 'exact', head: true }),
       supabase.from('projects').select('*', { count: 'exact', head: true }),
       supabase.from('services').select('*', { count: 'exact', head: true }),
+      supabase.from('documentations').select('*', { count: 'exact', head: true }),
     ]);
 
     return {
       products: productsRes.count ?? 0,
       projects: projectsRes.count ?? 0,
       services: servicesRes.count ?? defaultServices.length,
+      documentations: documentationsRes.count ?? defaultDocumentations.length,
     };
   } catch (err) {
     return {
       products: 0,
       projects: 0,
       services: defaultServices.length,
+      documentations: defaultDocumentations.length,
     };
   }
 };

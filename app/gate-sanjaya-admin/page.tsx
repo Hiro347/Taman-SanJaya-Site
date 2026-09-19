@@ -5,6 +5,7 @@ import {
   Phone,
   Sprout,
   Briefcase,
+  Camera,
   ExternalLink,
   ArrowRight,
 } from 'lucide-react';
@@ -26,7 +27,7 @@ export default async function AdminDashboardPage() {
             Panel Pengelola Taman San Jaya
           </h1>
           <p className="text-sm text-brand-earth/75 mt-2 max-w-xl">
-            Di sini Anda dapat memperbarui informasi kontak &amp; WhatsApp resmi, menambah koleksi tanaman hias di katalog, dan mengunggah portofolio pengerjaan taman tanpa perlu menyentuh kodingan.
+            Di sini Anda dapat memperbarui informasi kontak &amp; WhatsApp resmi, menambah koleksi tanaman hias di katalog, mengunggah portofolio pengerjaan taman, dan mengatur foto dokumentasi aktivitas.
           </p>
         </div>
 
@@ -41,7 +42,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         <div className="bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
           <div className="p-3.5 bg-emerald-50 text-emerald-600 rounded-lg">
             <Sprout className="w-7 h-7" />
@@ -69,6 +70,20 @@ export default async function AdminDashboardPage() {
             </span>
           </div>
         </div>
+
+        <div className="bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs flex items-center gap-4">
+          <div className="p-3.5 bg-amber-50 text-amber-700 rounded-lg">
+            <Camera className="w-7 h-7" />
+          </div>
+          <div>
+            <span className="text-xs font-semibold text-brand-earth/70 block">
+              Dokumentasi Aktivitas
+            </span>
+            <span className="text-2xl font-black text-brand-earth">
+              {counts.documentations} Item
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Quick Action Navigation Cards */}
@@ -76,7 +91,7 @@ export default async function AdminDashboardPage() {
         <h2 className="text-lg font-bold text-brand-earth mb-4">
           Aksi Cepat Pengelolaan
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           
           {/* Card 1: Contact Settings */}
           <Link
@@ -110,10 +125,10 @@ export default async function AdminDashboardPage() {
                 <Sprout className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-base text-brand-earth group-hover:text-emerald-700 transition-colors">
-                Kelola Produk Tanaman Hias
+                Produk Tanaman Hias
               </h3>
               <p className="text-xs sm:text-sm text-brand-earth/75 mt-1.5 leading-relaxed">
-                Tambah jenis tanaman baru (Lidah Mertua, Bonsai, Palem), upload foto, atur harga dan status ketersediaan.
+                Tambah jenis tanaman baru, upload foto, atur harga, dan status ketersediaan.
               </p>
             </div>
             <div className="mt-5 flex items-center gap-1.5 text-xs font-bold text-emerald-700">
@@ -132,14 +147,36 @@ export default async function AdminDashboardPage() {
                 <Briefcase className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-base text-brand-earth group-hover:text-brand-navy transition-colors">
-                Kelola Portofolio Proyek
+                Portofolio Proyek
               </h3>
               <p className="text-xs sm:text-sm text-brand-earth/75 mt-1.5 leading-relaxed">
-                Dokumentasikan hasil karya taman baru yang telah selesai dikerjakan untuk meyakinkan calon klien.
+                Dokumentasikan hasil karya taman baru yang telah selesai dikerjakan untuk calon klien.
               </p>
             </div>
             <div className="mt-5 flex items-center gap-1.5 text-xs font-bold text-brand-navy">
               <span>Lihat Portofolio</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+            </div>
+          </Link>
+
+          {/* Card 4: Documentations */}
+          <Link
+            href="/gate-sanjaya-admin/documentations"
+            className="group bg-white rounded-xl p-6 border border-brand-sand-dark/40 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+          >
+            <div>
+              <div className="p-3 bg-amber-50 w-fit rounded-lg text-amber-700 group-hover:bg-amber-600 group-hover:text-white transition-colors mb-4">
+                <Camera className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-base text-brand-earth group-hover:text-amber-700 transition-colors">
+                Dokumentasi Aktivitas
+              </h3>
+              <p className="text-xs sm:text-sm text-brand-earth/75 mt-1.5 leading-relaxed">
+                Kelola foto kegiatan nursery kebun dan proses kerja ilmiah yang tampil pada carousel About Us.
+              </p>
+            </div>
+            <div className="mt-5 flex items-center gap-1.5 text-xs font-bold text-amber-700">
+              <span>Kelola Aktivitas</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </div>
           </Link>

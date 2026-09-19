@@ -1,16 +1,44 @@
 'use client';
 
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ShieldCheck, HeartHandshake, Award, Clock, ArrowRight } from 'lucide-react';
-import { SiteSettings } from '@/lib/types';
+import { ShieldCheck, HeartHandshake, Award, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { SiteSettings, Documentation } from '@/lib/types';
 
 interface AboutSectionProps {
   settings: SiteSettings;
+  documentations?: Documentation[];
 }
 
-export default function AboutSection({ settings }: AboutSectionProps) {
+export default function AboutSection({ settings, documentations = [] }: AboutSectionProps) {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const checkScrollability = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 10);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    checkScrollability();
+    window.addEventListener('resize', checkScrollability);
+    return () => window.removeEventListener('resize', checkScrollability);
+  }, [documentations]);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = scrollContainerRef.current.clientWidth * 0.75;
+      scrollContainerRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
   return (
     <section id="about" className="pt-6 sm:pt-14 pb-2 sm:pb-4 px-4 sm:px-8 lg:px-12 max-w-7xl mx-auto">
       {/* Brand Story Box with Scroll Reveal */}
@@ -113,6 +141,125 @@ export default function AboutSection({ settings }: AboutSectionProps) {
           </div>
         </div>
       </motion.div>
+
+      {/* ===================================================================== */}
+      {/* 2. ACTIVITY & BEHIND-THE-SCENES DOCUMENTATION (SWIPEABLE CAROUSEL)    */}
+      {/* ===================================================================== */}
+      <div className="mt-10 sm:mt-14 lg:mt-20">
+        {/* Header with Navigation Controls */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-[11px] sm:text-xs font-bold tracking-widest text-brand-crimson uppercase">
+                Aktivitas &amp; Di Balik Layar
+              </span>
+              <span className="text-brand-earth/40">•</span>
+              <span className="text-[11px] sm:text-xs font-medium tracking-widest text-brand-earth/60 font-sans">
+                真实记录
+              </span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-earth tracking-tight">
+              Dedikasi &amp; Proses Ilmiah Lapangan
+            </h3>
+            <p className="text-xs sm:text-sm text-brand-earth/75 font-medium mt-1.5 max-w-2xl leading-relaxed">
+              Dokumentasi nyata kegiatan pembibitan di nursery Bogor, survei kontur lahan, hingga pengerjaan hardscape berstandar proteksi tanaman IPB.
+            </p>
+          </div>
+
+          {/* Desktop Arrow Navigation Controls */}
+          {documentations.length > 0 && (
+            <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
+              <button
+                onClick={() => scroll('left')}
+                disabled={!canScrollLeft}
+                aria-label="Geser ke kiri"
+                className="w-10 h-10 rounded-full border border-brand-earth/20 bg-white/80 hover:bg-white text-brand-earth disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all shadow-xs active:scale-95 hover:border-brand-crimson/50"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => scroll('right')}
+                disabled={!canScrollRight}
+                aria-label="Geser ke kanan"
+                className="w-10 h-10 rounded-full border border-brand-earth/20 bg-white/80 hover:bg-white text-brand-earth disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all shadow-xs active:scale-95 hover:border-brand-crimson/50"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Carousel Content or Clean Upcoming State */}
+        {documentations.length === 0 ? (
+          <div className="text-center py-16 sm:py-20 flex flex-col items-center justify-center bg-white/40 rounded-2xl border border-brand-earth/10">
+            <p className="text-lg sm:text-xl md:text-2xl font-extrabold text-brand-earth tracking-tight">
+              Dokumentasi Aktivitas Segera Hadir
+            </p>
+            <p className="text-xs sm:text-sm md:text-base text-brand-earth/75 font-medium mt-1.5 max-w-md">
+              Sedang dalam proses dokumentasi kebun bibit dan aktivitas lapangan.
+            </p>
+          </div>
+        ) : (
+          <div
+            ref={scrollContainerRef}
+            onScroll={checkScrollability}
+            className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 pt-1 snap-x snap-mandatory scroll-smooth no-scrollbar"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+            }}
+          >
+            {documentations.map((item, idx) => (
+              <motion.div
+                key={item.id || idx}
+                whileHover={{ y: -4 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+                className="w-[280px] xs:w-[320px] sm:w-[360px] lg:w-[390px] flex-shrink-0 snap-start bg-white rounded-2xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
+              >
+                {/* Photo Stage (aspect 16:10) */}
+                <div className="relative w-full aspect-[16/10] overflow-hidden bg-brand-sand/30">
+                  <Image
+                    src={item.image_url}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 640px) 320px, 400px"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  {/* Subtle dark vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40 group-hover:opacity-70 transition-opacity" />
+
+                  {/* Order Index Counter Badge */}
+                  <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/45 backdrop-blur-md text-white text-[11px] font-mono font-bold border border-white/20 shadow-xs">
+                    0{idx + 1}
+                  </span>
+                </div>
+
+                {/* Content Box */}
+                <div className="p-4 sm:p-5 flex flex-col justify-between flex-1">
+                  <div>
+                    <h4 className="font-extrabold text-sm sm:text-base text-brand-earth group-hover:text-brand-crimson transition-colors line-clamp-2 leading-snug">
+                      {item.title}
+                    </h4>
+                    <p className="mt-2 text-xs sm:text-sm text-brand-earth/80 font-normal leading-relaxed line-clamp-3">
+                      {item.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-brand-earth/10 flex items-center justify-between text-[11px] text-brand-earth/60 font-semibold">
+                    <span className="inline-flex items-center gap-1 text-brand-navy">
+                      <span className="w-1.5 h-1.5 rounded-full bg-brand-navy inline-block" />
+                      Dokumentasi Lapangan
+                    </span>
+                    <span className="font-mono text-[10px] uppercase text-brand-earth/45">
+                      TSJ-DOC-0{idx + 1}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   );
 }
