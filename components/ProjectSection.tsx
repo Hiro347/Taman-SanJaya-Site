@@ -29,10 +29,10 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
       {projects.length === 0 ? (
         <div className="text-center py-20 sm:py-28 lg:py-36 flex flex-col items-center justify-center">
           <p className="text-xl sm:text-2xl md:text-3xl font-extrabold text-brand-earth tracking-tight">
-            Dokumentasi Portofolio Sedang Dalam Tahap Kurasi
+            Portofolio Proyek Segera Hadir
           </p>
           <p className="text-sm sm:text-base md:text-lg text-brand-earth/75 font-medium mt-2 sm:mt-3 max-w-xl mx-auto">
-            Galeri foto hasil pengerjaan taman tropis &amp; lanskap arsitektural terbaru akan segera ditampilkan.
+            Sedang dalam pengembangan. Galeri dokumentasi taman kami akan segera tampil.
           </p>
         </div>
       ) : (

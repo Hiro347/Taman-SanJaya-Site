@@ -71,10 +71,10 @@ export default function CatalogSection({ products, settings }: CatalogSectionPro
             ) : (
               <>
                 <p className="text-xl sm:text-2xl md:text-3xl font-extrabold text-brand-earth tracking-tight">
-                  Koleksi Tanaman Nursery Sedang Diperbarui
+                  Koleksi Tanaman Segera Hadir
                 </p>
                 <p className="text-sm sm:text-base md:text-lg text-brand-earth/75 font-medium mt-2 sm:mt-3 max-w-xl mx-auto">
-                  Katalog tanaman hias dan bibit unggul pilihan sedang dalam masa aklimatisasi dan kurasi berkala.
+                  Sedang dalam pengembangan. Nantikan katalog tanaman hias pilihan kami.
                 </p>
               </>
             )}
