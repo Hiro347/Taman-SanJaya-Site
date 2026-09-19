@@ -2,8 +2,18 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
+import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
-import { ShieldCheck, HeartHandshake, Award, Clock, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  ShieldCheck,
+  HeartHandshake,
+  Award,
+  Clock,
+  ChevronLeft,
+  ChevronRight,
+  Maximize2,
+  X,
+} from 'lucide-react';
 import { SiteSettings, Documentation } from '@/lib/types';
 
 interface AboutSectionProps {
@@ -15,6 +25,14 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+
+  // Lightbox modal state
+  const [selectedDocIndex, setSelectedDocIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const checkScrollability = () => {
     if (scrollContainerRef.current) {
@@ -29,6 +47,37 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
     window.addEventListener('resize', checkScrollability);
     return () => window.removeEventListener('resize', checkScrollability);
   }, [documentations]);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedDocIndex !== null) {
+      const original = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = original;
+      };
+    }
+  }, [selectedDocIndex]);
+
+  // Keyboard navigation for modal
+  useEffect(() => {
+    if (selectedDocIndex === null) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedDocIndex(null);
+      } else if (e.key === 'ArrowLeft') {
+        setSelectedDocIndex((prev) =>
+          prev !== null && prev > 0 ? prev - 1 : documentations.length - 1
+        );
+      } else if (e.key === 'ArrowRight') {
+        setSelectedDocIndex((prev) =>
+          prev !== null && prev < documentations.length - 1 ? prev + 1 : 0
+        );
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedDocIndex, documentations.length]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
@@ -143,45 +192,39 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
       </motion.div>
 
       {/* ===================================================================== */}
-      {/* 2. ACTIVITY & BEHIND-THE-SCENES DOCUMENTATION (SWIPEABLE CAROUSEL)    */}
+      {/* 2. DOKUMENTASI (SWIPEABLE EDITORIAL CAROUSEL)                         */}
       {/* ===================================================================== */}
-      <div className="mt-10 sm:mt-14 lg:mt-20">
-        {/* Header with Navigation Controls */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 sm:mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-[11px] sm:text-xs font-bold tracking-widest text-brand-crimson uppercase">
-                Aktivitas &amp; Di Balik Layar
-              </span>
-              <span className="text-brand-earth/40">•</span>
-              <span className="text-[11px] sm:text-xs font-medium tracking-widest text-brand-earth/60 font-sans">
-                真实记录
-              </span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-earth tracking-tight">
-              Dedikasi &amp; Proses Ilmiah Lapangan
-            </h3>
-            <p className="text-xs sm:text-sm text-brand-earth/75 font-medium mt-1.5 max-w-2xl leading-relaxed">
-              Dokumentasi nyata kegiatan pembibitan di nursery Bogor, survei kontur lahan, hingga pengerjaan hardscape berstandar proteksi tanaman IPB.
-            </p>
-          </div>
+      <div className="mt-12 sm:mt-16 lg:mt-24">
+        {/* Section Header: Dokumentasi (真实记录) */}
+        <div className="text-center mb-8 sm:mb-12 relative">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-earth tracking-tight">
+            Dokumentasi
+          </h2>
+          <span className="block text-sm sm:text-base font-medium text-brand-earth/70 tracking-[0.2em] uppercase mt-1">
+            真实记录
+          </span>
+          <p className="mt-3 text-xs sm:text-base text-brand-earth/75 max-w-2xl mx-auto font-medium leading-relaxed">
+            Dokumentasi nyata kegiatan pembibitan di nursery Bogor, survei kontur lahan, hingga pengerjaan hardscape berstandar proteksi tanaman IPB.
+          </p>
 
           {/* Desktop Arrow Navigation Controls */}
           {documentations.length > 0 && (
-            <div className="hidden sm:flex items-center gap-2 flex-shrink-0">
+            <div className="hidden sm:flex items-center gap-2 absolute right-0 bottom-0">
               <button
+                type="button"
                 onClick={() => scroll('left')}
                 disabled={!canScrollLeft}
                 aria-label="Geser ke kiri"
-                className="w-10 h-10 rounded-full border border-brand-earth/20 bg-white/80 hover:bg-white text-brand-earth disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all shadow-xs active:scale-95 hover:border-brand-crimson/50"
+                className="w-10 h-10 rounded-full border border-brand-earth/20 bg-white/80 hover:bg-white text-brand-earth disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all shadow-xs active:scale-95 hover:border-brand-crimson/50 cursor-pointer"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
+                type="button"
                 onClick={() => scroll('right')}
                 disabled={!canScrollRight}
                 aria-label="Geser ke kanan"
-                className="w-10 h-10 rounded-full border border-brand-earth/20 bg-white/80 hover:bg-white text-brand-earth disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all shadow-xs active:scale-95 hover:border-brand-crimson/50"
+                className="w-10 h-10 rounded-full border border-brand-earth/20 bg-white/80 hover:bg-white text-brand-earth disabled:opacity-30 disabled:cursor-not-allowed flex items-center justify-center transition-all shadow-xs active:scale-95 hover:border-brand-crimson/50 cursor-pointer"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -216,8 +259,11 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
                 transition={{ duration: 0.25, ease: 'easeOut' }}
                 className="w-[280px] xs:w-[320px] sm:w-[360px] lg:w-[390px] flex-shrink-0 snap-start bg-white rounded-2xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
               >
-                {/* Photo Stage (aspect 16:10) */}
-                <div className="relative w-full aspect-[16/10] overflow-hidden bg-brand-sand/30">
+                {/* Photo Stage (aspect 16:10) - Klik untuk melebarkan */}
+                <div
+                  onClick={() => setSelectedDocIndex(idx)}
+                  className="relative w-full aspect-[16/10] overflow-hidden bg-brand-sand/30 cursor-pointer group/photo"
+                >
                   <Image
                     src={item.image_url}
                     alt={item.title}
@@ -226,32 +272,55 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                   {/* Subtle dark vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-40 group-hover:opacity-70 transition-opacity" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-30 group-hover:opacity-60 transition-opacity pointer-events-none" />
 
                   {/* Order Index Counter Badge */}
-                  <span className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-black/45 backdrop-blur-md text-white text-[11px] font-mono font-bold border border-white/20 shadow-xs">
+                  <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md text-white text-xs font-mono font-bold tracking-wider border border-white/20 pointer-events-none">
                     0{idx + 1}
-                  </span>
+                  </div>
+
+                  {/* Expand Hint Badge */}
+                  <div className="absolute top-3.5 right-3.5 px-2.5 py-1 rounded-full bg-black/45 backdrop-blur-md text-white text-xs font-medium border border-white/20 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                    <Maximize2 className="w-3.5 h-3.5" />
+                    <span>Perbesar</span>
+                  </div>
                 </div>
 
                 {/* Content Box */}
-                <div className="p-4 sm:p-5 flex flex-col justify-between flex-1">
+                <div className="p-5 flex flex-col justify-between flex-1">
                   <div>
-                    <h4 className="font-extrabold text-sm sm:text-base text-brand-earth group-hover:text-brand-crimson transition-colors line-clamp-2 leading-snug">
+                    {/* Category Pill like in Project Section */}
+                    <div className="flex items-center gap-2 mb-2.5">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-brand-crimson text-white shadow-xs">
+                        Dokumentasi
+                      </span>
+                      <span className="font-mono text-[11px] font-bold text-brand-earth/60">
+                        TSJ-DOC-0{idx + 1}
+                      </span>
+                    </div>
+
+                    <h3
+                      onClick={() => setSelectedDocIndex(idx)}
+                      className="font-bold text-base sm:text-lg text-brand-earth group-hover:text-brand-crimson transition-colors line-clamp-2 leading-snug cursor-pointer"
+                    >
                       {item.title}
-                    </h4>
+                    </h3>
                     <p className="mt-2 text-xs sm:text-sm text-brand-earth/80 font-normal leading-relaxed line-clamp-3">
                       {item.description}
                     </p>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-brand-earth/10 flex items-center justify-between text-[11px] text-brand-earth/60 font-semibold">
-                    <span className="inline-flex items-center gap-1 text-brand-navy">
-                      <span className="w-1.5 h-1.5 rounded-full bg-brand-navy inline-block" />
-                      Dokumentasi Lapangan
+                  {/* Bottom Action Bar */}
+                  <div
+                    onClick={() => setSelectedDocIndex(idx)}
+                    className="mt-4 pt-3 border-t border-brand-earth/10 flex items-center justify-between text-xs font-bold text-brand-crimson cursor-pointer group/action"
+                  >
+                    <span className="group-hover/action:underline flex items-center gap-1.5">
+                      <Maximize2 className="w-3.5 h-3.5" />
+                      <span>Lihat Detail Foto</span>
                     </span>
-                    <span className="font-mono text-[10px] uppercase text-brand-earth/45">
-                      TSJ-DOC-0{idx + 1}
+                    <span className="font-mono text-[11px] text-brand-earth/50">
+                      0{idx + 1}
                     </span>
                   </div>
                 </div>
@@ -260,6 +329,112 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
           </div>
         )}
       </div>
+
+      {/* ===================================================================== */}
+      {/* LIGHTBOX MODAL: LEBARKAN FOTO + JUDUL & DESKRIPSI DI BAWAHNYA         */}
+      {/* ===================================================================== */}
+      {mounted &&
+        selectedDocIndex !== null &&
+        documentations[selectedDocIndex] &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="lightbox-doc-title"
+            onClick={() => setSelectedDocIndex(null)}
+            className="fixed inset-0 z-[99999] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200"
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedDocIndex(null);
+              }}
+              aria-label="Tutup perbesar foto"
+              className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[100000] p-2.5 sm:p-3 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+            >
+              <X className="w-5 h-5 sm:w-6 sm:h-6" />
+            </button>
+
+            {/* Previous Button */}
+            {documentations.length > 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedDocIndex((prev) =>
+                    prev !== null && prev > 0 ? prev - 1 : documentations.length - 1
+                  );
+                }}
+                aria-label="Foto Sebelumnya"
+                className="fixed left-2 sm:left-6 top-1/2 -translate-y-1/2 z-[100000] p-2.5 sm:p-3.5 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+              >
+                <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7" />
+              </button>
+            )}
+
+            {/* Next Button */}
+            {documentations.length > 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedDocIndex((prev) =>
+                    prev !== null && prev < documentations.length - 1 ? prev + 1 : 0
+                  );
+                }}
+                aria-label="Foto Berikutnya"
+                className="fixed right-2 sm:right-6 top-1/2 -translate-y-1/2 z-[100000] p-2.5 sm:p-3.5 rounded-full bg-black/60 hover:bg-black/90 text-white border border-white/20 transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+              >
+                <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7" />
+              </button>
+            )}
+
+            {/* Modal Card with Photo on Top and Title + Desc Underneath */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-white/20 my-auto flex flex-col transform transition-all animate-in zoom-in-95 duration-200 max-h-[92vh]"
+            >
+              {/* Top: Enlarged Photo Stage */}
+              <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] max-h-[62vh] bg-black/95 overflow-hidden flex items-center justify-center">
+                <Image
+                  src={documentations[selectedDocIndex].image_url}
+                  alt={documentations[selectedDocIndex].title}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 1200px"
+                  className="object-contain"
+                />
+                {/* Photo Counter */}
+                <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-mono font-bold border border-white/20 pointer-events-none">
+                  0{selectedDocIndex + 1} / 0{documentations.length}
+                </div>
+              </div>
+
+              {/* Bottom: Title & Description Underneath */}
+              <div className="p-5 sm:p-7 bg-[#F4EFE2] border-t border-brand-sand-dark/40 overflow-y-auto">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-brand-crimson text-white shadow-xs">
+                    Dokumentasi
+                  </span>
+                  <span className="font-mono text-xs font-bold text-brand-earth/60">
+                    TSJ-DOC-0{selectedDocIndex + 1}
+                  </span>
+                </div>
+
+                <h3 id="lightbox-doc-title" className="text-xl sm:text-2xl font-black text-brand-earth leading-snug">
+                  {documentations[selectedDocIndex].title}
+                </h3>
+
+                <p className="mt-2 text-xs sm:text-sm md:text-base text-brand-earth/85 font-medium leading-relaxed">
+                  {documentations[selectedDocIndex].description}
+                </p>
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </section>
   );
 }
