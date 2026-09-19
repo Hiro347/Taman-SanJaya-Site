@@ -28,6 +28,8 @@ import {
   ChevronUp,
   ChevronDown,
   Sparkles,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 export default function AdminProjectsPage() {
@@ -56,6 +58,7 @@ export default function AdminProjectsPage() {
     image_url: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
     gallery_images: [] as string[],
     description: '',
+    is_active: true,
   });
 
   useEffect(() => {
@@ -95,6 +98,7 @@ export default function AdminProjectsPage() {
       image_url: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&q=80',
       gallery_images: [],
       description: '',
+      is_active: true,
     });
     setIsModalOpen(true);
   };
@@ -109,8 +113,46 @@ export default function AdminProjectsPage() {
       image_url: proj.image_url,
       gallery_images: Array.isArray(proj.gallery_images) ? [...proj.gallery_images] : [],
       description: proj.description,
+      is_active: proj.is_active !== false,
     });
     setIsModalOpen(true);
+  };
+
+  const toggleActive = async (project: Project) => {
+    const currentActive = project.is_active !== false;
+    const newActive = !currentActive;
+
+    // Optimistic UI update
+    setProjects((prev) =>
+      prev.map((p) => (p.id === project.id ? { ...p, is_active: newActive } : p))
+    );
+
+    try {
+      const supabase = createClient();
+      if (!project.id.startsWith('proj') && !project.id.startsWith('local_')) {
+        const { error } = await supabase
+          .from('projects')
+          .update({ is_active: newActive })
+          .eq('id', project.id);
+
+        if (error) throw error;
+      }
+      await revalidateSite('/');
+      setToast({
+        type: 'success',
+        text: `Status proyek berhasil diubah ke ${newActive ? 'Aktif (Tampil)' : 'Disembunyikan'}!`,
+      });
+    } catch (err: any) {
+      console.error('Error toggling project status:', err);
+      // Revert optimistic state
+      setProjects((prev) =>
+        prev.map((p) => (p.id === project.id ? { ...p, is_active: currentActive } : p))
+      );
+      setToast({
+        type: 'error',
+        text: 'Gagal mengubah status aktif proyek.',
+      });
+    }
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -375,6 +417,7 @@ export default function AdminProjectsPage() {
             image_url: formData.image_url,
             gallery_images: formData.gallery_images,
             description: formData.description,
+            is_active: formData.is_active,
           })
           .eq('id', editingId);
 
@@ -399,6 +442,7 @@ export default function AdminProjectsPage() {
             gallery_images: formData.gallery_images,
             description: formData.description,
             order_index: nextOrder,
+            is_active: formData.is_active,
           },
         ]);
 
@@ -423,6 +467,7 @@ export default function AdminProjectsPage() {
                   image_url: formData.image_url,
                   gallery_images: formData.gallery_images,
                   description: formData.description,
+                  is_active: formData.is_active,
                 }
               : p
           )
@@ -444,6 +489,7 @@ export default function AdminProjectsPage() {
           gallery_images: formData.gallery_images,
           description: formData.description,
           order_index: nextOrder,
+          is_active: formData.is_active,
         };
         setProjects((prev) => [...prev, newProj]);
         setToast({ type: 'success', text: 'Proyek ditambahkan ke website!' });
@@ -588,13 +634,16 @@ export default function AdminProjectsPage() {
               const globalIndex = projects.findIndex((p) => p.id === proj.id);
               const isFirst = globalIndex === 0;
               const isLast = globalIndex === projects.length - 1;
+              const isActive = proj.is_active !== false;
               const galleryCount = (proj.gallery_images?.length || 0) + (proj.image_url ? 1 : 0);
 
               return (
                 <div
                   key={proj.id}
                   className={`bg-white rounded-xl overflow-hidden border transition-all flex flex-col justify-between ${
-                    isFirst
+                    !isActive
+                      ? 'opacity-85 border-gray-300 bg-gray-50/50 shadow-xs ring-1 ring-gray-200'
+                      : isFirst
                       ? 'border-brand-crimson/50 shadow-md ring-2 ring-brand-crimson/15'
                       : 'border-brand-sand-dark/40 shadow-xs'
                   }`}
@@ -609,8 +658,8 @@ export default function AdminProjectsPage() {
                         className="object-cover"
                       />
 
-                      {/* Top Left: Category & Photos Count */}
-                      <div className="absolute top-3 left-3 flex items-center gap-2">
+                      {/* Top Left: Category, Photos Count & Hidden Status */}
+                      <div className="absolute top-3 left-3 flex items-center gap-2 flex-wrap">
                         <span className="bg-brand-earth/80 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full">
                           {proj.category}
                         </span>
@@ -618,6 +667,12 @@ export default function AdminProjectsPage() {
                           <Images className="w-3 h-3" />
                           <span>{galleryCount} Foto</span>
                         </span>
+                        {!isActive && (
+                          <span className="bg-gray-800/85 backdrop-blur-md text-amber-300 text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/20 shadow-xs">
+                            <EyeOff className="w-3 h-3" />
+                            <span>Tersembunyi</span>
+                          </span>
+                        )}
                       </div>
 
                       {/* Top Right: Order Badge (#1 Utama / #2, #3, ...) */}
@@ -695,7 +750,14 @@ export default function AdminProjectsPage() {
                         <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
                         <span>{proj.location}</span>
                       </div>
-                      <h3 className="font-bold text-lg text-brand-earth">{proj.title}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-lg text-brand-earth">{proj.title}</h3>
+                        {!isActive && (
+                          <span className="text-[10px] font-bold text-gray-600 bg-gray-200 px-2 py-0.5 rounded-md whitespace-nowrap">
+                            Tersembunyi
+                          </span>
+                        )}
+                      </div>
                       <p className="mt-2 text-xs sm:text-sm text-brand-earth/75 leading-relaxed line-clamp-3">
                         {proj.description}
                       </p>
@@ -722,8 +784,40 @@ export default function AdminProjectsPage() {
                   </div>
 
                   {/* Footer Action Buttons */}
-                  <div className="p-5 pt-3 flex items-center justify-between border-t border-brand-sand/30 mt-2 gap-2 flex-wrap">
+                  <div className="p-4 sm:p-5 pt-3 flex items-center justify-between border-t border-brand-sand/30 mt-2 gap-3 flex-wrap">
+                    {/* Switch Toggle Status Publikasi */}
                     <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={isActive}
+                        onClick={() => toggleActive(proj)}
+                        className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-crimson/30 ${
+                          isActive ? 'bg-emerald-500' : 'bg-gray-300'
+                        }`}
+                        title={
+                          isActive
+                            ? 'Aktif: Klik untuk menyembunyikan dari website (OFF)'
+                            : 'Nonaktif: Klik untuk menampilkan di website (ON)'
+                        }
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                            isActive ? 'translate-x-5' : 'translate-x-0'
+                          }`}
+                        />
+                      </button>
+                      <span
+                        className={`text-xs font-bold select-none ${
+                          isActive ? 'text-emerald-700' : 'text-gray-400'
+                        }`}
+                      >
+                        {isActive ? 'Aktif' : 'Disembunyikan'}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 sm:gap-2">
                       {/* Quick Preview "Lihat di Web" */}
                       <a
                         href={`/proyek/${proj.slug || proj.id}`}
@@ -745,17 +839,17 @@ export default function AdminProjectsPage() {
                         <Pencil className="w-3.5 h-3.5" />
                         <span>Edit</span>
                       </button>
-                    </div>
 
-                    {/* Hapus Button */}
-                    <button
-                      type="button"
-                      onClick={() => setDeleteTarget(proj)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                      <span>Hapus</span>
-                    </button>
+                      {/* Hapus Button */}
+                      <button
+                        type="button"
+                        onClick={() => setDeleteTarget(proj)}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Hapus</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -977,6 +1071,37 @@ export default function AdminProjectsPage() {
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
+              </div>
+
+              {/* Status Publikasi di Website */}
+              <div className="p-3.5 rounded-xl bg-brand-sand-light/60 border border-brand-sand-dark/40 space-y-2.5">
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, is_active: !formData.is_active })}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                      formData.is_active ? 'bg-emerald-600' : 'bg-gray-300'
+                    }`}
+                    role="switch"
+                    aria-checked={formData.is_active}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                        formData.is_active ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                  <div>
+                    <span className="text-xs font-bold text-brand-earth uppercase tracking-wider block">
+                      Status Publikasi di Website
+                    </span>
+                    <span className="text-[11px] text-brand-earth/70">
+                      {formData.is_active
+                        ? 'Aktif (Muncul di portofolio beranda & halaman detail)'
+                        : 'Non-Aktif / Disembunyikan (Tidak muncul di website publik)'}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               <div className="pt-4 flex items-center justify-end gap-3 border-t border-brand-sand-dark/30">

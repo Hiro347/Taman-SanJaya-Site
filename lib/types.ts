@@ -58,5 +58,6 @@ export interface Project {
   gallery_images?: string[];
   description: string;
   order_index?: number;
+  is_active?: boolean;
   created_at?: string;
 }

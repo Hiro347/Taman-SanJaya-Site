@@ -69,6 +69,7 @@ export const getProjects = cache(async (): Promise<Project[]> => {
     const { data, error } = await supabase
       .from('projects')
       .select('*')
+      .neq('is_active', false)
       .order('order_index', { ascending: true });
 
     if (error) {
@@ -100,6 +101,11 @@ export const getProjectById = cache(async (id: string): Promise<Project | null> 
     if (error || !data) {
       return null;
     }
+
+    if (data.is_active === false) {
+      return null;
+    }
+
     return data as Project;
   } catch (err) {
     return null;
@@ -114,6 +120,7 @@ export const getOtherProjects = cache(async (currentId: string, limit: number = 
     let query = supabase
       .from('projects')
       .select('*')
+      .neq('is_active', false)
       .order('order_index', { ascending: true })
       .limit(limit);
 

@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
   gallery_images JSONB DEFAULT '[]'::jsonb,
   description TEXT,
   order_index INTEGER NOT NULL DEFAULT 0,
+  is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
@@ -81,6 +82,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
 -- INDEXES UNTUK OPTIMASI QUERY (SORTING & FILTERING)
 -- ==============================================================================
 CREATE INDEX IF NOT EXISTS idx_projects_order_index ON public.projects (order_index ASC);
+CREATE INDEX IF NOT EXISTS idx_projects_is_active ON public.projects (is_active);
 CREATE INDEX IF NOT EXISTS idx_products_order_index ON public.products (order_index ASC);
 CREATE INDEX IF NOT EXISTS idx_services_order_index ON public.services (order_index ASC);
 CREATE INDEX IF NOT EXISTS idx_products_category ON public.products (category);

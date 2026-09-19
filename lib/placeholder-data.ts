@@ -164,6 +164,7 @@ export const defaultProjects: Project[] = [
     gallery_images: ['/images/proyek-1.jpeg', '/images/Perencanaan.jpg', '/images/proyek-4.avif', '/images/proyek-2.jpg'],
     description: 'Rancangan arsitektural 3D fotorealistis meliputi jalur pejalan kaki, gazebo santai, area hijau terbuka, serta penataan komposisi vegetasi terstruktur.',
     order_index: 1,
+    is_active: true,
   },
   {
     id: 'proj1',
@@ -175,6 +176,7 @@ export const defaultProjects: Project[] = [
     gallery_images: ['/images/proyek-4.avif', '/images/proyek-2.jpg', '/images/proyek-1.jpeg', '/images/Pembuatan.jpg'],
     description: 'Penataan tanaman bonsai peneduh artistik, batuan koral hias, hamparan rumput jepang rapi, dan vegetasi tropis pembatas pagar hunian privat.',
     order_index: 2,
+    is_active: true,
   },
   {
     id: 'proj2',
@@ -186,6 +188,7 @@ export const defaultProjects: Project[] = [
     gallery_images: ['/images/proyek-2.jpg', '/images/proyek-4.avif', '/images/proyek-3.jpg', '/images/Perawatan.jpg'],
     description: 'Kombinasi pohon kamboja berbunga harum, palem tropis, tanaman puring hias, dan pedestrian paving yang asri serta rindang.',
     order_index: 3,
+    is_active: true,
   },
   {
     id: 'proj5',
@@ -197,6 +200,7 @@ export const defaultProjects: Project[] = [
     gallery_images: ['/images/Pembuatan.jpg', '/images/proyek-1.jpeg', '/images/proyek-3.jpg', '/images/Perawatan.jpg'],
     description: 'Eksekusi fisik pengerjaan lanskap dari olah lahan, seleksi bibit unggul, pemupukan organik, hingga penataan hardscape bergaransi tumbuh 100%.',
     order_index: 4,
+    is_active: true,
   },
   {
     id: 'proj6',
@@ -208,5 +212,6 @@ export const defaultProjects: Project[] = [
     gallery_images: ['/images/Perawatan.jpg', '/images/proyek-2.jpg', '/images/proyek-4.avif', '/images/Pembuatan.jpg'],
     description: 'Program pemeliharaan komprehensif bergaransi IPB: pemangkasan estetika, sanitasi hama terpadu, aerasi tanah, serta pemupukan nutrisi makro/mikro berkala.',
     order_index: 5,
+    is_active: true,
   },
 ];
