@@ -235,9 +235,6 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
             <p className="text-lg sm:text-xl md:text-2xl font-extrabold text-brand-earth tracking-tight">
               Dokumentasi Aktivitas Segera Hadir
             </p>
-            <p className="text-xs sm:text-sm md:text-base text-brand-earth/75 font-medium mt-1.5 max-w-md">
-              Sedang dalam proses dokumentasi kebun bibit dan aktivitas lapangan.
-            </p>
           </div>
         ) : (
           <div

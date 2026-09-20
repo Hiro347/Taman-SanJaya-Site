@@ -147,11 +147,12 @@ export default function AdminDocumentationsPage() {
     try {
       setUploading(true);
       const supabase = createClient();
-      const fileName = generateSafeFileName(file.name, 'doc');
+      const fileName = generateSafeFileName('doc', file.name);
+      const filePath = `documentations/${fileName}`;
 
       const { data, error } = await supabase.storage
         .from('taman-media')
-        .upload(fileName, file, {
+        .upload(filePath, file, {
           cacheControl: '3600',
           upsert: false,
         });
@@ -160,7 +161,7 @@ export default function AdminDocumentationsPage() {
 
       const { data: publicUrlData } = supabase.storage
         .from('taman-media')
-        .getPublicUrl(fileName);
+        .getPublicUrl(filePath);
 
       setFormData((prev) => ({
         ...prev,
