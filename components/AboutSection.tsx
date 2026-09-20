@@ -254,13 +254,11 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
                 key={item.id || idx}
                 whileHover={{ y: -4 }}
                 transition={{ duration: 0.25, ease: 'easeOut' }}
-                className="w-[280px] xs:w-[320px] sm:w-[360px] lg:w-[390px] flex-shrink-0 snap-start bg-white rounded-2xl overflow-hidden border border-brand-earth/15 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group"
+                onClick={() => setSelectedDocIndex(idx)}
+                className="w-[280px] xs:w-[320px] sm:w-[350px] lg:w-[380px] flex-shrink-0 snap-start cursor-pointer group"
               >
-                {/* Photo Stage (aspect 16:10) - Klik untuk melebarkan */}
-                <div
-                  onClick={() => setSelectedDocIndex(idx)}
-                  className="relative w-full aspect-[16/10] overflow-hidden bg-brand-sand/30 cursor-pointer group/photo"
-                >
+                {/* Photo Stage (Clean rounded photo without enclosing card box) */}
+                <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden bg-brand-sand/30 shadow-xs group-hover:shadow-md transition-all duration-300">
                   <Image
                     src={item.image_url}
                     alt={item.title}
@@ -268,48 +266,29 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
                     sizes="(max-width: 640px) 320px, 400px"
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  {/* Subtle dark vignette */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-30 group-hover:opacity-60 transition-opacity pointer-events-none" />
+                  {/* Subtle dark vignette on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-40 transition-opacity pointer-events-none" />
 
                   {/* Order Index Counter Badge */}
-                  <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md text-white text-xs font-mono font-bold tracking-wider border border-white/20 pointer-events-none">
+                  <div className="absolute top-3.5 left-3.5 px-2.5 py-0.5 rounded-full bg-black/50 backdrop-blur-md text-white text-[11px] font-mono font-bold tracking-wider border border-white/20 pointer-events-none">
                     0{idx + 1}
                   </div>
 
-                  {/* Expand Hint Badge */}
-                  <div className="absolute top-3.5 right-3.5 px-2.5 py-1 rounded-full bg-black/45 backdrop-blur-md text-white text-xs font-medium border border-white/20 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  {/* Expand Hint Badge on Hover */}
+                  <div className="absolute top-3.5 right-3.5 px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md text-white text-xs font-medium border border-white/20 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     <Maximize2 className="w-3.5 h-3.5" />
                     <span>Perbesar</span>
                   </div>
                 </div>
 
-                {/* Content Box */}
-                <div className="p-5 flex flex-col justify-between flex-1">
-                  <div>
-                    <h3
-                      onClick={() => setSelectedDocIndex(idx)}
-                      className="font-bold text-base sm:text-lg text-brand-earth group-hover:text-brand-crimson transition-colors line-clamp-2 leading-snug cursor-pointer"
-                    >
-                      {item.title}
-                    </h3>
-                    <p className="mt-2 text-xs sm:text-sm text-brand-earth/80 font-normal leading-relaxed line-clamp-3">
-                      {item.description}
-                    </p>
-                  </div>
-
-                  {/* Bottom Action Bar */}
-                  <div
-                    onClick={() => setSelectedDocIndex(idx)}
-                    className="mt-4 pt-3 border-t border-brand-earth/10 flex items-center justify-between text-xs font-bold text-brand-crimson cursor-pointer group/action"
-                  >
-                    <span className="group-hover/action:underline flex items-center gap-1.5">
-                      <Maximize2 className="w-3.5 h-3.5" />
-                      <span>Lihat Detail Foto</span>
-                    </span>
-                    <span className="font-mono text-[11px] text-brand-earth/50">
-                      0{idx + 1}
-                    </span>
-                  </div>
+                {/* Minimalist Typography Directly Under Photo (No Card Box) */}
+                <div className="mt-3 px-0.5">
+                  <h3 className="font-bold text-base sm:text-lg text-brand-earth group-hover:text-brand-crimson transition-colors line-clamp-1 leading-snug">
+                    {item.title}
+                  </h3>
+                  <p className="mt-1 text-xs sm:text-sm text-brand-earth/75 font-normal leading-relaxed line-clamp-2">
+                    {item.description}
+                  </p>
                 </div>
               </motion.div>
             ))}

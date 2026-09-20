@@ -28,6 +28,13 @@ import {
   Sparkles,
 } from 'lucide-react';
 
+const MAX_DESC_WORDS = 15;
+
+const countWords = (text: string) => {
+  const trimmed = text.trim();
+  return trimmed ? trimmed.split(/\s+/).length : 0;
+};
+
 export default function AdminDocumentationsPage() {
   const [mounted, setMounted] = useState(false);
   const [documentations, setDocumentations] = useState<Documentation[]>([]);
@@ -259,6 +266,13 @@ export default function AdminDocumentationsPage() {
     }
     if (!formData.description.trim()) {
       setToast({ type: 'error', text: 'Deskripsi dokumentasi wajib diisi.' });
+      return;
+    }
+    if (countWords(formData.description) > MAX_DESC_WORDS) {
+      setToast({
+        type: 'error',
+        text: `Deskripsi terlalu panjang. Maksimal ${MAX_DESC_WORDS} kata agar tampilan di website tetap proporsional & rapi.`,
+      });
       return;
     }
     if (!isValidSafeImageUrl(formData.image_url)) {
@@ -552,19 +566,52 @@ export default function AdminDocumentationsPage() {
                 />
               </div>
 
-              {/* Deskripsi */}
+              {/* Deskripsi Singkat */}
               <div>
-                <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-1.5">
-                  Deskripsi Kegiatan <span className="text-brand-crimson">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider">
+                    Deskripsi Singkat <span className="text-brand-crimson">*</span>
+                  </label>
+                  <span
+                    className={`text-[11px] font-bold font-mono px-2 py-0.5 rounded-full transition-colors ${
+                      countWords(formData.description) > MAX_DESC_WORDS
+                        ? 'bg-red-100 text-red-700 border border-red-200'
+                        : 'bg-brand-sand/40 text-brand-earth/80'
+                    }`}
+                  >
+                    {countWords(formData.description)} / {MAX_DESC_WORDS} kata
+                  </span>
+                </div>
                 <textarea
                   required
-                  rows={3}
-                  placeholder="Jelaskan ringkas aktivitas yang dilakukan, tujuan, dan metode ilmiah yang diterapkan..."
+                  rows={2}
+                  placeholder="Contoh: Landscape design, maintenance, vertical garden"
                   value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth leading-relaxed"
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    const words = val.trim() ? val.trim().split(/\s+/) : [];
+                    if (words.length > MAX_DESC_WORDS) {
+                      setFormData({
+                        ...formData,
+                        description: words.slice(0, MAX_DESC_WORDS).join(' '),
+                      });
+                      setToast({
+                        type: 'error',
+                        text: `Maksimal ${MAX_DESC_WORDS} kata agar tampilan dokumentasi tetap proporsional & rapi.`,
+                      });
+                    } else {
+                      setFormData({ ...formData, description: val });
+                    }
+                  }}
+                  className={`w-full px-4 py-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth leading-relaxed transition-colors ${
+                    countWords(formData.description) > MAX_DESC_WORDS
+                      ? 'border-red-400 bg-red-50/20'
+                      : 'border-brand-sand-dark/60'
+                  }`}
                 />
+                <p className="mt-1 text-[11px] text-brand-earth/65">
+                  Maksimal {MAX_DESC_WORDS} kata deskripsi ringkas (contoh: <em>Landscape design, maintenance, vertical garden</em>).
+                </p>
               </div>
 
               {/* Foto Dokumentasi */}
