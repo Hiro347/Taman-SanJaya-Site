@@ -23,9 +23,7 @@ import {
   Images,
   ChevronUp,
   ChevronDown,
-  Eye,
   EyeOff,
-  Camera,
   CheckCircle2,
   Sparkles,
 } from 'lucide-react';
@@ -176,7 +174,8 @@ export default function AdminDocumentationsPage() {
   };
 
   const toggleActive = async (doc: Documentation) => {
-    const newActive = doc.is_active === false;
+    const currentActive = doc.is_active !== false;
+    const newActive = !currentActive;
     const oldDocs = [...documentations];
 
     // Optimistic UI update
@@ -197,8 +196,8 @@ export default function AdminDocumentationsPage() {
       setToast({
         type: 'success',
         text: newActive
-          ? `"${doc.title}" sekarang ditampilkan di About Us.`
-          : `"${doc.title}" berhasil disembunyikan dari About Us.`,
+          ? `"${doc.title}" sekarang aktif tayang di website.`
+          : `"${doc.title}" berhasil disembunyikan dari website.`,
       });
     } catch (err: any) {
       console.error(err);
@@ -336,8 +335,6 @@ export default function AdminDocumentationsPage() {
     }
   };
 
-  const activeCount = documentations.filter((d) => d.is_active !== false).length;
-
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-12">
       {/* Toast Notification */}
@@ -346,17 +343,9 @@ export default function AdminDocumentationsPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-earth">
-              Pengaturan Dokumentasi Aktivitas
-            </h1>
-            <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-brand-crimson/10 text-brand-crimson border border-brand-crimson/20">
-              About Us Carousel
-            </span>
-          </div>
-          <p className="text-sm text-brand-earth/75 mt-1">
-            Kelola foto, judul, dan deskripsi kegiatan nursery &amp; di balik layar yang tampil pada carousel seksi About Us.
-          </p>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-earth">
+            Pengaturan Dokumentasi Aktivitas
+          </h1>
         </div>
 
         <button
@@ -366,29 +355,6 @@ export default function AdminDocumentationsPage() {
           <Plus className="w-4 h-4" />
           <span>Tambah Dokumentasi</span>
         </button>
-      </div>
-
-      {/* Summary Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-white rounded-xl p-4 border border-brand-sand-dark/40 shadow-xs flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-brand-sand/40 border border-brand-sand-dark/40 flex items-center justify-center text-brand-earth flex-shrink-0">
-            <Camera className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="text-xs text-brand-earth/65 font-medium block">Total Dokumentasi</span>
-            <span className="text-xl font-black text-brand-earth">{documentations.length} Item</span>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 border border-brand-sand-dark/40 shadow-xs flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 flex-shrink-0">
-            <Eye className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="text-xs text-emerald-800/70 font-medium block">Aktif Tayang di Web</span>
-            <span className="text-xl font-black text-emerald-700">{activeCount} Item</span>
-          </div>
-        </div>
       </div>
 
       {/* List / Table of Documentations */}
@@ -434,20 +400,15 @@ export default function AdminDocumentationsPage() {
                       0{index + 1}
                     </span>
 
-                    {/* Status Badge */}
-                    <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                      {isHidden ? (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/95 text-white shadow-xs backdrop-blur-md border border-white/20">
+                    {/* Status Badge (like in Proyek: only show badge if hidden) */}
+                    {isHidden && (
+                      <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                        <span className="bg-gray-800/85 backdrop-blur-md text-amber-300 text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 border border-white/20 shadow-xs">
                           <EyeOff className="w-3 h-3" />
                           <span>Tersembunyi</span>
                         </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-600/95 text-white shadow-xs backdrop-blur-md border border-white/20">
-                          <Eye className="w-3 h-3" />
-                          <span>Tayang</span>
-                        </span>
-                      )}
-                    </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Body Content */}
@@ -462,20 +423,38 @@ export default function AdminDocumentationsPage() {
                 </div>
 
                 {/* Footer Action Bar */}
-                <div className="px-4 py-3 sm:px-5 sm:py-3.5 bg-brand-sand/20 border-t border-brand-sand-dark/30 flex items-center justify-between gap-2">
-                  {/* Switch Toggle Visibility */}
-                  <button
-                    onClick={() => toggleActive(doc)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                      isHidden
-                        ? 'bg-amber-100 text-amber-900 hover:bg-amber-200'
-                        : 'bg-emerald-100 text-emerald-900 hover:bg-emerald-200'
-                    }`}
-                    title={isHidden ? 'Klik untuk tampilkan di web' : 'Klik untuk sembunyikan'}
-                  >
-                    {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                    <span>{isHidden ? 'Disembunyikan' : 'Aktif Tayang'}</span>
-                  </button>
+                <div className="px-4 py-3 sm:px-5 sm:py-3.5 bg-brand-sand/20 border-t border-brand-sand-dark/30 flex items-center justify-between gap-3 flex-wrap">
+                  {/* Switch Toggle Status Publikasi (Konsisten ON / OFF seperti Proyek) */}
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={!isHidden}
+                      onClick={() => toggleActive(doc)}
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-crimson/30 ${
+                        !isHidden ? 'bg-emerald-500' : 'bg-gray-300'
+                      }`}
+                      title={
+                        !isHidden
+                          ? 'Aktif: Klik untuk menyembunyikan dari website (OFF)'
+                          : 'Nonaktif: Klik untuk menampilkan di website (ON)'
+                      }
+                    >
+                      <span
+                        aria-hidden="true"
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                          !isHidden ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
+                    <span
+                      className={`text-xs font-bold select-none ${
+                        !isHidden ? 'text-emerald-700' : 'text-gray-400'
+                      }`}
+                    >
+                      {!isHidden ? 'Aktif' : 'Disembunyikan'}
+                    </span>
+                  </div>
 
                   <div className="flex items-center gap-1.5">
                     {/* Reorder Buttons */}
