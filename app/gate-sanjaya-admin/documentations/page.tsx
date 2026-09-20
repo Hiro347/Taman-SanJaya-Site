@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
 import { defaultDocumentations } from '@/lib/placeholder-data';
@@ -29,16 +30,8 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-const PRESET_IMAGES = [
-  { label: 'Perawatan & Greenhouse', url: '/images/Perawatan.jpg' },
-  { label: 'Perencanaan & Survei', url: '/images/Perencanaan.jpg' },
-  { label: 'Pembuatan & Konstruksi', url: '/images/Pembuatan.jpg' },
-  { label: 'Lanskap Tropis Villa', url: '/images/proyek-2.jpg' },
-  { label: 'Taman Asri & Gazebo', url: '/images/proyek-3.jpg' },
-  { label: 'Minimalis & Bonsai', url: '/images/proyek-4.avif' },
-];
-
 export default function AdminDocumentationsPage() {
+  const [mounted, setMounted] = useState(false);
   const [documentations, setDocumentations] = useState<Documentation[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,6 +54,30 @@ export default function AdminDocumentationsPage() {
     order_index: 0,
     is_active: true,
   });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Modal ESC key press & body scroll lock
+  useEffect(() => {
+    if (!isModalOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !submitting && !uploading) {
+        setIsModalOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isModalOpen, submitting, uploading]);
 
   useEffect(() => {
     fetchDocumentations();
@@ -320,7 +337,6 @@ export default function AdminDocumentationsPage() {
   };
 
   const activeCount = documentations.filter((d) => d.is_active !== false).length;
-  const hiddenCount = documentations.length - activeCount;
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 pb-12">
@@ -353,7 +369,7 @@ export default function AdminDocumentationsPage() {
       </div>
 
       {/* Summary Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="bg-white rounded-xl p-4 border border-brand-sand-dark/40 shadow-xs flex items-center gap-3.5">
           <div className="w-11 h-11 rounded-xl bg-brand-sand/40 border border-brand-sand-dark/40 flex items-center justify-center text-brand-earth flex-shrink-0">
             <Camera className="w-5 h-5" />
@@ -371,16 +387,6 @@ export default function AdminDocumentationsPage() {
           <div>
             <span className="text-xs text-emerald-800/70 font-medium block">Aktif Tayang di Web</span>
             <span className="text-xl font-black text-emerald-700">{activeCount} Item</span>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 border border-brand-sand-dark/40 shadow-xs flex items-center gap-3.5">
-          <div className="w-11 h-11 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 flex-shrink-0">
-            <EyeOff className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="text-xs text-amber-800/70 font-medium block">Disembunyikan</span>
-            <span className="text-xl font-black text-amber-700">{hiddenCount} Item</span>
           </div>
         </div>
       </div>
@@ -518,13 +524,22 @@ export default function AdminDocumentationsPage() {
       {/* =================================================================== */}
       {/* MODAL TAMBAH & EDIT DOKUMENTASI                                     */}
       {/* =================================================================== */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-2xl w-full max-w-xl overflow-hidden shadow-2xl border border-brand-sand-dark/40 my-8">
+      {mounted && isModalOpen && createPortal(
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 bg-black/70 z-[99999] flex items-center justify-center p-3 sm:p-4 md:p-6 backdrop-blur-xs overflow-y-auto animate-in fade-in duration-200"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !submitting && !uploading) {
+              setIsModalOpen(false);
+            }
+          }}
+        >
+          <div className="bg-white rounded-2xl sm:rounded-3xl w-full max-w-2xl p-5 sm:p-7 md:p-8 shadow-2xl border border-brand-sand-dark/40 max-h-[92vh] sm:max-h-[90vh] flex flex-col my-auto animate-in zoom-in-95 duration-150">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-5 border-b border-brand-sand-dark/30 bg-brand-sand/15">
+            <div className="flex items-center justify-between pb-4 border-b border-brand-sand-dark/30 mb-5 sm:mb-6 flex-shrink-0">
               <div>
-                <h2 className="text-lg font-bold text-brand-earth">
+                <h2 className="text-lg sm:text-xl font-bold text-brand-earth">
                   {editingId ? 'Edit Dokumentasi Aktivitas' : 'Tambah Dokumentasi Aktivitas'}
                 </h2>
                 <p className="text-xs text-brand-earth/70 mt-0.5">
@@ -532,15 +547,17 @@ export default function AdminDocumentationsPage() {
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-lg text-brand-earth/60 hover:text-brand-earth hover:bg-brand-sand/40 transition-colors"
+                aria-label="Tutup form dokumentasi"
+                className="p-2 rounded-lg hover:bg-brand-sand/40 text-brand-earth/70 hover:text-brand-earth transition-colors cursor-pointer active:scale-95"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Modal Form */}
-            <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 overflow-y-auto pr-1 sm:pr-2 flex-1 scrollbar-thin">
               {/* Judul */}
               <div>
                 <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-1.5">
@@ -552,7 +569,7 @@ export default function AdminDocumentationsPage() {
                   placeholder="Contoh: Aklimatisasi Bibit Unggul di Nursery Bogor"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
+                  className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth"
                 />
               </div>
 
@@ -567,7 +584,7 @@ export default function AdminDocumentationsPage() {
                   placeholder="Jelaskan ringkas aktivitas yang dilakukan, tujuan, dan metode ilmiah yang diterapkan..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth leading-relaxed"
+                  className="w-full px-4 py-3 rounded-lg border border-brand-sand-dark/60 text-sm focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth leading-relaxed"
                 />
               </div>
 
@@ -588,11 +605,11 @@ export default function AdminDocumentationsPage() {
                 </div>
 
                 {/* Upload File Button & URL Input */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
+                <div className="space-y-2.5">
+                  <div>
                     <label className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-brand-navy hover:bg-brand-navy-dark text-white text-xs font-bold cursor-pointer transition-colors shadow-xs">
                       <Upload className="w-4 h-4" />
-                      <span>{uploading ? 'Mengunggah...' : 'Unggah Foto Baru'}</span>
+                      <span>{uploading ? 'Mengunggah...' : 'Unggah Foto dari Perangkat'}</span>
                       <input
                         type="file"
                         accept="image/*"
@@ -601,85 +618,78 @@ export default function AdminDocumentationsPage() {
                         disabled={uploading}
                       />
                     </label>
-                    <span className="text-xs text-brand-earth/60 font-medium">atau pilih foto preset:</span>
                   </div>
 
-                  {/* Preset Pills */}
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {PRESET_IMAGES.map((preset) => (
-                      <button
-                        type="button"
-                        key={preset.url}
-                        onClick={() => setFormData({ ...formData, image_url: preset.url })}
-                        className={`text-[11px] font-semibold px-2.5 py-1 rounded-md border transition-all ${
-                          formData.image_url === preset.url
-                            ? 'bg-brand-crimson text-white border-brand-crimson'
-                            : 'bg-white text-brand-earth/80 border-brand-sand-dark/50 hover:bg-brand-sand/30'
-                        }`}
-                      >
-                        {preset.label}
-                      </button>
-                    ))}
+                  <div>
+                    <span className="text-[11px] text-brand-earth/60 font-medium block mb-1">
+                      Atau tempel tautan/URL foto secara langsung:
+                    </span>
+                    <input
+                      type="text"
+                      required
+                      placeholder="/images/... atau https://..."
+                      value={formData.image_url}
+                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+                      className="w-full px-3.5 py-2 rounded-lg border border-brand-sand-dark/60 text-xs focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth font-mono"
+                    />
                   </div>
-
-                  {/* Custom URL Input */}
-                  <input
-                    type="text"
-                    required
-                    placeholder="Atau tempel URL gambar langsung (/images/... atau https://...)"
-                    value={formData.image_url}
-                    onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                    className="w-full px-3.5 py-2 rounded-lg border border-brand-sand-dark/60 text-xs focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth mt-1 font-mono"
-                  />
                 </div>
               </div>
 
               {/* Status Publikasi Switch Toggle */}
-              <div className="bg-brand-sand/20 rounded-xl p-3.5 border border-brand-sand-dark/40 flex items-center justify-between">
-                <div>
-                  <span className="text-xs font-bold text-brand-earth block">
-                    Status Publikasi di Website
-                  </span>
-                  <span className="text-[11px] text-brand-earth/70 block mt-0.5">
-                    {formData.is_active
-                      ? 'Dokumentasi akan langsung tampil di carousel About Us.'
-                      : 'Dokumentasi akan disembunyikan sementara dari pengunjung.'}
-                  </span>
+              <div className="p-3.5 rounded-xl bg-brand-sand-light/60 border border-brand-sand-dark/40 space-y-2.5">
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, is_active: !formData.is_active })}
+                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                      formData.is_active ? 'bg-emerald-600' : 'bg-gray-300'
+                    }`}
+                    role="switch"
+                    aria-checked={formData.is_active}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                        formData.is_active ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                  <div>
+                    <span className="text-xs font-bold text-brand-earth uppercase tracking-wider block">
+                      Status Publikasi di Website
+                    </span>
+                    <span className="text-[11px] text-brand-earth/70">
+                      {formData.is_active
+                        ? 'Aktif (Langsung tampil pada carousel seksi About Us)'
+                        : 'Non-Aktif / Disembunyikan (Tidak muncul di website publik)'}
+                    </span>
+                  </div>
                 </div>
-
-                <label className="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                  <input
-                    type="checkbox"
-                    checked={formData.is_active}
-                    onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                    className="sr-only peer"
-                  />
-                  <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-crimson" />
-                </label>
               </div>
 
               {/* Modal Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-brand-sand-dark/30">
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-brand-sand-dark/30 flex-shrink-0 mt-3">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
                   disabled={submitting}
-                  className="px-4 py-2.5 rounded-lg border border-brand-sand-dark/60 text-xs font-bold text-brand-earth hover:bg-brand-sand/30 transition-colors"
+                  className="px-4 sm:px-5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-xs sm:text-sm font-semibold text-brand-earth hover:bg-brand-sand/30 transition-colors"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-6 py-2.5 rounded-lg bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-xs font-bold text-white shadow-md transition-all flex items-center gap-1.5"
+                  className="px-5 sm:px-6 py-2.5 rounded-lg bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white text-xs sm:text-sm font-bold shadow-md transition-colors flex items-center gap-1.5"
                 >
                   <CheckCircle2 className="w-4 h-4" />
-                  <span>{submitting ? 'Menyimpan...' : 'Simpan Dokumentasi'}</span>
+                  <span>{submitting ? 'Menyimpan...' : editingId ? 'Perbarui Dokumentasi' : 'Simpan Dokumentasi'}</span>
                 </button>
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* =================================================================== */}

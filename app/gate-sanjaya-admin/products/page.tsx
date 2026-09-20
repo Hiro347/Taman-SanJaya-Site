@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { createClient } from '@/utils/supabase/client';
 import { defaultProducts } from '@/lib/placeholder-data';
@@ -38,6 +39,7 @@ import {
 } from 'lucide-react';
 
 export default function AdminProductsPage() {
+  const [mounted, setMounted] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -71,6 +73,30 @@ export default function AdminProductsPage() {
   // Validasi real-time URL marketplace Tokopedia & Shopee
   const isTokopediaValid = isValidTokopediaUrl(formData.tokopedia_url);
   const isShopeeValid = isValidShopeeUrl(formData.shopee_url);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Modal ESC key press & body scroll lock
+  useEffect(() => {
+    if (!isModalOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !submitting && !uploading && !uploadingGallery) {
+        setIsModalOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isModalOpen, submitting, uploading, uploadingGallery]);
 
   useEffect(() => {
     fetchProducts();
@@ -935,22 +961,38 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Add / Edit Product Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl border border-brand-sand-dark/40">
-            <div className="flex items-center justify-between pb-4 border-b border-brand-sand-dark/30 mb-6">
-              <h2 className="text-xl font-bold text-brand-earth">
-                {editingProduct ? 'Edit Tanaman Hias' : 'Tambah Tanaman Hias Baru'}
-              </h2>
+      {mounted && isModalOpen && createPortal(
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 bg-black/70 z-[99999] flex items-center justify-center p-3 sm:p-4 md:p-6 backdrop-blur-xs overflow-y-auto animate-in fade-in duration-200"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !submitting && !uploading && !uploadingGallery) {
+              setIsModalOpen(false);
+            }
+          }}
+        >
+          <div className="bg-white rounded-2xl sm:rounded-3xl w-full max-w-2xl p-5 sm:p-7 md:p-8 shadow-2xl border border-brand-sand-dark/40 max-h-[92vh] sm:max-h-[90vh] flex flex-col my-auto animate-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between pb-4 border-b border-brand-sand-dark/30 mb-5 sm:mb-6 flex-shrink-0">
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold text-brand-earth">
+                  {editingProduct ? 'Edit Tanaman Hias' : 'Tambah Tanaman Hias Baru'}
+                </h2>
+                <p className="text-xs text-brand-earth/70 mt-0.5">
+                  Lengkapi detail nama tanaman, kategori, harga, dan foto nursery.
+                </p>
+              </div>
               <button
+                type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-lg hover:bg-brand-sand/40 text-brand-earth"
+                aria-label="Tutup form tanaman"
+                className="p-2 rounded-lg hover:bg-brand-sand/40 text-brand-earth/70 hover:text-brand-earth transition-colors cursor-pointer active:scale-95"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 overflow-y-auto pr-1 sm:pr-2 flex-1 scrollbar-thin">
               <div>
                 <label className="block text-xs font-bold text-brand-earth uppercase tracking-wider mb-1.5">
                   Nama Tanaman Hias
@@ -1287,25 +1329,27 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              <div className="pt-4 flex items-center justify-end gap-3 border-t border-brand-sand-dark/30">
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-brand-sand-dark/30 flex-shrink-0 mt-3">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-sm font-semibold text-brand-earth hover:bg-brand-sand/30"
+                  className="px-4 sm:px-5 py-2.5 rounded-lg border border-brand-sand-dark/60 text-xs sm:text-sm font-semibold text-brand-earth hover:bg-brand-sand/30 transition-colors"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={submitting || uploading || !isTokopediaValid || !isShopeeValid}
-                  className="px-6 py-2.5 rounded-lg bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white text-sm font-bold shadow-md transition-colors"
+                  className="px-5 sm:px-6 py-2.5 rounded-lg bg-brand-crimson hover:bg-brand-crimson-hover disabled:bg-gray-400 text-white text-xs sm:text-sm font-bold shadow-md transition-colors flex items-center gap-1.5"
                 >
-                  {submitting ? 'Menyimpan...' : 'Simpan Produk'}
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>{submitting ? 'Menyimpan...' : editingProduct ? 'Perbarui Produk' : 'Simpan Produk'}</span>
                 </button>
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Modern Confirmation Modal */}

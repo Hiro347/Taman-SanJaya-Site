@@ -194,22 +194,19 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
       {/* ===================================================================== */}
       {/* 2. DOKUMENTASI (SWIPEABLE EDITORIAL CAROUSEL)                         */}
       {/* ===================================================================== */}
-      <div className="mt-12 sm:mt-16 lg:mt-24">
+      <div className="mt-10 sm:mt-14 lg:mt-18">
         {/* Section Header: Dokumentasi (真实记录) */}
-        <div className="text-center mb-8 sm:mb-12 relative">
+        <div className="text-center mb-5 sm:mb-6 relative">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-brand-earth tracking-tight">
             Dokumentasi
           </h2>
           <span className="block text-sm sm:text-base font-medium text-brand-earth/70 tracking-[0.2em] uppercase mt-1">
             真实记录
           </span>
-          <p className="mt-3 text-xs sm:text-base text-brand-earth/75 max-w-2xl mx-auto font-medium leading-relaxed">
-            Dokumentasi nyata kegiatan pembibitan di nursery Bogor, survei kontur lahan, hingga pengerjaan hardscape berstandar proteksi tanaman IPB.
-          </p>
 
           {/* Desktop Arrow Navigation Controls */}
           {documentations.length > 0 && (
-            <div className="hidden sm:flex items-center gap-2 absolute right-0 bottom-0">
+            <div className="hidden sm:flex items-center gap-2 absolute right-0 top-1/2 -translate-y-1/2">
               <button
                 type="button"
                 onClick={() => scroll('left')}
@@ -289,16 +286,6 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
                 {/* Content Box */}
                 <div className="p-5 flex flex-col justify-between flex-1">
                   <div>
-                    {/* Category Pill like in Project Section */}
-                    <div className="flex items-center gap-2 mb-2.5">
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-brand-crimson text-white shadow-xs">
-                        Dokumentasi
-                      </span>
-                      <span className="font-mono text-[11px] font-bold text-brand-earth/60">
-                        TSJ-DOC-0{idx + 1}
-                      </span>
-                    </div>
-
                     <h3
                       onClick={() => setSelectedDocIndex(idx)}
                       className="font-bold text-base sm:text-lg text-brand-earth group-hover:text-brand-crimson transition-colors line-clamp-2 leading-snug cursor-pointer"
@@ -340,9 +327,9 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
           <div
             role="dialog"
             aria-modal="true"
-            aria-labelledby="lightbox-doc-title"
+            aria-label="Tampilan Foto Dokumentasi"
             onClick={() => setSelectedDocIndex(null)}
-            className="fixed inset-0 z-[99999] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200"
+            className="fixed inset-0 z-[99999] bg-black/90 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 animate-in fade-in duration-200"
           >
             {/* Close Button */}
             <button
@@ -391,45 +378,22 @@ export default function AboutSection({ settings, documentations = [] }: AboutSec
               </button>
             )}
 
-            {/* Modal Card with Photo on Top and Title + Desc Underneath */}
+            {/* Enlarged Photo Stage (Only Image) */}
             <div
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-4xl bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-white/20 my-auto flex flex-col transform transition-all animate-in zoom-in-95 duration-200 max-h-[92vh]"
+              className="relative w-full max-w-5xl h-[80vh] sm:h-[85vh] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-white/20 my-auto flex items-center justify-center bg-black/80 animate-in zoom-in-95 duration-200"
             >
-              {/* Top: Enlarged Photo Stage */}
-              <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] max-h-[62vh] bg-black/95 overflow-hidden flex items-center justify-center">
-                <Image
-                  src={documentations[selectedDocIndex].image_url}
-                  alt={documentations[selectedDocIndex].title}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 1200px"
-                  className="object-contain"
-                />
-                {/* Photo Counter */}
-                <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-mono font-bold border border-white/20 pointer-events-none">
-                  0{selectedDocIndex + 1} / 0{documentations.length}
-                </div>
-              </div>
-
-              {/* Bottom: Title & Description Underneath */}
-              <div className="p-5 sm:p-7 bg-[#F4EFE2] border-t border-brand-sand-dark/40 overflow-y-auto">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-brand-crimson text-white shadow-xs">
-                    Dokumentasi
-                  </span>
-                  <span className="font-mono text-xs font-bold text-brand-earth/60">
-                    TSJ-DOC-0{selectedDocIndex + 1}
-                  </span>
-                </div>
-
-                <h3 id="lightbox-doc-title" className="text-xl sm:text-2xl font-black text-brand-earth leading-snug">
-                  {documentations[selectedDocIndex].title}
-                </h3>
-
-                <p className="mt-2 text-xs sm:text-sm md:text-base text-brand-earth/85 font-medium leading-relaxed">
-                  {documentations[selectedDocIndex].description}
-                </p>
+              <Image
+                src={documentations[selectedDocIndex].image_url}
+                alt={documentations[selectedDocIndex].title}
+                fill
+                priority
+                sizes="(max-width: 1280px) 100vw, 1280px"
+                className="object-contain"
+              />
+              {/* Photo Counter */}
+              <div className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-black/65 backdrop-blur-md text-white text-xs font-mono font-bold border border-white/20 pointer-events-none">
+                0{selectedDocIndex + 1} / 0{documentations.length}
               </div>
             </div>
           </div>,

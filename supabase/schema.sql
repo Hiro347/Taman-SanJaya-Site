@@ -76,6 +76,8 @@ CREATE TABLE IF NOT EXISTS public.projects (
   order_index INTEGER NOT NULL DEFAULT 0,
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
 -- 6. TABEL DOKUMENTASI AKTIVITAS & DI BALIK LAYAR
 CREATE TABLE IF NOT EXISTS public.documentations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

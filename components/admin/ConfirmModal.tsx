@@ -1,6 +1,5 @@
-'use client';
-
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { AlertTriangle, X, Loader2 } from 'lucide-react';
 
 interface ConfirmModalProps {
@@ -26,9 +25,18 @@ export default function ConfirmModal({
   onConfirm,
   onClose,
 }: ConfirmModalProps) {
-  // Handle ESC key press
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Handle ESC key press & body scroll lock
   useEffect(() => {
     if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && !isLoading) {
@@ -37,17 +45,20 @@ export default function ConfirmModal({
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isOpen, isLoading, onClose]);
 
-  if (!isOpen) return null;
+  if (!mounted || !isOpen) return null;
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+      className="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget && !isLoading) {
           onClose();
@@ -120,6 +131,7 @@ export default function ConfirmModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
