@@ -288,38 +288,4 @@ export function generateSafeFileName(prefix: string, filename: string): string {
   return `${prefix}_${Date.now()}_${safeToken}.${safeExt}`;
 }
 
-/**
- * Validasi URL gambar manual untuk mencegah injeksi XSS (javascript:, data:, vbscript:)
- */
-export function isValidSafeImageUrl(url: string | null | undefined): { valid: boolean; error?: string } {
-  if (!url || url.trim() === '') {
-    return { valid: true };
-  }
 
-  const trimmed = url.trim();
-
-  // Cegah protokol berbahaya (XSS / Injection)
-  if (/^(javascript:|data:|vbscript:|file:)/i.test(trimmed)) {
-    return {
-      valid: false,
-      error: 'Protokol URL tidak diizinkan! Gunakan URL gambar https:// yang aman.',
-    };
-  }
-
-  // Cegah tag script, kurung siku, dan karakter injeksi
-  if (/[<>"'`\\]/.test(trimmed)) {
-    return {
-      valid: false,
-      error: 'URL mengandung karakter terlarang atau indikasi script berbahaya.',
-    };
-  }
-
-  if (!/^https?:\/\//i.test(trimmed)) {
-    return {
-      valid: false,
-      error: 'URL gambar harus diawali dengan https:// atau http://',
-    };
-  }
-
-  return { valid: true };
-}

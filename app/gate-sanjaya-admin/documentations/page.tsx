@@ -10,7 +10,6 @@ import { revalidateSite } from '@/app/actions';
 import {
   validateImageFile,
   generateSafeFileName,
-  isValidSafeImageUrl,
 } from '@/lib/validators';
 import ConfirmModal from '@/components/admin/ConfirmModal';
 import ToastNotification from '@/components/admin/ToastNotification';
@@ -275,8 +274,8 @@ export default function AdminDocumentationsPage() {
       });
       return;
     }
-    if (!isValidSafeImageUrl(formData.image_url)) {
-      setToast({ type: 'error', text: 'URL foto tidak valid atau tidak aman.' });
+    if (!formData.image_url || !formData.image_url.trim()) {
+      setToast({ type: 'error', text: 'Silakan pilih dan unggah foto dokumentasi dari HP atau laptop Anda.' });
       return;
     }
 
@@ -630,35 +629,22 @@ export default function AdminDocumentationsPage() {
                   />
                 </div>
 
-                {/* Upload File Button & URL Input */}
-                <div className="space-y-2.5">
-                  <div>
-                    <label className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-brand-navy hover:bg-brand-navy-dark text-white text-xs font-bold cursor-pointer transition-colors shadow-xs">
-                      <Upload className="w-4 h-4" />
-                      <span>{uploading ? 'Mengunggah...' : 'Unggah Foto dari Perangkat'}</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleFileUpload}
-                        disabled={uploading}
-                      />
-                    </label>
-                  </div>
-
-                  <div>
-                    <span className="text-[11px] text-brand-earth/60 font-medium block mb-1">
-                      Atau tempel tautan/URL foto secara langsung:
-                    </span>
+                {/* Upload File Button from HP / Laptop */}
+                <div className="space-y-2">
+                  <label className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-navy hover:bg-brand-navy-dark active:scale-[0.98] text-white text-xs sm:text-sm font-bold cursor-pointer transition-all shadow-xs">
+                    <Upload className="w-4 h-4" />
+                    <span>{uploading ? 'Mengunggah dari Perangkat...' : 'Pilih Foto dari HP / Laptop'}</span>
                     <input
-                      type="text"
-                      required
-                      placeholder="/images/... atau https://..."
-                      value={formData.image_url}
-                      onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
-                      className="w-full px-3.5 py-2 rounded-lg border border-brand-sand-dark/60 text-xs focus:outline-none focus:ring-2 focus:ring-brand-crimson/50 text-brand-earth font-mono"
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/jpg"
+                      className="hidden"
+                      onChange={handleFileUpload}
+                      disabled={uploading}
                     />
-                  </div>
+                  </label>
+                  <p className="text-[11px] text-brand-earth/65">
+                    Format yang didukung: JPG, JPEG, PNG, WebP (Maksimal ukuran file 5 MB).
+                  </p>
                 </div>
               </div>
 

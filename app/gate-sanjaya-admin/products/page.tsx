@@ -14,7 +14,6 @@ import {
   normalizeMarketplaceUrl,
   validateImageFile,
   generateSafeFileName,
-  isValidSafeImageUrl,
   MAX_GALLERY_IMAGES,
 } from '@/lib/validators';
 import ConfirmModal from '@/components/admin/ConfirmModal';
@@ -47,7 +46,6 @@ export default function AdminProductsPage() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadingGallery, setUploadingGallery] = useState(false);
-  const [galleryUrlInput, setGalleryUrlInput] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [reordering, setReordering] = useState(false);
@@ -151,7 +149,6 @@ export default function AdminProductsPage() {
       tokopedia_url: '',
       shopee_url: '',
     });
-    setGalleryUrlInput('');
     setIsModalOpen(true);
   };
 
@@ -171,7 +168,6 @@ export default function AdminProductsPage() {
       tokopedia_url: product.tokopedia_url || '',
       shopee_url: product.shopee_url || '',
     });
-    setGalleryUrlInput('');
     setIsModalOpen(true);
   };
 
@@ -295,35 +291,6 @@ export default function AdminProductsPage() {
     }
   };
 
-  const handleAddGalleryUrl = () => {
-    const trimmedUrl = galleryUrlInput.trim();
-    if (!trimmedUrl) return;
-
-    // Validasi URL aman (cegah javascript: / XSS injection)
-    const urlCheck = isValidSafeImageUrl(trimmedUrl);
-    if (!urlCheck.valid) {
-      setToast({
-        type: 'error',
-        text: urlCheck.error || 'URL foto galeri tidak valid atau tidak aman.',
-      });
-      return;
-    }
-
-    if (formData.gallery_images.length >= MAX_GALLERY_IMAGES) {
-      setToast({
-        type: 'error',
-        text: `Galeri foto produk sudah mencapai batas maksimal (${MAX_GALLERY_IMAGES} foto).`,
-      });
-      return;
-    }
-
-    setFormData((prev) => ({
-      ...prev,
-      gallery_images: [...prev.gallery_images, trimmedUrl],
-    }));
-    setGalleryUrlInput('');
-  };
-
   const handleRemoveGalleryImage = (indexToRemove: number) => {
     setFormData((prev) => ({
       ...prev,
@@ -341,28 +308,14 @@ export default function AdminProductsPage() {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)+/g, '') + '-' + Date.now();
 
-    // Validasi Keamanan URL Foto Utama
-    const imageUrlCheck = isValidSafeImageUrl(formData.image_url);
-    if (!imageUrlCheck.valid) {
+    // Validasi Foto Utama
+    if (!formData.image_url || !formData.image_url.trim()) {
       setToast({
         type: 'error',
-        text: imageUrlCheck.error || 'URL foto utama tidak valid atau tidak aman.',
+        text: 'Silakan pilih dan unggah foto utama tanaman dari HP atau laptop Anda.',
       });
       setSubmitting(false);
       return;
-    }
-
-    // Validasi Keamanan URL Galeri Foto
-    for (const gUrl of formData.gallery_images) {
-      const gCheck = isValidSafeImageUrl(gUrl);
-      if (!gCheck.valid) {
-        setToast({
-          type: 'error',
-          text: gCheck.error || 'Ada URL foto galeri yang tidak valid atau mengandung script terlarang.',
-        });
-        setSubmitting(false);
-        return;
-      }
     }
 
     // Validasi URL Marketplace Tokopedia & Shopee Resmi
@@ -1058,10 +1011,10 @@ export default function AdminProductsPage() {
                     />
                   </div>
                   <div className="flex-1 space-y-2">
-                    <div className="flex items-center gap-3">
-                      <label className="inline-flex items-center gap-2 px-4 py-2 bg-brand-sand/50 hover:bg-brand-sand rounded-lg text-xs font-bold text-brand-earth cursor-pointer transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                      <label className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-sand hover:bg-brand-sand-dark/40 rounded-xl text-xs sm:text-sm font-bold text-brand-earth cursor-pointer transition-colors border border-brand-sand-dark/50 shadow-xs active:scale-[0.98]">
                         <Upload className="w-4 h-4 text-brand-crimson" />
-                        <span>{uploading ? 'Mengunggah...' : 'Upload Foto Utama'}</span>
+                        <span>{uploading ? 'Mengunggah dari Perangkat...' : 'Pilih Foto Utama dari HP / Laptop'}</span>
                         <input
                           type="file"
                           accept="image/jpeg,image/png,image/webp,image/avif"
@@ -1070,17 +1023,8 @@ export default function AdminProductsPage() {
                           className="hidden"
                         />
                       </label>
-                      <span className="text-[11px] text-brand-earth/60">Maks. 5 MB (JPG, PNG, WebP — Bukan Dokumen/PDF)</span>
+                      <span className="text-[11px] text-brand-earth/60">Maks. 5 MB (JPG, PNG, WebP)</span>
                     </div>
-                    <input
-                      type="url"
-                      placeholder="Atau tempel link URL foto utama..."
-                      value={formData.image_url}
-                      onChange={(e) =>
-                        setFormData({ ...formData, image_url: e.target.value })
-                      }
-                      className="w-full px-3 py-2 rounded-lg border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none"
-                    />
                   </div>
                 </div>
               </div>
@@ -1113,32 +1057,8 @@ export default function AdminProductsPage() {
                 </div>
 
                 <p className="text-xs text-brand-earth/70">
-                  Foto carousel produk gaya Tokopedia/Shopee (Maksimal 5 foto pendukung, @ maks 5 MB).
+                  Unggah foto galeri pendukung tanaman langsung dari galeri HP atau folder laptop (Maksimal 5 foto, @ maks 5 MB).
                 </p>
-
-                {/* Input URL Foto Tambahan */}
-                <div className="flex gap-2">
-                  <input
-                    type="url"
-                    disabled={formData.gallery_images.length >= MAX_GALLERY_IMAGES}
-                    placeholder={
-                      formData.gallery_images.length >= MAX_GALLERY_IMAGES
-                        ? 'Batas maksimal 5 foto galeri telah tercapai'
-                        : 'Atau tempel URL foto tambahan...'
-                    }
-                    value={galleryUrlInput}
-                    onChange={(e) => setGalleryUrlInput(e.target.value)}
-                    className="flex-1 px-3 py-2 rounded-lg border border-brand-sand-dark/60 text-xs text-brand-earth focus:outline-none bg-white disabled:bg-gray-100 disabled:text-gray-400"
-                  />
-                  <button
-                    type="button"
-                    disabled={formData.gallery_images.length >= MAX_GALLERY_IMAGES || !galleryUrlInput.trim()}
-                    onClick={handleAddGalleryUrl}
-                    className="px-3 py-2 bg-brand-earth text-white rounded-lg text-xs font-bold hover:bg-brand-earth-dark disabled:bg-gray-300 transition-colors cursor-pointer"
-                  >
-                    Tambah
-                  </button>
-                </div>
 
                 {/* Thumbnail Preview Grid dengan Individual Delete */}
                 {formData.gallery_images.length > 0 && (
